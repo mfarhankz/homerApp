@@ -12,8 +12,7 @@ export default function RootLayout() {
     };
 
     return (
-        <div className="flex flex-col min-h-screen w-screen">
-            <Header user={user} onSignOut={handleSignOut} />
+        <div className="flex flex-col min-h-screen w-screen">          
             <main className="flex-grow w-full">
                 <Outlet />
             </main>

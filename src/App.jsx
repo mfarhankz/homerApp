@@ -1,20 +1,30 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import RootLayout from './layout';
-import SignIn from './pages/SignIn/signin';
-import LandingPage from './pages/SignIn/Landing/LandingPage';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import SignInPage from './components/SignInPage';
+import LandingPage from './components/LandingPage';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 
-function App() {
-    return (
-        <Router>
-            <Routes>
-                <Route path="/signin" element={<SignIn />} />
-                <Route element={<RootLayout />}>
-                    <Route path="/landing" element={<LandingPage />} />
-                    {/* Add more routes that should use RootLayout here */}
-                </Route>
-            </Routes>
-        </Router>
-    );
+function PrivateRoute({ children }) {
+    const { isAuthenticated } = useAuth();
+    return isAuthenticated ? children : <Navigate to="/signin" replace />;
 }
 
-export default App;
+export default function App() {
+    return (
+        <AuthProvider>
+            <Router>
+                <Routes>
+                    <Route path="/signin" element={<SignInPage />} />
+                    <Route
+                        path="/"
+                        element={
+                            <PrivateRoute>
+                                <LandingPage />
+                            </PrivateRoute>
+                        }
+                    />
+                </Routes>
+            </Router>
+        </AuthProvider>
+    );
+}
