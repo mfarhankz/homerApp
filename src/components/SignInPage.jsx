@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { Mail, Lock, ArrowRight, Loader } from 'lucide-react';
 import { motion } from 'framer-motion';
 
+
 export default function SignInPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -34,7 +35,7 @@ export default function SignInPage() {
                 <div>
                     <img
                         className="mx-auto h-12 w-auto"
-                        src="/public/images/homer.jpg?height=48&width=48"
+                        src={'src/assets/images/homer.jpgheight=40&width=40'}
                         alt="Your Company Logo"
                     />
                     <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
