@@ -7,7 +7,7 @@ const Header = ({ user, onSignOut }) => {
     return (
         <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
             <div className="flex justify-between items-center px-4 py-2 w-full mx-auto">
-                <img src="/public/images/homer.jpg" alt="Logo" className="h-8" />
+                <img src="/images/homer_main.jpg" alt="Logo" className="h-8" />
                 <div className="relative">
                     <button
                         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
