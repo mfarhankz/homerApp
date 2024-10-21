@@ -35,7 +35,7 @@ export default function SignInPage() {
                 <div>
                     <img
                         className="mx-auto h-12 w-auto"
-                        src='/images/homer.jpg?height=48&width=48'
+                        src='/images/homer.jpg'
                         alt="Your Company Logo"
                     />
                     <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
