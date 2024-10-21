@@ -1,23 +1,26 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Mail, Lock, ArrowRight } from 'lucide-react';
+import { Mail, Lock, ArrowRight, Loader } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function SignInPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(null);
     const { login } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            setIsLoading(true);
             await login(email, password);
             navigate('/');
         } catch (error) {
-            console.error('Failed to sign in:', error);
-            // Here you would typically show an error message to the user
+            setIsLoading(false);
+            setErrorMessage(error.message);
         }
     };
 
@@ -52,6 +55,7 @@ export default function SignInPage() {
                                     <Mail className="h-5 w-5 text-gray-400" />
                                 </div>
                                 <input
+                                    disabled={isLoading}
                                     id="email-address"
                                     name="email"
                                     type="email"
@@ -73,6 +77,7 @@ export default function SignInPage() {
                                     <Lock className="h-5 w-5 text-gray-400" />
                                 </div>
                                 <input
+                                    disabled={isLoading}
                                     id="password"
                                     name="password"
                                     type="password"
@@ -90,6 +95,7 @@ export default function SignInPage() {
                     <div className="flex items-center justify-between">
                         <div className="flex items-center">
                             <input
+                                disabled={isLoading}
                                 id="remember-me"
                                 name="remember-me"
                                 type="checkbox"
@@ -109,17 +115,23 @@ export default function SignInPage() {
 
                     <div>
                         <button
+                            disabled={isLoading}
                             type="submit"
                             className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                         >
                             <span className="absolute left-0 inset-y-0 flex items-center pl-3">
                                 <Lock className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" aria-hidden="true" />
                             </span>
-                            Sign in
+                            {isLoading ? (
+                                <Loader className="animate-spin mr-2" /> // Show loading icon
+                            ) : (
+                                'Sign In'
+                            )}
                             <ArrowRight className="ml-2 -mr-1 h-5 w-5" aria-hidden="true" />
                         </button>
                     </div>
                 </form>
+                <span className="text-red-500">{errorMessage}</span>
             </motion.div>
         </div>
     );
