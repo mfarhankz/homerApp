@@ -26,7 +26,8 @@ export function AuthProvider({ children }) {
     }, [])
 
     const login = async (email, password) => {
-        const response = await axios.post('https://localhost:7096/api/Account/signin', {
+        const apiEndpoint = import.meta.env.VITE_Homer_API_Base_Url;
+        const response = await axios.post(`${apiEndpoint}/Account/signin`, {
             userName: email,
             password: password,
         });

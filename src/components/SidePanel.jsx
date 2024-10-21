@@ -43,7 +43,9 @@ export default function SidePanel() {
         >
             <div className="flex-grow p-4">
                 <div className="mb-8">
-                    <img src="/public/images/homer.jpg?height=40&width=40" alt="Logo" className="w-10 h-10 mx-auto" />
+                    <img src="/images/homer_main.jpg" alt="Logo"
+                        style={{ width: '40', height: '40' }}
+                        className="w-10 h-10 mx-auto" />
                 </div>
                 <nav>
                     <ul className="space-y-2">
