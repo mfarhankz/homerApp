@@ -1,102 +1,88 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { Mail, Lock, ArrowRight, Loader } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { Loader, Eye, EyeOff } from 'lucide-react';
+import ReCAPTCHA from "react-google-recaptcha";
 
-
-export default function SignInPage() {
+export default function Component() {
+    const { login, errorMessage } = useAuth();
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [errorMessage, setErrorMessage] = useState(null);
-    const { login } = useAuth();
-    const navigate = useNavigate();
+    const [showPassword, setShowPassword] = useState(false);
+    const [captchaValue, setCaptchaValue] = useState(null);
 
-    const handleSubmit = async (e) => {
+    const handleSignIn = async (e) => {
         e.preventDefault();
-        try {
-            setIsLoading(true);
-            await login(email, password);
-            navigate('/');
-        } catch (error) {
-            setIsLoading(false);
-            setErrorMessage(error.message);
-        }
+        /*if (!captchaValue) {
+            alert("Please complete the CAPTCHA");
+            return;
+        }*/
+        setIsLoading(true);
+        await login(email, password);
+        setIsLoading(false);
+        navigate('/');
+    };
+
+    const handleCaptchaChange = (value) => {
+        setCaptchaValue(value);
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
-            <motion.div className="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-lg"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: 0.7 }}
-            >
-                <div>
-                    <img
-                        className="mx-auto h-12 w-auto"
-                        src='/images/homer_main.jpg'
-                        alt="Your Company Logo"
-                    />
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                        Welcome back
-                    </h2>
-                    <p className="mt-2 text-center text-sm text-gray-600">
-                        Sign in to your account to continue
-                    </p>
-                </div>
-                <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-                    <div className="rounded-md shadow-sm -space-y-px">
-                        <div>
-                            <label htmlFor="email-address" className="sr-only">
-                                Email address
-                            </label>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <Mail className="h-5 w-5 text-gray-400" />
-                                </div>
-                                <input
-                                    disabled={isLoading}
-                                    id="email-address"
-                                    name="email"
-                                    type="email"
-                                    autoComplete="email"
-                                    required
-                                    className="appearance-none rounded-none relative block w-full px-3 py-2 pl-10 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                                    placeholder="Email address"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                />
-                            </div>
-                        </div>
-                        <div>
-                            <label htmlFor="password" className="sr-only">
-                                Password
-                            </label>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <Lock className="h-5 w-5 text-gray-400" />
-                                </div>
-                                <input
-                                    disabled={isLoading}
-                                    id="password"
-                                    name="password"
-                                    type="password"
-                                    autoComplete="current-password"
-                                    required
-                                    className="appearance-none rounded-none relative block w-full px-3 py-2 pl-10 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                                    placeholder="Password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                />
-                            </div>
+        <div className="min-h-screen flex flex-col items-center justify-center bg-[#FEF8F2] py-12 px-4 sm:px-6 lg:px-8">
+            <span className="absolute top-4 left-4 text-homer-homer-34">homer</span>
+            <h2 className="mb-8 text-center text-2xl font-semibold text-homer-blue">
+                Real-time CMA data at your fingertips
+            </h2>
+            <div className="max-w-sm w-full space-y-8 bg-white p-10 rounded-xl shadow-lg">
+                <h1 className="text-2xl font-bold text-homer-blue text-center">Sign in</h1>
+                <form className="mt-8 space-y-6" onSubmit={handleSignIn}>
+                    <div>
+                        <label htmlFor="email" className="block text-homer-blue-16">
+                            Email
+                        </label>
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            required
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                    </div>
+                    <div className="relative">
+                        <label htmlFor="password" className="block text-homer-blue-16 mb-1">
+                            Password
+                        </label>
+                        <div className="relative">
+                            <input
+                                id="password"
+                                name="password"
+                                type={showPassword ? "text" : "password"}
+                                required
+                                className="block w-full px-3 py-2 pr-10 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute inset-y-0 right-0 flex items-center px-3"
+                                aria-label={showPassword ? "Hide password" : "Show password"}
+                            >
+                                {showPassword ? (
+                                    <EyeOff className="h-5 w-5 text-gray-500" />
+                                ) : (
+                                    <Eye className="h-5 w-5 text-gray-500" />
+                                )}
+                            </button>
                         </div>
                     </div>
-
                     <div className="flex items-center justify-between">
                         <div className="flex items-center">
                             <input
-                                disabled={isLoading}
                                 id="remember-me"
                                 name="remember-me"
                                 type="checkbox"
@@ -106,34 +92,29 @@ export default function SignInPage() {
                                 Remember me
                             </label>
                         </div>
-
-                        <div className="text-sm">
-                            <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
-                                Forgot your password?
-                            </a>
-                        </div>
                     </div>
-
+                    <div className="flex justify-center">
+                        <ReCAPTCHA
+                            sitekey="YOUR_RECAPTCHA_SITE_KEY"
+                            onChange={handleCaptchaChange}
+                        />
+                    </div>
                     <div>
                         <button
-                            disabled={isLoading}
                             type="submit"
-                            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            disabled={isLoading}
+                            className="group relative w-full flex items-center justify-center py-2 px-4 border button-homer-signin border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50"
                         >
-                            <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                                <Lock className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" aria-hidden="true" />
-                            </span>
                             {isLoading ? (
-                                <Loader className="animate-spin mr-2" /> // Show loading icon
+                                <Loader className="animate-spin mr-2" />
                             ) : (
                                 'Sign In'
                             )}
-                            <ArrowRight className="ml-2 -mr-1 h-5 w-5" aria-hidden="true" />
                         </button>
                     </div>
                 </form>
-                <span className="text-red-500">{errorMessage}</span>
-            </motion.div>
+                {errorMessage && <p className="text-red-500 text-sm text-center" role="alert">{errorMessage}</p>}
+            </div>
         </div>
     );
 }

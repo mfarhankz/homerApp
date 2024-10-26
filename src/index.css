@@ -13,4 +13,41 @@
         padding: 0;
         overflow-x: hidden;
     }
+
+    .min-h-screen {
+        background: #FEF8F2 !important;
+    }
+
+    .text-homer-blue {
+        color: #002864 !important;
+        font-weight: 700;
+        font-size: 24px;
+        line-height: 30px;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .text-homer-blue-16 {
+        color: #002864 !important;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 24px;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .text-homer-homer-34 {
+        font-weight: 800;
+        font-size: 34px;
+        line-height: 43px;
+        background: -webkit-linear-gradient(#EE7B6F 0%,
+                #D54233 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+
+
+    .button-homer-signin {
+        height: 50px;
+        background: linear-gradient(90deg, #EE7B6F 0%, #D54233 100%);
+    }
 }

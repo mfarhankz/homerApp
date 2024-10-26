@@ -3,8 +3,6 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import SignInPage from './components/SignInPage';
 import LandingPage from './components/LandingPage';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
-import { ThemeProvider } from './contexts/ThemeProvider';
-import './styles/themes.css';
 
 function PrivateRoute({ children }) {
     const { isAuthenticated } = useAuth();
@@ -13,22 +11,22 @@ function PrivateRoute({ children }) {
 
 export default function App() {
     return (
-        <ThemeProvider>
-            <AuthProvider>
-                <Router>
-                    <Routes>
-                        <Route path="/signin" element={<SignInPage />} />
-                        <Route
-                            path="/"
-                            element={
-                                <PrivateRoute>
-                                    <LandingPage />
-                                </PrivateRoute>
-                            }
-                        />
-                    </Routes>
-                </Router>
-            </AuthProvider>
-        </ThemeProvider>
+
+        <AuthProvider>
+            <Router>
+                <Routes>
+                    <Route path="/signin" element={<SignInPage />} />
+                    <Route
+                        path="/"
+                        element={
+                            <PrivateRoute>
+                                <LandingPage />
+                            </PrivateRoute>
+                        }
+                    />
+                </Routes>
+            </Router>
+        </AuthProvider>
+
     );
 }

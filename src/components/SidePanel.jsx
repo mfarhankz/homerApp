@@ -3,14 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { LayoutDashboard, UserCircle, Settings, LogOut, Sun, Moon, ChevronUp, ChevronDown } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useTheme } from '../contexts/ThemeProvider';
+
 
 export default function SidePanel() {
     const [isOpen, setIsOpen] = useState(false);
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
     const { user, logout } = useAuth();
     const navigate = useNavigate();
-    const { theme, setTheme } = useTheme();
+
 
     const handleLogout = () => {
         logout();
@@ -22,10 +22,6 @@ export default function SidePanel() {
         { name: 'Clients', icon: UserCircle },
         { name: 'Settings', icon: Settings },
     ];
-
-    const toggleTheme = () => {
-        setTheme(theme === 'light' ? 'dark' : 'light');
-    };
 
     return (
         <motion.div
@@ -87,12 +83,7 @@ export default function SidePanel() {
                             <div className="px-4 py-2 text-md text-gray-200">{user?.userName}</div>
                             <div className="w-full h-px bg-gray-600"></div>
                             <div className="px-4 py-2 text-sm text-gray-300">Preferences</div>
-                            <div className="flex items-center justify-between px-4 py-2 hover:bg-gray-600 transition-colors duration-200">
-                                <span>Theme</span>
-                                <button onClick={toggleTheme} className="flex items-center">
-                                    {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
-                                </button>
-                            </div>
+
                             <button
                                 className="flex items-center w-full text-left py-2 px-4 hover:bg-gray-600 transition-colors duration-200"
                                 onClick={() => setIsUserMenuOpen(false)}
