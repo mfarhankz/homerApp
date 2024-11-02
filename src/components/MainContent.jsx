@@ -1,11 +1,23 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import CitySearch from './CitySearch'
 
 export default function MainContent({ user, isOpen }) {
+
+    const navigate = useNavigate();
+
     const handleCitySelect = (city) => {
         console.log('Selected city:', city);
         // Handle the selected city
     };
+
+    const handleClick = (city) => {
+        console.log('Selected city:', city);
+        const encodedLocation = encodeURIComponent(city);
+        navigate(`/report/generate/${encodedLocation}`, {
+            state: { location: city }
+        });
+    }
 
     return (
         <div className="max-w-3xl mx-auto px-4 mt-32">
@@ -21,7 +33,7 @@ export default function MainContent({ user, isOpen }) {
                         </p>
                     </div>
 
-                    <CitySearch onSelect={handleCitySelect} />
+                    <CitySearch onSelect={handleCitySelect} onClicked={handleClick} />
 
                     {/* Reports Section */}
                     <div>

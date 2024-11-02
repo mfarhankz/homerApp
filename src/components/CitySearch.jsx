@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Search, ArrowRight } from 'lucide-react';
 
-const CitySearch = ({ onSelect }) => {
+const CitySearch = ({ onSelect, onClicked }) => {
+
     const [searchTerm, setSearchTerm] = useState('');
     const [isOpen, setIsOpen] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(-1);
+    const [selectedLocation, setSelectedLocation] = useState(null);
+
     const dropdownRef = useRef(null);
     const inputRef = useRef(null);
 
@@ -8907,6 +8910,12 @@ const CitySearch = ({ onSelect }) => {
             location.value.toLowerCase().includes(searchTerm.toLowerCase())
         );
 
+    const handleSearchClick = () => {
+        if (onClicked) {
+            onClicked(selectedLocation.value);
+        }
+    };
+
     const handleInputChange = (e) => {
         setSearchTerm(e.target.value);
         setIsOpen(true);
@@ -8915,6 +8924,7 @@ const CitySearch = ({ onSelect }) => {
 
     const handleSelect = (location) => {
         setSearchTerm(location.value);
+        setSelectedLocation(location);
         setIsOpen(false);
         if (onSelect) {
             onSelect(location);
@@ -8952,6 +8962,15 @@ const CitySearch = ({ onSelect }) => {
             default:
                 break;
         }
+    };
+
+    const getLocationTypeLabel = (type) => {
+        const typeLabels = {
+            "CityRegion": "(Region)",
+            "City": "(City)",
+            "CountyOrParish": "(County)"
+        };
+        return typeLabels[type] || "";
     };
 
     useEffect(() => {
@@ -8993,8 +9012,10 @@ const CitySearch = ({ onSelect }) => {
                     className="w-full px-4 py-3 pr-12 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     autoComplete="off"
                 />
-                <button className="absolute right-3 top-1/2 -translate-y-1/2 bg-pink-200 rounded-full p-2 hover:bg-pink-300 transition-colors">
-                    <ArrowRight className="w-5 h-5 text-pink-500" />
+                <button
+                    onClick={handleSearchClick}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-2 button-homer-search transition-colors">
+                    <ArrowRight className="w-5 h-5 text-white" />
                 </button>
             </div>
 
@@ -9018,7 +9039,7 @@ const CitySearch = ({ onSelect }) => {
                                 <div className="flex justify-between items-center">
                                     <span>{location.value}</span>
                                     <span className="text-sm text-gray-500 ml-2">
-                                        {location.type === "CityRegion" && "(Region)"}
+                                        {getLocationTypeLabel(location.type)}
                                     </span>
                                 </div>
                             </li>
