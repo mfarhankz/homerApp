@@ -42,8 +42,8 @@ export default function PortalLayout() {
 
             {/* Sidebar Navigation */}
             <aside className={`
-                fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-40 
-                transform transition-transform duration-300 ease-in-out
+                fixed top-0 left-0 h-full w-64 side-panel-bg shadow-lg z-40 
+                transform transition-transform duration-300 ease-in-out rounded-r-lg
                 ${isNavOpen ? 'translate-x-0' : '-translate-x-full'}
             `}>
                 {/* Close Button */}
@@ -65,7 +65,7 @@ export default function PortalLayout() {
                     <NavLink
                         to="/"
                         className={({ isActive }) =>
-                            `flex items-center p-3 rounded-lg transition-colors ${isActive ? 'bg-blue-50 text-blue-900' : 'text-gray-600 hover:bg-gray-50'
+                            `flex items-center p-3 rounded-lg transition-colors ${isActive ? 'side-panel-selected-item-bg text-blue-900' : 'text-gray-600 hover:bg-gray-50'
                             }`
                         }
                         onClick={() => setIsNavOpen(false)}
@@ -77,7 +77,7 @@ export default function PortalLayout() {
                     <NavLink
                         to="/reports"
                         className={({ isActive }) =>
-                            `flex items-center p-3 rounded-lg transition-colors ${isActive ? 'bg-blue-50 text-blue-900' : 'text-gray-600 hover:bg-gray-50'
+                            `flex items-center p-3 rounded-lg transition-colors ${isActive ? 'side-panel-selected-item-bg text-blue-900' : 'text-gray-600 hover:bg-gray-50'
                             }`
                         }
                         onClick={() => setIsNavOpen(false)}
@@ -88,7 +88,7 @@ export default function PortalLayout() {
                     <NavLink
                         to="/settings"
                         className={({ isActive }) =>
-                            `flex items-center p-3 rounded-lg transition-colors ${isActive ? 'bg-blue-50 text-blue-900' : 'text-gray-600 hover:bg-gray-50'
+                            `flex items-center p-3 rounded-lg transition-colors ${isActive ? 'side-panel-selected-item-bg text-blue-900' : 'text-gray-600 hover:bg-gray-50'
                             }`
                         }
                         onClick={() => setIsNavOpen(false)}
@@ -99,20 +99,19 @@ export default function PortalLayout() {
                 </nav>
 
                 {/* User Section */}
-                <div className="absolute bottom-0 w-full p-4 border-t bg-white">
-                    <div className="flex items-center justify-between">
+                <div className="absolute bottom-0 w-full p-4 border-t side-panel-bg">
+                    <div className="flex items-center justify-between side-panel-user-bg rounded-full p-2">
                         <div className="flex items-center">
                             <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
                                 <span className="text-blue-900 font-medium">
                                     {user?.displayName?.[0] || 'U'}
                                 </span>
                             </div>
-                            <span className="ml-3 text-sm text-gray-700">{user?.displayName}</span>
+                            <span className="ml-3 text-sm text-gray-700 text-white">{user?.displayName}</span>
                         </div>
                         <button
                             onClick={handleSignOut}
-                            className="p-2 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100"
-                        >
+                            className="p-2 text-white hover:text-white-100 rounded-lg" >
                             <LogOut className="w-5 h-5" />
                         </button>
                     </div>

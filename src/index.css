@@ -84,4 +84,16 @@
     .border-homer-propertytype-selected {
         border: 2.16px solid #EE7B6F
     }
+
+    .side-panel-bg {
+        background: #FEF8F2;
+    }
+
+    .side-panel-selected-item-bg {
+        background: #F9E7D4;
+    }
+
+    .side-panel-user-bg {
+        background: linear-gradient(90deg, #EE7B6F 0%, #D54233 100%);
+    }
 }

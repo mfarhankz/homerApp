@@ -1,11 +1,27 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import SignInPage from './components/SignInPage';
 import PortalLayout from './components/PortalLayout';
 import MainContent from './components/MainContent'
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import NeighborhoodReportGenerator from './components/NeighborhoodReportGenerator';
 
+
+// PublicRoute component
+const PublicRoute = ({ children }) => {
+    const { isAuthenticated, loading } = useAuth();
+    const location = useLocation();
+
+    if (loading) {
+        return <div>Loading...</div>; // Or your loading component
+    }
+
+    if (isAuthenticated) {
+        return <Navigate to="/" state={{ from: location }} replace />;
+    }
+
+    return children;
+};
 
 function PrivateRoute({ children }) {
     const { isAuthenticated } = useAuth();
@@ -17,15 +33,21 @@ export default function App() {
         <AuthProvider>
             <Router>
                 <Routes>
-                    <Route path="/signin" element={<SignInPage />} />
                     <Route
-                        path="/"
+                        path="/signin"
+                        element={
+                            <PublicRoute>
+                                <SignInPage />
+                            </PublicRoute>
+                        }
+                    />
+                    <Route
+                        path="/*"
                         element={
                             <PrivateRoute>
                                 <PortalLayout />
                             </PrivateRoute>
-                        }
-                    >
+                        }>
                         <Route index element={<MainContent />} />
                         <Route path="report/generate/:location" element={<NeighborhoodReportGenerator />} />
                     </Route>

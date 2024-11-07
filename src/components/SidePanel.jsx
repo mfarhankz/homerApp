@@ -28,7 +28,7 @@ export default function SidePanel() {
             className="fixed top-0 left-0 h-full bg-gray-800 text-white flex flex-col"
             initial={{ width: '70px' }}
             animate={{
-                width: isOpen ? '256px' : '70px',
+                width: isOpen ? '456px' : '70px',
                 transition: { duration: 0.3, ease: "easeInOut" }
             }}
             onMouseEnter={() => setIsOpen(true)}
