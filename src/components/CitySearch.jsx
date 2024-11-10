@@ -14,13 +14,13 @@ const CitySearch = ({ onSelect, onClicked }) => {
 
     // Filter cities based on search term
     const filteredLocations = cityData
-        .filter(location => location.value)
+        .filter(location => location)
         .filter(location =>
-            location.value.toLowerCase().includes(searchTerm.toLowerCase())
+            location.toLowerCase().includes(searchTerm.toLowerCase())
         );
 
     const handleSelect = (location) => {
-        setSearchTerm(location.value);
+        setSearchTerm(location);
         setSelectedLocation(location);
         setIsOpen(false);
         if (onSelect) {
@@ -61,14 +61,6 @@ const CitySearch = ({ onSelect, onClicked }) => {
         }
     };
 
-    const getLocationTypeLabel = (type) => {
-        const typeLabels = {
-            "CityRegion": "(Region)",
-            "City": "(City)",
-            "CountyOrParish": "(County)"
-        };
-        return typeLabels[type] || "";
-    };
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -84,8 +76,6 @@ const CitySearch = ({ onSelect, onClicked }) => {
         };
     }, []);
 
-    // Generate composite key
-    const getCompositeKey = (location) => `${location.type}-${location.value}`;
 
     return (
         <div className="relative w-full">
@@ -140,7 +130,7 @@ const CitySearch = ({ onSelect, onClicked }) => {
                     <ul className="py-2">
                         {filteredLocations.map((location, index) => (
                             <li
-                                key={`${location.type}-${location.value}`}
+                                key={`${location}`}
                                 className={`px-4 py-2 cursor-pointer transition-colors ${selectedIndex === index
                                     ? 'bg-blue-50 text-blue-900'
                                     : 'hover:bg-gray-50 text-gray-700'
@@ -149,7 +139,7 @@ const CitySearch = ({ onSelect, onClicked }) => {
                                 onMouseEnter={() => setSelectedIndex(index)}
                             >
                                 <div className="flex justify-between items-center">
-                                   <span>{location.value}</span>                                   
+                                   <span>{location}</span>                                   
                                 </div>
                             </li>
                         ))}

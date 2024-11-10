@@ -51,15 +51,11 @@ export const authAPI = {
 export const baseDataAPI = {
   fetchCityData: async () => {
     try {
-      const response = await apiClient.get('/Account/base-data')
-
-      if (
-        response.data.status === 0 &&
-        response.data.baseDataResponseDto?.city
-      ) {
+      const response = await apiClient.get('/Listing/GetCities')
+      if (response.data) {
         return {
           success: true,
-          data: response.data.baseDataResponseDto.city,
+          data: response.data,
         }
       }
 
@@ -71,6 +67,33 @@ export const baseDataAPI = {
       return {
         success: false,
         error: error.message || 'An error occurred while fetching city data',
+      }
+    }
+  },
+
+  fetchRegionsByCity: async (city) => {
+    try {
+      const response = await apiClient.get(
+        '/Listing/GetRegionsByCity?city=' + city,
+      )
+
+      if (response.data) {
+        return {
+          success: true,
+          data: response.data,
+        }
+      }
+
+      return {
+        success: false,
+        error: response.data.message || 'Failed to fetch regions by city data',
+      }
+    } catch (error) {
+      return {
+        success: false,
+        error:
+          error.message ||
+          'An error occurred while fetching  regions by city data',
       }
     }
   },

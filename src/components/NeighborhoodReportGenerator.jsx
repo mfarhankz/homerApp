@@ -10,7 +10,7 @@ const NeighborhoodReportGenerator = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const initialLocation = location.state?.location || null;
-
+    console.log('initial loc:', initialLocation);
     const [reportData, setReportData] = useState({
         city: initialLocation,
         cityRegion: null,
@@ -111,6 +111,7 @@ const NeighborhoodReportGenerator = () => {
                         </h1>
                     </div>
                     <CityRegionSearch
+                        city={initialLocation}
                         onSelect={handleCityRegionSelect}
                         onClicked={() => { }}
                     />

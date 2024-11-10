@@ -113,8 +113,8 @@ export function AuthProvider({ children }) {
                 });
 
                 // Save city data if it comes with the response
-                if (data.baseDataResponseDto?.city) {
-                    saveCityData(data.baseDataResponseDto.city);
+                if (data.cities) {
+                    saveCityData(data.cities);
                 }
             } else {
                 throw new Error(data.message);
