@@ -96,4 +96,22 @@
     .side-panel-user-bg {
         background: linear-gradient(90deg, #EE7B6F 0%, #D54233 100%);
     }
+
+    .date-range-item-not-selected {
+        border: 0.81px solid #F4D7B7;
+        background: #FDF4EB;
+    }
+
+    .date-range-item-selected {
+        border: 1px solid #EE7B6F;
+        background: #F9E7D4;
+    }
+
+    .recommended-text {
+        color: #587197 !important;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 16px;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
 }

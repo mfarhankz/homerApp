@@ -12,7 +12,6 @@ export default function MainContent({ user, isOpen }) {
     };
 
     const handleClick = (city) => {
-        console.log('Selected city:', city);
         const encodedLocation = encodeURIComponent(city);
         navigate(`/report/generate/${encodedLocation}`, {
             state: { location: city }
@@ -21,12 +20,11 @@ export default function MainContent({ user, isOpen }) {
 
     return (
         <div className="max-w-3xl mx-auto px-4 mt-32">
-
             <div className="max-w-3xl w-full px-4">
                 <div className="space-y-8">
                     <div>
                         <h1 className="text-2xl font-semibold text-blue-900 mb-2">
-                            Which neighbourhood do you need insights on?
+                            Which city do you need insights on?
                         </h1>
                         <p className="text-gray-600">
                             We'll generate a real-time data report that you can easily share with your clients.

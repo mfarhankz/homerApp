@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Home, FileText, Settings, LogOut, Menu, X } from 'lucide-react';
+import CityRegionSearch from './CityRegionSearch'
 
 export default function PortalLayout() {
     const { user, logout } = useAuth();
