@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import { authAPI } from '../services/api';
 import { saveCityData } from '../hooks/useCityData';
+import { savePropertyTypeData } from '../hooks/usePropertyTypesData';
 
 const AuthContext = createContext();
 
@@ -115,6 +116,10 @@ export function AuthProvider({ children }) {
                 // Save city data if it comes with the response
                 if (data.cities) {
                     saveCityData(data.cities);
+                }
+
+                if (data.propertyTypes) {
+                    savePropertyTypeData(data.propertyTypes);
                 }
             } else {
                 throw new Error(data.message);

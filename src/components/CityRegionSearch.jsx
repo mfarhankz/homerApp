@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { CrossIcon } from 'lucide-react';
+import { CrossIcon, X } from 'lucide-react';
 import { baseDataAPI } from '../services/api';
 
-const CityRegionSearch = ({ city, onSelect, onClicked }) => {
+const CityRegionSearch = ({ city, currentValue, onSelect, onClicked }) => {
     console.log('selected city is:', city);
     const [selectedCity, setSelectedCity] = useState(city || 'Toronto');
-    const [searchTerm, setSearchTerm] = useState('');
+    const [searchTerm, setSearchTerm] = useState(currentValue);
     const [isOpen, setIsOpen] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const [selectedLocation, setSelectedLocation] = useState(null);
@@ -132,16 +132,20 @@ const CityRegionSearch = ({ city, onSelect, onClicked }) => {
                     disabled={loading}
                 />
                 <button
-                    onClick={handleSearchClick}
-                    disabled={!selectedLocation || loading}
-                    className={`absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-2 
-                        ${!selectedLocation || loading
-                            ? 'bg-gray-200 cursor-not-allowed'
-                            : 'button-homer-search'} 
-                        transition-colors`}
-                >
-                    <CrossIcon className={`w-5 h-5 ${!selectedLocation || loading ? 'text-gray-500' : 'text-white'}`} />
+                    onClick={() => {
+                        setSearchTerm('');
+                        setSelectedLocation(null);
+                        setIsOpen(false);
+                        inputRef.current?.focus();
+                        if (onSelect) {
+                            onSelect(null);
+                        }
+                    }}
+                    disabled={!searchTerm || loading}
+                    className={`absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-2 transition-colors`}>
+                <X className="w-4 h-4 text-gray-500" />
                 </button>
+
             </div>
 
             {/* Error Message */}

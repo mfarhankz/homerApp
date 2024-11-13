@@ -97,6 +97,29 @@ export const baseDataAPI = {
       }
     }
   },
+
+  fetchPropertyTypeData: async () => {
+    try {
+      const response = await apiClient.get('/Listing/GetPropertyTypeData')
+      if (response.data) {
+        return {
+          success: true,
+          data: response.data,
+        }
+      }
+
+      return {
+        success: false,
+        error: response.data.message || 'Failed to fetch PropertType data',
+      }
+    } catch (error) {
+      return {
+        success: false,
+        error:
+          error.message || 'An error occurred while fetching PropertType data',
+      }
+    }
+  },
 }
 
 // Report related API calls (for future use)
