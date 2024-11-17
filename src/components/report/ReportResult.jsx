@@ -11,73 +11,6 @@ const ReportResult = () => {
     const { reportId } = useParams();
     const { reportData, searchCriteria } = location.state || {};
     const [loading, setLoading] = useState(false);
-    console.log('report data:', searchCriteria)
-    // Sample data for listings
-    const sampleListings = [
-        {
-            id: '1',
-            status: 'For Sale',
-            price: 999999,
-            address: 'XXXX XXX Avenue',
-            city: 'Surrey',
-            beds: 2,
-            baths: 2,
-            sqft: 9999,
-            mls: 'XXXXX',
-            image: '/images/house-1.jpg',
-            hideStatus: false
-        },
-        {
-            id: '2',
-            status: 'For Sale',
-            price: 999999,
-            address: 'XXXX XXX Avenue',
-            city: 'Surrey',
-            beds: 2,
-            baths: 2,
-            sqft: 9999,
-            mls: 'XXXXX',
-            image: '/images/house-1.jpg',
-            hideStatus: false
-        },
-        {
-            id: '3',
-            status: 'For Sale',
-            price: 999999,
-            address: 'XXXX XXX Avenue',
-            city: 'Surrey',
-            beds: 2,
-            baths: 2,
-            sqft: 9999,
-            mls: 'XXXXX',
-            image: '/images/house-1.jpg',
-            hideStatus: false
-        },
-        // ... other listings
-    ];
-
-    const listPriceData = [
-        { month: 'MAY', price: 999 },
-        { month: 'JUN', price: 899 },
-        { month: 'JUL', price: 950 },
-        { month: 'AUG', price: 920 },
-        { month: 'SEP', price: 980 },
-        { month: 'OCT', price: 940 },
-        { month: 'NOV', price: 960 },
-    ];
-
-    const sellPriceData = [
-        // ... same data as listPriceData
-    ];
-
-    // useEffect(() => {
-    //     const fetchReportData = async () => {
-    //         console.log(reportId);
-    //         setLoading(false);
-    //     };
-
-    //     fetchReportData();
-    // }, [reportId]);
 
     if (loading) {
         return <div>Loading...</div>;
@@ -97,7 +30,6 @@ const ReportResult = () => {
                         initials: "FL"
                     }}
                 />
-
 
                 {/* Metrics Cards - Stacked on mobile */}
                 <div className="flex flex-col sm:grid sm:grid-cols-2 gap-6 mb-8">

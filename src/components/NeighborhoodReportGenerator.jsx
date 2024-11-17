@@ -6,6 +6,7 @@ import PropertyTypeOption from './PropertyTypeOption';
 import CityRegionSearch from './CityRegionSearch';
 import TimeRangeSelector from './TimeRangeSelector';
 import { usePropertyTypeData } from '../hooks/usePropertyTypesData';
+import { baseDataAPI } from '../services/api'
 
 const NeighborhoodReportGenerator = () => {
     const navigate = useNavigate();
@@ -93,20 +94,12 @@ const NeighborhoodReportGenerator = () => {
 
             try {
                 console.log('Generating report with:', reportPayload);
-                const response = await fetch('https://localhost:7199/api/Listing/GenerateNeighborhoodReport', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(reportPayload),
-                    signal: abortControllerRef.current.signal
-                });
-
-                if (!response.ok) {
+                var response = await baseDataAPI.fetchReportData(reportPayload, abortControllerRef.current.signal);
+                if (!response.success) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
-                const reportResponse = await response.json();
+                const reportResponse = await response.data;
                 console.log(reportResponse);
                 navigate(`/report/${reportResponse.reportId}`, {
                     state: {
