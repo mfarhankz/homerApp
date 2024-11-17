@@ -8,7 +8,7 @@ const ListingCard = ({ listing, onHideToggle }) => {
             {/* Image Section */}
             <div className="relative">
                 <img
-                    src={`/public/images/listing-home.jpg`}
+                    src={`/images/listing-home.jpg`}
                     className="w-full h-48 object-cover"
                 />
                 <div className="absolute top-2 left-2">
