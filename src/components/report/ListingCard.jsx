@@ -1,5 +1,6 @@
 // components/report/ListingCard.jsx
 import React from 'react';
+import { BedIcon, BathIcon } from 'lucide-react';
 
 const ListingCard = ({ listing, onHideToggle }) => {
     return (
@@ -7,13 +8,12 @@ const ListingCard = ({ listing, onHideToggle }) => {
             {/* Image Section */}
             <div className="relative">
                 <img
-                    src={`/api/placeholder/400/300`}
-                    alt={listing.address}
+                    src={`/public/images/listing-home.jpg`}
                     className="w-full h-48 object-cover"
                 />
                 <div className="absolute top-2 left-2">
                     <span className="bg-emerald-500 text-white px-3 py-1 text-xs font-medium rounded-full">
-                        For Sale
+                        {listing.uiStatus}
                     </span>
                 </div>
                 <button
@@ -28,30 +28,30 @@ const ListingCard = ({ listing, onHideToggle }) => {
             {/* Content Section */}
             <div className="p-4">
                 <div className="text-xl font-semibold mb-1">
-                    ${listing.price.toLocaleString()}
+                    ${listing.listPrice}
                 </div>
 
                 <div className="text-gray-700 mb-2">
-                    {listing.address}, {listing.city}
+                    {listing.uiCity}, {listing.postalCode}
                 </div>
 
                 <div className="flex items-center gap-4 text-gray-600 text-sm mb-2">
                     <div className="flex items-center">
-                        <span>{listing.beds}</span>
+                        <BedIcon /><span>{listing.bedroomsTotal}</span>
                         <span className="ml-1">beds</span>
                     </div>
                     <div className="flex items-center">
-                        <span>{listing.baths}</span>
+                        <BathIcon /> <span>{listing.bathroomsTotalInteger}</span>
                         <span className="ml-1">baths</span>
                     </div>
-                    <div className="flex items-center">
+                    {/* <div className="flex items-center">
                         <span>{listing.sqft.toLocaleString()}</span>
                         <span className="ml-1">sqft</span>
-                    </div>
+                    </div> */}
                 </div>
 
                 <div className="text-xs text-gray-400">
-                    MLS® {listing.mls}
+                    MLS® {listing.listingKey}
                 </div>
             </div>
         </div>

@@ -7,7 +7,7 @@ const ReportHeader = ({ location, propertyType, timeRange, agent }) => {
             <div>
                 <h1 className="text-2xl font-semibold text-blue-900">{location}</h1>
                 <p className="text-gray-600">
-                    {propertyType} homes for sale over the past {timeRange} months
+                    {propertyType} homes for sale over the past {(timeRange/30).toFixed()} months
                 </p>
             </div>
             <div className="flex items-center gap-4">

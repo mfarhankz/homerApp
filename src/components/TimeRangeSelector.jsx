@@ -1,12 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 
-const TimeRangeSelector = ({ selectedRange, onRangeSelect }) => {
+const TimeRangeSelector = ({ selectedRange, onRangeSelect, defaultValue }) => {
     const timeRanges = [
         { id: '30days', label: '30 days', value: 30 },
         { id: '6months', label: '6 months', value: 180, recommended: true },
         { id: '1year', label: '1 year', value: 365 }
     ];
+
+    // Use the provided default value or find the recommended one
+    useEffect(() => {
+        const valueToUse = defaultValue || timeRanges.find(range => range.recommended)?.value;
+        if (valueToUse && (!selectedRange || selectedRange === 30)) {
+            onRangeSelect(valueToUse);
+        }
+    }, [defaultValue]); // Run when defaultValue changes
 
     return (
         <motion.div

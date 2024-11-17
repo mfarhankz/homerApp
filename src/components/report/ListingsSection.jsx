@@ -27,7 +27,7 @@ const ListingsSection = ({ listings, onSort, sortOption }) => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[calc(100vh-16rem)] overflow-y-auto pr-2">
                 {listings.map(listing => (
                     <ListingCard
-                        key={listing.id}
+                        key={listing.listingKey}
                         listing={listing}
                         onHideToggle={() => {/* handle hide */ }}
                     />

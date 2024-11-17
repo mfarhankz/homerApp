@@ -11,6 +11,7 @@ const NeighborhoodReportGenerator = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const initialLocation = location.state?.location || null;
+    const DEFAULT_TIME_RANGE = 180;
     console.log('initial loc:', initialLocation);
 
     // Initialize report data with city as string
@@ -18,7 +19,7 @@ const NeighborhoodReportGenerator = () => {
         city: initialLocation, // Now handling as string
         cityRegion: null,
         propertyType: null,
-        timeRange: 180
+        timeRange: DEFAULT_TIME_RANGE
     });
 
     const [step, setStep] = useState(1);
@@ -72,7 +73,7 @@ const NeighborhoodReportGenerator = () => {
         navigate('/');
     };
 
-    const handleContinue = () => {
+    const handleContinue = async () => {
         if (step === 1 && reportData.cityRegion) {
             setStep(2);
         } else if (step === 2 && reportData.propertyType) {
@@ -89,21 +90,61 @@ const NeighborhoodReportGenerator = () => {
                 timeRange: reportData.timeRange
             };
 
-            console.log('Generating report with:', reportPayload);
 
-            // Simulate API call
-            const timeoutId = setTimeout(() => {
+            try {
+                console.log('Generating report with:', reportPayload);
+                const response = await fetch('https://localhost:7199/api/Listing/GenerateNeighborhoodReport', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(reportPayload),
+                    signal: abortControllerRef.current.signal
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const reportResponse = await response.json();
+                console.log(reportResponse);
+                navigate(`/report/${reportResponse.reportId}`, {
+                    state: {
+                        reportData: reportResponse,
+                        searchCriteria: {
+                            city: reportData.city,
+                            region: reportData.cityRegion,
+                            propertyType: reportData.propertyType,
+                            timeRange: reportData.timeRange
+                        }
+                    }
+                });
+
+            } catch (error) {
+                if (error.name === 'AbortError') {
+                    console.log('Request was cancelled');
+                } else {
+                    console.error('Error generating report:', error);
+                    // Handle error - maybe show an error message to user
+                }
+            } finally {
                 setIsLoading(false);
                 abortControllerRef.current = null;
-                const reportId = '17ac5079-7aef-491b-92d4-cea88888e25b'; // Replace with actual UUID generation
-                navigate(`/report/${reportId}`);
-                // TODO: Handle report generation response
-                // navigate('/report-result', { state: { reportData: response.data } });
-            }, 3000);
+            }
 
-            abortControllerRef.current.cleanup = () => {
-                clearTimeout(timeoutId);
-            };
+            // Simulate API call
+            // const timeoutId = setTimeout(() => {
+            //     setIsLoading(false);
+            //     abortControllerRef.current = null;
+            //     const reportId = '17ac5079-7aef-491b-92d4-cea88888e25b'; // Replace with actual UUID generation
+            //     navigate(`/report/${reportId}`);
+            //     // TODO: Handle report generation response
+            //     // navigate('/report-result', { state: { reportData: response.data } });
+            // }, 3000);
+
+            // abortControllerRef.current.cleanup = () => {
+            //     clearTimeout(timeoutId);
+            // };
         }
     };
 
@@ -193,6 +234,7 @@ const NeighborhoodReportGenerator = () => {
                     <TimeRangeSelector
                         selectedRange={reportData.timeRange}
                         onRangeSelect={handleTimeRangeSelect}
+                        defaultValue={DEFAULT_TIME_RANGE}
                     />
 
                     <button
