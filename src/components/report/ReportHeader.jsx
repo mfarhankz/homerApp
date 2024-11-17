@@ -3,14 +3,14 @@ import { PhoneIcon, MailIcon } from "lucide-react";
 
 const ReportHeader = ({ location, propertyType, timeRange, agent }) => {
     return (
-        <div className="flex justify-between items-start mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start gap-8 p-4 sm:p-6 bg-white shadow rounded-lg">
             <div>
                 <h1 className="text-2xl font-semibold text-blue-900">{location}</h1>
                 <p className="text-gray-600">
-                    {propertyType} homes for sale over the past {(timeRange/30).toFixed()} months
+                    {propertyType} homes for sale over the past {(timeRange / 30).toFixed()} months
                 </p>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 <div className="flex items-center gap-2">
                     <div className="w-10 h-10 bg-blue-900 rounded-full flex items-center justify-center">
                         <span className="text-white">{agent.initials}</span>

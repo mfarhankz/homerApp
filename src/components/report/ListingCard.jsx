@@ -50,7 +50,7 @@ const ListingCard = ({ listing, onHideToggle }) => {
                     </div> */}
                 </div>
 
-                <div className="text-xs text-gray-400">
+                <div className="listing-card-mls-badge listing-card-mls-badge-label">
                     MLS® {listing.listingKey}
                 </div>
             </div>

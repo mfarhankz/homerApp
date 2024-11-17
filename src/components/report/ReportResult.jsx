@@ -18,7 +18,7 @@ const ReportResult = () => {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <div className="max-w-[1600px] mx-auto px-4 py-8">
+            <div className="max-w-[1600px] mx-auto px-4 py-8 space-y-8">
                 {/* Header Section */}
                 <ReportHeader
                     location={searchCriteria.city + ', ' + searchCriteria.region}
@@ -32,24 +32,27 @@ const ReportResult = () => {
                 />
 
                 {/* Metrics Cards - Stacked on mobile */}
-                <div className="flex flex-col sm:grid sm:grid-cols-2 gap-6 mb-8">
-                    {/* <MetricsCard
-                        title="Average Days on Market"
-                        value={24}
-                        highLow={{ high: "99", low: "99" }}
-                    /> */}
-                    <MetricsCard
-                        title="Average List Price"
-                        value={reportData.priceAnalaysis.overallAveragePrice}
-                        highLow={{ high: reportData.priceAnalaysis.overallHighestPrice, low: reportData.priceAnalaysis.overallLowestPrice }}
-                        chart={<PriceChart data={reportData.priceAnalaysis.listingPriceAnalyses} />}
-                    />
-                    <MetricsCard
-                        title="Average Sell Price"
-                        value={reportData.priceAnalaysis.overallAveragePrice}
-                        highLow={{ high: reportData.priceAnalaysis.overallHighestPrice, low: reportData.priceAnalaysis.overallLowestPrice }}
-                        chart={<PriceChart data={reportData.priceAnalaysis.listingPriceAnalyses} />}
-                    />
+                <div className="rounded-lg">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <MetricsCard
+                            title="Average List Price"
+                            value={reportData.priceAnalaysis.overallAveragePrice}
+                            highLow={{
+                                high: reportData.priceAnalaysis.overallHighestPrice,
+                                low: reportData.priceAnalaysis.overallLowestPrice,
+                            }}
+                            chart={<PriceChart data={reportData.priceAnalaysis.listingPriceAnalyses} />}
+                        />
+                        <MetricsCard
+                            title="Average Sell Price"
+                            value={reportData.priceAnalaysis.overallAveragePrice}
+                            highLow={{
+                                high: reportData.priceAnalaysis.overallHighestPrice,
+                                low: reportData.priceAnalaysis.overallLowestPrice,
+                            }}
+                            chart={<PriceChart data={reportData.priceAnalaysis.listingPriceAnalyses} />}
+                        />
+                    </div>
                 </div>
 
                 {/* Listings and Map Section - Also make responsive */}

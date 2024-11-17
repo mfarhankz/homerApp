@@ -114,4 +114,21 @@
         line-height: 16px;
         font-family: 'Plus Jakarta Sans', sans-serif;
     }
+
+    .listing-card-mls-badge {
+        background: #FFE3C9;
+        gap: 10px;
+        border-radius: 30px;
+        width: 95px;
+        padding: 5px;
+        text-align: center;
+        opacity: 0px;
+    }
+
+    .listing-card-mls-badge-label {
+        color: #1F2937;
+        font-weight: 500;
+        font-size: 10px;
+
+    }
 }
