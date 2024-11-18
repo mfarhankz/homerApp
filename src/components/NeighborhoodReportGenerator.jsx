@@ -81,7 +81,7 @@ const NeighborhoodReportGenerator = () => {
             setStep(3);
         } else if (step === 3) {
             setStep(4);
-            setIsLoading(true);
+            //setIsLoading(true);
             abortControllerRef.current = new AbortController();
             // Prepare report data for API
             const reportPayload = {
@@ -94,50 +94,24 @@ const NeighborhoodReportGenerator = () => {
 
             try {
                 console.log('Generating report with:', reportPayload);
-                var response = await baseDataAPI.fetchReportData(reportPayload, abortControllerRef.current.signal);
+                var response = await baseDataAPI.generateReportSignatureData(reportPayload, abortControllerRef.current.signal);
                 if (!response.success) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
                 const reportResponse = await response.data;
-                console.log(reportResponse);
-                navigate(`/report/${reportResponse.reportId}`, {
-                    state: {
-                        reportData: reportResponse,
-                        searchCriteria: {
-                            city: reportData.city,
-                            region: reportData.cityRegion,
-                            propertyType: reportData.propertyType,
-                            timeRange: reportData.timeRange
-                        }
-                    }
-                });
+                navigate(`/report/${reportResponse.reportId}`);
 
             } catch (error) {
                 if (error.name === 'AbortError') {
                     console.log('Request was cancelled');
                 } else {
                     console.error('Error generating report:', error);
-                    // Handle error - maybe show an error message to user
                 }
             } finally {
                 setIsLoading(false);
                 abortControllerRef.current = null;
             }
-
-            // Simulate API call
-            // const timeoutId = setTimeout(() => {
-            //     setIsLoading(false);
-            //     abortControllerRef.current = null;
-            //     const reportId = '17ac5079-7aef-491b-92d4-cea88888e25b'; // Replace with actual UUID generation
-            //     navigate(`/report/${reportId}`);
-            //     // TODO: Handle report generation response
-            //     // navigate('/report-result', { state: { reportData: response.data } });
-            // }, 3000);
-
-            // abortControllerRef.current.cleanup = () => {
-            //     clearTimeout(timeoutId);
-            // };
         }
     };
 

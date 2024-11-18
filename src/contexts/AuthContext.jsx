@@ -44,6 +44,11 @@ export function AuthProvider({ children }) {
         const initializeAuth = async () => {
             try {
                 const token = Cookies.get('authToken');
+                const profileTokenString = Cookies.get('profileToken');
+                let profileToken = {};
+                if (profileTokenString != "" && profileTokenString != undefined) {
+                    profileToken = JSON.parse(profileTokenString);
+                }
                 if (token) {
                     const tokenData = JSON.parse(atob(token.split('.')[1]));
                     const currentTime = Date.now();
@@ -65,7 +70,10 @@ export function AuthProvider({ children }) {
                         setUser({
                             userName: tokenData.userName,
                             displayName: tokenData.displayName,
-                            isActive: tokenData.isActive
+                            isActive: tokenData.isActive,
+                            firstName: profileToken?.firstName || 'Unknown',
+                            lastName: profileToken?.lastName || 'Unknown',
+                            brokerageName: profileToken?.brokerageName || 'Unknown',
                         });
 
                         // Setup timers
@@ -97,7 +105,7 @@ export function AuthProvider({ children }) {
             if (data.status === 0) {
                 // Handle auth token
                 Cookies.set('authToken', data.token, { expires: 1 / 24 });
-
+                Cookies.set('profileToken', JSON.stringify(data.profileSettings), { expires: 1 / 24 });
                 const tokenData = JSON.parse(atob(data.token.split('.')[1]));
                 const timeUntilExpiry = tokenData.exp * 1000 - Date.now();
 
