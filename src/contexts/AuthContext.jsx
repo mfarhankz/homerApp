@@ -35,7 +35,6 @@ export function AuthProvider({ children }) {
             clearTimeout(window.tokenExpirationTimer);
         }
         window.tokenExpirationTimer = setTimeout(() => {
-            console.log('Token expired, logging out');
             handleLogout();
         }, timeUntilExpiry);
     };
@@ -110,7 +109,10 @@ export function AuthProvider({ children }) {
                 setUser({
                     userName: data.userName,
                     displayName: data.displayName,
-                    isActive: data.isActive
+                    isActive: data.isActive,
+                    firstName: data.profileSettings.firstName,
+                    lastName: data.profileSettings.lastName,
+                    brokerageName: data.profileSettings.brokerageName,
                 });
 
                 // Save city data if it comes with the response

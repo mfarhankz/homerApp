@@ -28,7 +28,7 @@ const ListingCard = ({ listing, onHideToggle }) => {
             {/* Content Section */}
             <div className="p-4">
                 <div className="text-xl font-semibold mb-1">
-                    ${listing.listPrice}
+                    ${listing.formattedListPrice}
                 </div>
 
                 <div className="text-gray-700 mb-2">

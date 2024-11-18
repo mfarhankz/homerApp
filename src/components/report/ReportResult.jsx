@@ -5,10 +5,13 @@ import MetricsCard from './MetricsCard';
 import ListingsSection from './ListingsSection';
 import PriceChart from './PriceChart';
 import ListingsMap from './ListingsMap';
+import { useAuth } from '../../contexts/AuthContext';
+
 
 const ReportResult = () => {
     const location = useLocation();
     const { reportId } = useParams();
+    const { user } = useAuth();
     const { reportData, searchCriteria } = location.state || {};
     const [loading, setLoading] = useState(false);
 
@@ -17,17 +20,17 @@ const ReportResult = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gray-50 mt-6">
             <div className="max-w-[1600px] mx-auto px-4 py-8 space-y-8">
                 {/* Header Section */}
                 <ReportHeader
                     location={searchCriteria.city + ', ' + searchCriteria.region}
-                    propertyType="Detached"
+                    propertyType={searchCriteria.propertyType}
                     timeRange={searchCriteria.timeRange}
                     agent={{
-                        name: "Firstname Lastname",
-                        brokerage: "Brokerage Name",
-                        initials: "FL"
+                        name: user.firstName + ',' + user.lastName,
+                        brokerage: user.brokerageName,
+                        initials: ""
                     }}
                 />
 

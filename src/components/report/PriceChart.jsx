@@ -1,24 +1,9 @@
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, CartesianGrid, Area, AreaChart, Tooltip } from 'recharts';
+import { XAxis, YAxis, ResponsiveContainer, CartesianGrid, Area, AreaChart, Tooltip } from 'recharts';
 
 // components/report/PriceChart.jsx
 const PriceChart = ({ data }) => {
-
-    const CustomLabel = ({ x, y, value }) => {
-        return (
-            <text
-                x={x}
-                y={y - 10} // Position slightly above the dot
-                fill="#000"
-                textAnchor="middle"
-                fontSize="12px"
-                fontWeight="bold"
-            >
-                ${value >= 1000 ? `${(value / 1000).toFixed(1)}K` : value}
-            </text>
-        );
-    };
     return (
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer >
             <AreaChart data={data} margin={{ top: 2, right: 2, left: 2, bottom: 2 }}>
                 <defs>
                     <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
@@ -40,9 +25,9 @@ const PriceChart = ({ data }) => {
                     tick={{ fontSize: 12, fill: '#615E83' }}
                     tickFormatter={(value) => {
                         if (value >= 1000000) {
-                            return `${(value / 1000000).toFixed(2)}M`; // Format in millions
+                            return `${(value / 1000000).toFixed()}M`; // Format in millions
                         } else if (value >= 1000) {
-                            return `${(value / 1000).toFixed(1)}K`; // Format in thousands
+                            return `${(value / 1000).toFixed()}K`; // Format in thousands
                         }
                         return value; // For very small values
                     }}

@@ -2,7 +2,7 @@
 const MetricsCard = ({ title, value, highLow, chart, className = '' }) => {
     return (
         <div className={`bg-white rounded-lg p-6 shadow-sm ${className}`}>
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex justify-between items-center">
                 <h3 className="text-lg font-medium">{title}</h3>
                 <div className="flex justify-between items-center bg-gray-100 p-2 rounded-md">
                     <div className="text-center">
@@ -21,7 +21,7 @@ const MetricsCard = ({ title, value, highLow, chart, className = '' }) => {
                 </div>
             </div>
             {chart && (
-                <div className="mt-4 h-24">
+                <div className="mt-6 h-24">
                     {chart}
                 </div>
             )}
