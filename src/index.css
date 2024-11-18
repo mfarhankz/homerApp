@@ -132,7 +132,7 @@
     }
 
     .start-report {
-        background-image: url(./images/report-generate-firstpage-2.jpg);
+        background-image: url(/images/report-generate-firstpage-2.jpg);
 
         /* Slightly increased height */
         background-repeat: no-repeat;
