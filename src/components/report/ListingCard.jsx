@@ -1,16 +1,49 @@
 // components/report/ListingCard.jsx
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BedIcon, BathIcon } from 'lucide-react';
+import { baseDataAPI } from '../../services/api'
 
 const ListingCard = ({ listing, onHideToggle }) => {
+    const [imageUrl, setImageUrl] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const loadImage = async () => {
+            try {
+                setIsLoading(true);
+                const response = await baseDataAPI.fetchListingMedia(listing.listingKey);
+                if (!response.success) {
+                    setImageUrl('/images/listing-home.jpg');
+                } else {
+                    const mediaUrl = await response.data;
+                    setImageUrl(mediaUrl || '/images/listing-home.jpg');
+                }
+            } catch (error) {
+                console.error('Error loading listing image:', error);
+                setImageUrl('/images/listing-home.jpg');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        loadImage();
+    }, [listing.listingKey]);
+
     return (
         <div className="bg-white rounded-lg overflow-hidden shadow-sm">
             {/* Image Section */}
             <div className="relative">
-                <img
-                    src={`/images/listing-home.jpg`}
-                    className="w-full h-48 object-cover"
-                />
+                {isLoading ? (
+                    <div className="w-full h-48 bg-gray-200 animate-pulse flex items-center justify-center">
+                        <div className="text-gray-400">Loading...</div>
+                    </div>
+                ) : (
+                    <img
+                        src={imageUrl}
+                        className="w-full h-48 object-cover"
+                        alt={`Listing ${listing.listingKey}`}
+                    />
+                )}
                 <div className="absolute top-2 left-2">
                     <span className="bg-emerald-500 text-white px-3 py-1 text-xs font-medium rounded-full">
                         {listing.uiStatus}

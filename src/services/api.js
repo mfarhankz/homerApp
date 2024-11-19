@@ -121,6 +121,28 @@ export const baseDataAPI = {
     }
   },
 
+  fetchListingMedia: async (listingKey) => {
+    try {
+      const response = await apiClient.get(
+        '/Listing/GetListingMedia?listingKey=' + listingKey,
+      )
+      if (response.data) {
+        return {
+          success: true,
+          data: response.data,
+        }
+      }
+      return {
+        success: false,
+        error: response.data.message || 'Failed to report data',
+      }
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message || 'An error occurred while fetching report data',
+      }
+    }
+  },
   fetchReportData: async (reportId, abortSignal) => {
     try {
       const response = await apiClient.get(

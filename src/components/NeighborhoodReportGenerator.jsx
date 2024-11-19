@@ -116,7 +116,7 @@ const NeighborhoodReportGenerator = () => {
     };
 
     return (
-        <div className="max-w-4xl mx-auto px-4 py-8 mt-8">
+        <div className="max-w-xl mx-auto px-4 py-8 mt-8">
             {step < 4 && (
                 <button
                     onClick={handleBack}
@@ -164,11 +164,11 @@ const NeighborhoodReportGenerator = () => {
                         </h1>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
                         {propertyTypeData.map((type) => (
                             <PropertyTypeOption
                                 key={type}
-                                icon='/images/property-type.png'
+                                icon={type === 'Other' ? '/images/property-type.png' : `/images/${type}.png`}
                                 label={type}
                                 selected={reportData.propertyType === type}
                                 onClick={() => handlePropertyTypeSelect(type)}
@@ -187,7 +187,7 @@ const NeighborhoodReportGenerator = () => {
             )}
 
             {step === 3 && (
-                <div className="space-y-8">
+                <div className="max-w-xl space-y-8 text-center justify-center items-center">
                     <div>
                         <h2 className="text-sm text-blue-900">
                             Let's dive into <b>{propertyTypeData.find(t => t === reportData.propertyType)}</b>

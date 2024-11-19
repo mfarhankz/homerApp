@@ -1,0 +1,37 @@
+{
+    "navigationFallback": {
+        "rewrite": "/index.html",
+        "exclude": [
+            "/images/*.{png,jpg,gif}",
+            "/css/*",
+            "/js/*",
+            "/api/*"
+        ]
+    },
+    "routes": [
+        {
+            "route": "/report/*",
+            "serve": "/index.html",
+            "statusCode": 200
+        },
+        {
+            "route": "/signin",
+            "serve": "/index.html",
+            "statusCode": 200
+        },
+        {
+            "route": "/*",
+            "serve": "/index.html",
+            "statusCode": 200
+        }
+    ],
+    "responseOverrides": {
+        "404": {
+            "rewrite": "/index.html",
+            "statusCode": 200
+        }
+    },
+    "globalHeaders": {
+        "cache-control": "no-cache"
+    }
+}
