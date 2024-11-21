@@ -111,30 +111,73 @@ const ReportResult = () => {
                         </div>
 
 
-                        {/* Parent container with white background and rounded corners */}
+                        {/* Parent container */}
                         <div className="bg-white rounded-xl shadow-sm p-4">
-                            <div className="flex flex-col lg:flex-row gap-6 relative" style={{ height: 'calc(100vh - 240px)' }}>
+                            {/* Mobile Toggle Button */}
+                            <div className="lg:hidden mb-4">
+                                <button
+                                    onClick={() => setIsMapExpanded(!isMapExpanded)}
+                                    className="w-full bg-blue-50 text-blue-600 p-2 rounded-md flex items-center justify-center gap-2"
+                                >
+                                    {isMapExpanded ? (
+                                        <>
+                                            <span>Show Listings</span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+                                            </svg>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <span>Show Map</span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fillRule="evenodd" d="M12 1.586l-4 4v12.828l4-4V1.586zM3.707 3.293A1 1 0 002 4v10a1 1 0 00.293.707L6 18.414V5.586L3.707 3.293zM17.707 5.293L14 1.586v12.828l2.293 2.293A1 1 0 0018 16V6a1 1 0 00-.293-.707z" clipRule="evenodd" />
+                                            </svg>
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+
+                            <div className="flex flex-col lg:flex-row gap-6 relative h-[calc(100vh-16rem)]">
                                 {/* Listings Section */}
-                                <div className={`h-full transition-all duration-300 ${isMapExpanded ? 'lg:w-0 lg:hidden' : 'lg:w-1/2'
-                                    }`}>
-                                    <div className="h-full">
-                                        <ListingsSection
-                                            listings={reportData.neighborhoodListings}
-                                            onSort={(option) => console.log(option)}
-                                            sortOption="price-low"
-                                        />
-                                    </div>
+                                <div className={`
+                            ${isMapExpanded ? 'hidden lg:block' : 'block'} 
+                            h-full transition-all duration-300 
+                            ${isMapExpanded ? 'lg:w-0 lg:hidden' : 'lg:w-1/2'}
+                        `}>
+                                    <ListingsSection
+                                        listings={reportData.neighborhoodListings}
+                                        onSort={(option) => console.log(option)}
+                                        sortOption="price-low"
+                                    />
                                 </div>
 
                                 {/* Map Section */}
-                                <div className={`h-full transition-all duration-300 ${isMapExpanded ? 'lg:w-full' : 'lg:w-1/2'
-                                    }`}>
+                                <div className={`
+                            ${isMapExpanded ? 'block' : 'hidden lg:block'}
+                            h-[70vh] lg:h-full transition-all duration-300
+                            ${isMapExpanded ? 'lg:w-full' : 'lg:w-1/2'}
+                        `}>
                                     <div className="h-full relative">
+                                        {/* Desktop Toggle Button */}
                                         <button
                                             onClick={() => setIsMapExpanded(!isMapExpanded)}
-                                            className="absolute top-2 left-2 z-10 bg-white p-2 rounded-md shadow-md hover:bg-gray-50 transition-colors duration-200"
+                                            className="hidden lg:block absolute top-2 left-2 z-10 bg-white p-2 rounded-md shadow-md hover:bg-gray-50 transition-colors duration-200"
                                         >
-                                          Hide listings
+                                            {isMapExpanded ? (
+                                                <div className="flex items-center gap-2">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                                        <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+                                                    </svg>
+                                                    <span className="text-sm">Show List</span>
+                                                </div>
+                                            ) : (
+                                                <div className="flex items-center gap-2">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                                        <path fillRule="evenodd" d="M3 4a1 1 0 011-1h4a1 1 0 010 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h4a1 1 0 010 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h4a1 1 0 010 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+                                                    </svg>
+                                                    <span className="text-sm">Hide List</span>
+                                                </div>
+                                            )}
                                         </button>
                                         <ListingsMap
                                             listings={reportData.neighborhoodListings}
