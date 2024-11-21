@@ -19,6 +19,7 @@ const ReportResult = () => {
     const [reportData, setReportData] = useState();
     const [loading, setLoading] = useState(true);
     const abortControllerRef = React.useRef(null);
+    const [isMapExpanded, setIsMapExpanded] = useState(false);
 
     const handleCancel = () => {
         // Cancel any pending request
@@ -110,20 +111,36 @@ const ReportResult = () => {
                         </div>
 
 
-                        <div className="flex flex-col lg:flex-row gap-6">
-                            {/* Listings Section */}
-                            <div className="w-full lg:w-1/2">
-                                <ListingsSection
-                                    listings={reportData.neighborhoodListings}
-                                    onSort={(option) => console.log(option)}
-                                    sortOption="price-low"
-                                />
-                            </div>
+                        {/* Parent container with white background and rounded corners */}
+                        <div className="bg-white rounded-xl shadow-sm p-4">
+                            <div className="flex flex-col lg:flex-row gap-6 relative" style={{ height: 'calc(100vh - 240px)' }}>
+                                {/* Listings Section */}
+                                <div className={`h-full transition-all duration-300 ${isMapExpanded ? 'lg:w-0 lg:hidden' : 'lg:w-1/2'
+                                    }`}>
+                                    <div className="h-full">
+                                        <ListingsSection
+                                            listings={reportData.neighborhoodListings}
+                                            onSort={(option) => console.log(option)}
+                                            sortOption="price-low"
+                                        />
+                                    </div>
+                                </div>
 
-                            {/* Map Section */}
-                            <div className="w-full lg:w-1/2">
-                                <div className="sticky top-8 h-[calc(100vh-12rem)]">
-                                    <ListingsMap />
+                                {/* Map Section */}
+                                <div className={`h-full transition-all duration-300 ${isMapExpanded ? 'lg:w-full' : 'lg:w-1/2'
+                                    }`}>
+                                    <div className="h-full relative">
+                                        <button
+                                            onClick={() => setIsMapExpanded(!isMapExpanded)}
+                                            className="absolute top-2 left-2 z-10 bg-white p-2 rounded-md shadow-md hover:bg-gray-50 transition-colors duration-200"
+                                        >
+                                          Hide listings
+                                        </button>
+                                        <ListingsMap
+                                            listings={reportData.neighborhoodListings}
+                                            isMapExpanded={isMapExpanded}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -4,9 +4,9 @@ import ListingCard from './ListingCard';
 
 const ListingsSection = ({ listings, onSort, sortOption }) => {
     return (
-        <div>
+        <div className="h-full flex flex-col">
             {/* Header with Listings title, filters and count */}
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex-none flex items-center justify-between mb-4">
                 <div className="flex items-center gap-4">
                     <h2 className="font-medium">Listings</h2>
                     <select
@@ -24,16 +24,19 @@ const ListingsSection = ({ listings, onSort, sortOption }) => {
             </div>
 
             {/* Listings Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[calc(100vh-16rem)] overflow-y-auto pr-2">
-                {listings.map(listing => (
-                    <ListingCard
-                        key={listing.listingKey}
-                        listing={listing}
-                        onHideToggle={() => {/* handle hide */ }}
-                    />
-                ))}
+            <div className="flex-1 overflow-y-auto pr-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {listings.map(listing => (
+                        <ListingCard
+                            key={listing.listingKey}
+                            listing={listing}
+                            onHideToggle={() => {/* handle hide */ }}
+                        />
+                    ))}
+                </div>
             </div>
         </div>
+        
     );
 };
 
