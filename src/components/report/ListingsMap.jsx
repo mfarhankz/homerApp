@@ -1,16 +1,14 @@
-// components/report/ListingsMap.jsx
 import Map, {
     Marker,
-    Popup,
     NavigationControl,
 } from 'react-map-gl';
-import { useState, useEffect,useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 const ListingsMap = ({ listings = [], isMapExpanded }) => {
     const MAPBOX_ACCESS_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
     const mapRef = useRef(null);
-    // Add this prop to receive the expanded state    
     const [viewState, setViewState] = useState({
         latitude: 43.8078,
         longitude: -79.2652,
@@ -18,6 +16,7 @@ const ListingsMap = ({ listings = [], isMapExpanded }) => {
     });
 
     const [selectedGroup, setSelectedGroup] = useState(null);
+    const [currentPropertyIndex, setCurrentPropertyIndex] = useState(0);
 
     // Group listings by coordinates
     const groupedListings = listings.reduce((acc, property) => {
@@ -36,173 +35,158 @@ const ListingsMap = ({ listings = [], isMapExpanded }) => {
     }, {});
 
     useEffect(() => {
-        // Wait for the transition to complete before resizing
         const timer = setTimeout(() => {
             if (mapRef.current) {
                 mapRef.current.resize();
             }
-        }, 300); // match this with your transition duration
+        }, 300);
 
         return () => clearTimeout(timer);
     }, [isMapExpanded]);
 
+    const handleMarkerClick = (group) => {
+        setSelectedGroup(group);
+        setCurrentPropertyIndex(0);
+
+        // Center the map on the selected marker
+        setViewState(prev => ({
+            ...prev,
+            latitude: group.coordinates.latitude,
+            longitude: group.coordinates.longitude,
+            transitionDuration: 500
+        }));
+    };
+
+    const handleNext = () => {
+        setCurrentPropertyIndex((prev) =>
+            prev === selectedGroup.properties.length - 1 ? 0 : prev + 1
+        );
+    };
+
+    const handlePrev = () => {
+        setCurrentPropertyIndex((prev) =>
+            prev === 0 ? selectedGroup.properties.length - 1 : prev - 1
+        );
+    };
+
+    const handleClose = () => {
+        setSelectedGroup(null);
+        setCurrentPropertyIndex(0);
+    };
+
     return (
-        
-        <Map
-            {...viewState}
-            ref={mapRef}
-            onMove={evt => setViewState(evt.viewState)}
-            style={{ width: '100%', height: '100%', borderRadius: '0.5rem' }}
-            mapStyle="mapbox://styles/mapbox/streets-v11"
-            mapboxAccessToken={MAPBOX_ACCESS_TOKEN}
-        >
-            <NavigationControl position="top-right" />
+        <div className="relative w-full h-full">
+            <Map
+                {...viewState}
+                ref={mapRef}
+                onMove={evt => setViewState(evt.viewState)}
+                style={{ width: '100%', height: '100%', borderRadius: '0.5rem' }}
+                mapStyle="mapbox://styles/mapbox/streets-v11"
+                mapboxAccessToken={MAPBOX_ACCESS_TOKEN}
+            >
+                <NavigationControl position="top-right" />
 
-            {Object.values(groupedListings).map(group => (
-                <Marker
-                    key={`${group.coordinates.latitude}-${group.coordinates.longitude}`}
-                    latitude={group.coordinates.latitude}
-                    longitude={group.coordinates.longitude}
-                    onClick={() => setSelectedGroup(group)}
-                >
-                    <div style={{
-                        position: 'relative',
-                        width: '60px',
-                        height: '60px',
-                    }}>
-                        {/* Circle background */}
-                        <div style={{
-                            position: 'absolute',
-                            width: '100%',
-                            height: '100%',
-                            borderRadius: '50%',
-                            backgroundColor: group.properties.length > 1 ? 'rgba(239, 68, 68, 0.2)' : 'rgba(59, 130, 246, 0.2)',
-                            border: `2px solid ${group.properties.length > 1 ? '#EF4444' : '#3B82F6'}`,
-                        }} />
-
-                        {/* Number/Price */}
-                        <div style={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            backgroundColor: group.properties.length > 1 ? '#EF4444' : '#3B82F6',
-                            color: 'white',
-                            padding: '4px 8px',
-                            borderRadius: '4px',
-                            fontWeight: 'bold',
-                            cursor: 'pointer'
-                        }}>
-                            {group.properties.length > 1
-                                ? group.properties.length
-                                : `$${group.properties[0].formattedListPrice}`
-                            }
-                        </div>
-                    </div>
-                </Marker>
-            ))}
-
-            {selectedGroup && (
-                <Popup
-                    latitude={selectedGroup.coordinates.latitude}
-                    longitude={selectedGroup.coordinates.longitude}
-                    onClose={() => setSelectedGroup(null)}
-                    closeButton={true}
-                    closeOnClick={false}
-                    maxWidth="300px"
-                >
-                    <div style={{
-                        padding: '16px',
-                        maxHeight: '400px',
-                        overflowY: 'auto',
-                        width: '100%'
-                    }}>
-                        <h3 style={{
-                            fontSize: '16px',
-                            fontWeight: 'bold',
-                            marginBottom: '12px',
-                            color: '#1a1a1a',
-                            borderBottom: '2px solid #e5e7eb',
-                            paddingBottom: '8px'
-                        }}>
-                            {selectedGroup.properties.length > 1
-                                ? `${selectedGroup.properties.length} Properties Available`
-                                : 'Property Details'
-                            }
-                        </h3>
-
-                        {selectedGroup.properties.map(property => (
-                            <div key={property.listingKey} style={{
-                                marginBottom: '16px',
-                                paddingBottom: '16px',
-                                borderBottom: '1px solid #e5e7eb',
-                                lastChild: { borderBottom: 'none' }
-                            }}>
-                                <div style={{
-                                    fontSize: '18px',
-                                    fontWeight: 'bold',
-                                    color: '#2563eb',
-                                    marginBottom: '8px'
-                                }}>
-                                    ${property.formattedListPrice}
-                                </div>
-
-                                <div style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '8px',
-                                    marginBottom: '8px'
-                                }}>
-                                    <span style={{
-                                        backgroundColor: '#f3f4f6',
-                                        padding: '4px 8px',
-                                        borderRadius: '4px',
-                                        fontSize: '14px'
-                                    }}>
-                                        {property.bedroomsTotal} beds
-                                    </span>
-                                    <span style={{
-                                        backgroundColor: '#f3f4f6',
-                                        padding: '4px 8px',
-                                        borderRadius: '4px',
-                                        fontSize: '14px'
-                                    }}>
-                                        {property.bathroomsTotalInteger} baths
-                                    </span>
-                                </div>
-
-                                <div style={{
-                                    color: '#4b5563',
-                                    fontSize: '14px',
-                                    marginBottom: '4px'
-                                }}>
-                                    {property.uiCity}, {property.province}
-                                </div>
-
-                                <div style={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    marginTop: '8px',
-                                    fontSize: '13px'
-                                }}>
-                                    <span style={{
-                                        color: '#059669',
-                                        backgroundColor: '#ecfdf5',
-                                        padding: '2px 6px',
-                                        borderRadius: '4px'
-                                    }}>
-                                        {property.uiStatus}
-                                    </span>
-                                    <span style={{ color: '#6b7280' }}>
-                                        {property.postalCode}
-                                    </span>
-                                </div>
+                {Object.values(groupedListings).map(group => (
+                    <Marker
+                        key={`${group.coordinates.latitude}-${group.coordinates.longitude}`}
+                        latitude={group.coordinates.latitude}
+                        longitude={group.coordinates.longitude}
+                        onClick={() => handleMarkerClick(group)}
+                    >
+                        <div className="relative w-[60px] h-[60px]">
+                            <div className={`absolute w-full h-full rounded-full ${group.properties.length > 1
+                                    ? 'bg-red-500/20 border-red-500'
+                                    : 'bg-blue-500/20 border-blue-500'
+                                } border-2`}
+                            />
+                            <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
+                                ${group.properties.length > 1 ? 'bg-red-500' : 'bg-blue-500'}
+                                text-white px-2 py-1 rounded font-bold cursor-pointer`}
+                            >
+                                {group.properties.length > 1
+                                    ? group.properties.length
+                                    : `$${group.properties[0].formattedListPrice}`
+                                }
                             </div>
-                        ))}
+                        </div>
+                    </Marker>
+                ))}
+            </Map>
+
+            {/* Fixed Bottom Sheet */}
+            {selectedGroup && (
+                <div className="absolute bottom-0 left-0 right-0 bg-white shadow-lg rounded-t-xl transform transition-transform duration-300 ease-in-out">
+                    <div className="flex flex-col w-full">
+                        {/* Header */}
+                        <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+                            <h3 className="text-base font-bold text-gray-900">
+                                Property Details
+                            </h3>
+                            <button
+                                onClick={handleClose}
+                                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                                aria-label="Close dialog"
+                            >
+                                <X className="w-5 h-5 text-gray-500" />
+                            </button>
+                        </div>
+
+                        {/* Content */}
+                        <div className="p-4 space-y-3">
+                            <div className="text-xl font-bold text-blue-600">
+                                ${selectedGroup.properties[currentPropertyIndex].formattedListPrice}
+                            </div>
+
+                            <div className="flex gap-2">
+                                <span className="bg-gray-100 px-2 py-1 rounded text-sm">
+                                    {selectedGroup.properties[currentPropertyIndex].bedroomsTotal} beds
+                                </span>
+                                <span className="bg-gray-100 px-2 py-1 rounded text-sm">
+                                    {selectedGroup.properties[currentPropertyIndex].bathroomsTotalInteger} baths
+                                </span>
+                            </div>
+
+                            <div className="text-gray-600 text-sm">
+                                {selectedGroup.properties[currentPropertyIndex].uiCity},
+                                {selectedGroup.properties[currentPropertyIndex].province}
+                            </div>
+
+                            <div className="flex justify-between items-center text-sm">
+                                <span className="text-green-600 bg-green-50 px-2 py-1 rounded">
+                                    {selectedGroup.properties[currentPropertyIndex].uiStatus}
+                                </span>
+                                <span className="text-gray-500">
+                                    {selectedGroup.properties[currentPropertyIndex].postalCode}
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* Footer with Navigation */}
+                        {selectedGroup.properties.length > 1 && (
+                            <div className="p-4 border-t border-gray-200 flex items-center justify-between bg-gray-50">
+                                <button
+                                    onClick={handlePrev}
+                                    className="flex items-center gap-1 text-gray-600 hover:text-gray-900 px-2 py-1 rounded hover:bg-gray-100 touch-manipulation"
+                                >
+                                    <ChevronLeft className="w-4 h-4" />
+                                    <span className="text-sm">Previous</span>
+                                </button>
+                                <span className="text-sm text-gray-500">
+                                    {currentPropertyIndex + 1} of {selectedGroup.properties.length}
+                                </span>
+                                <button
+                                    onClick={handleNext}
+                                    className="flex items-center gap-1 text-gray-600 hover:text-gray-900 px-2 py-1 rounded hover:bg-gray-100 touch-manipulation"
+                                >
+                                    <span className="text-sm">Next</span>
+                                    <ChevronRight className="w-4 h-4" />
+                                </button>
+                            </div>
+                        )}
                     </div>
-                </Popup>
+                </div>
             )}
-        </Map>
+        </div>
     );
 };
 
