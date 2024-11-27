@@ -8,6 +8,7 @@ import ListingsMap from './ListingsMap';
 import { useAuth } from '../../contexts/AuthContext';
 import LoadingScreen from '../../components/LoadingScreen'
 import { baseDataAPI } from '../../services/api'
+import { filter } from 'framer-motion/client';
 
 
 
@@ -20,17 +21,26 @@ const ReportResult = () => {
     const [loading, setLoading] = useState(true);
     const abortControllerRef = React.useRef(null);
     const [isMapExpanded, setIsMapExpanded] = useState(false);
+    const [mapData , setMapData] = useState();
 
     const handleCancel = () => {
-        // Cancel any pending request
         if (abortControllerRef.current) {
             abortControllerRef.current.abort();
         }
-        // Reset loading state
+
         setLoading(false);
-        // Navigate back to main content
         navigate('/');
     };
+
+    const handleListingFiltered = (filtered)=>{
+        setMapData(filtered);
+    }
+
+    useEffect(() => {
+        if (reportData && reportData.neighborhoodListings){
+        setMapData(reportData.neighborhoodListings);
+        }
+     }, [reportData]);
 
     useEffect(() => {
         const LoadReportData = async () => {
@@ -42,9 +52,8 @@ const ReportResult = () => {
                 }
 
                 const reportResponse = await response.data;
-                setReportData(reportResponse);
+                setReportData(reportResponse);              
                 setLoading(false);
-                console.log(reportResponse);
             } catch (error) {
                 if (error.name === 'AbortError') {
                     console.log('Request was cancelled');
@@ -71,7 +80,6 @@ const ReportResult = () => {
     }
 
     return (
-
         <div className="min-h-screen bg-gray-50 mt-6">
             <div className="mx-auto px-4 py-8 space-y-8">
                 {/* Header Section */}
@@ -100,12 +108,12 @@ const ReportResult = () => {
                                 />
                                 <MetricsCard
                                     title="Average Sell Price"
-                                    value={reportData.priceAnalaysis.overallAveragePrice}
+                                    value={reportData.soldPriceAnalaysis.overallAveragePrice}
                                     highLow={{
-                                        high: reportData.priceAnalaysis.overallHighestPrice,
-                                        low: reportData.priceAnalaysis.overallLowestPrice,
+                                        high: reportData.soldPriceAnalaysis.overallHighestPrice,
+                                        low: reportData.soldPriceAnalaysis.overallLowestPrice,
                                     }}
-                                    chart={<PriceChart data={reportData.priceAnalaysis.listingPriceAnalyses} />}
+                                    chart={<PriceChart data={reportData.soldPriceAnalaysis.listingPriceAnalyses} />}
                                 />
                             </div>
                         </div>
@@ -146,7 +154,7 @@ const ReportResult = () => {
                         `}>
                                     <ListingsSection
                                         listings={reportData.neighborhoodListings}
-                                        onSort={(option) => console.log(option)}
+                                        onSort={(items) => handleListingFiltered(items)}
                                         sortOption="price-low"
                                     />
                                 </div>
@@ -180,7 +188,7 @@ const ReportResult = () => {
                                             )}
                                         </button>
                                         <ListingsMap
-                                            listings={reportData.neighborhoodListings}
+                                            listings={mapData}
                                             isMapExpanded={isMapExpanded}
                                         />
                                     </div>
