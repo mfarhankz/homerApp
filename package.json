@@ -12,6 +12,7 @@
   "dependencies": {
     "@headlessui/react": "^2.1.8",
     "@heroicons/react": "^2.1.5",
+    "@math.gl/web-mercator": "^4.1.0",
     "axios": "^1.7.7",
     "framer-motion": "^11.11.9",
     "js-cookie": "^3.0.5",

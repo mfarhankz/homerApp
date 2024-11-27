@@ -1,9 +1,11 @@
 import Map, {
     Marker,
-    NavigationControl,
+    NavigationControl
 } from 'react-map-gl';
+import { WebMercatorViewport } from '@math.gl/web-mercator';
+
 import { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight, X , TrendingUp, TrendingDown } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, TrendingUp, TrendingDown } from 'lucide-react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 // Reuse the cache constants and helper function from ListingCard
@@ -46,6 +48,10 @@ const ListingsMap = ({ listings = [], isMapExpanded }) => {
 
     // Group listings by coordinates
     const groupedListings = listings.reduce((acc, property) => {
+        if (!property.location || !property.location.coordinates ||
+            !property.location.coordinates.latitude || !property.location.coordinates.longitude) {
+            return acc; // Return accumulator without adding this property
+        }
         const key = `${property.location.coordinates.latitude},${property.location.coordinates.longitude}`;
         if (!acc[key]) {
             acc[key] = {
@@ -70,6 +76,88 @@ const ListingsMap = ({ listings = [], isMapExpanded }) => {
         return () => clearTimeout(timer);
     }, [isMapExpanded]);
 
+    const getValidListings = () => {
+        return listings.filter(property =>
+            property.location &&
+            property.location.coordinates &&
+            property.location.coordinates.latitude &&
+            property.location.coordinates.longitude
+        );
+    };
+
+    const fitMapToBounds = () => {
+        const validListings = getValidListings();
+        if (validListings.length === 0) return;
+
+        // Get min/max coordinates with some padding
+        const bounds = validListings.reduce(
+            (acc, property) => {
+                const { latitude, longitude } = property.location.coordinates;
+                return {
+                    minLng: Math.min(acc.minLng, longitude),
+                    maxLng: Math.max(acc.maxLng, longitude),
+                    minLat: Math.min(acc.minLat, latitude),
+                    maxLat: Math.max(acc.maxLat, latitude),
+                };
+            },
+            {
+                minLng: 180,
+                maxLng: -180,
+                minLat: 90,
+                maxLat: -90,
+            }
+        );
+
+        // Add some padding
+        const PADDING = 0.1; // 10% padding
+        const lngDiff = bounds.maxLng - bounds.minLng;
+        const latDiff = bounds.maxLat - bounds.minLat;
+
+        const viewport = new WebMercatorViewport({
+            width: mapRef.current?.getMap()?.getContainer()?.offsetWidth || window.innerWidth,
+            height: mapRef.current?.getMap()?.getContainer()?.offsetHeight || window.innerHeight
+        });
+
+        try {
+            const { longitude, latitude, zoom } = viewport.fitBounds(
+                [
+                    [bounds.minLng - lngDiff * PADDING, bounds.minLat - latDiff * PADDING],
+                    [bounds.maxLng + lngDiff * PADDING, bounds.maxLat + latDiff * PADDING]
+                ],
+                { padding: 20 }
+            );
+
+            setViewState(prev => ({
+                ...prev,
+                longitude,
+                latitude,
+                zoom: Math.min(zoom, 15), // Limit max zoom
+                transitionDuration: 1000
+            }));
+        } catch (error) {
+            console.error('Error fitting bounds:', error);
+            // Fallback to center point if fitBounds fails
+            if (validListings.length > 0) {
+                const centerLat = (bounds.maxLat + bounds.minLat) / 2;
+                const centerLng = (bounds.maxLng + bounds.minLng) / 2;
+                setViewState(prev => ({
+                    ...prev,
+                    latitude: centerLat,
+                    longitude: centerLng,
+                    zoom: 13,
+                    transitionDuration: 1000
+                }));
+            }
+        }
+    };
+
+    // Fit bounds when listings change or map is loaded
+    useEffect(() => {
+        if (mapRef.current && listings.length > 0) {
+            fitMapToBounds();
+        }
+    }, [listings, isMapExpanded]);
+
     // Effect to handle image loading when selected property changes
     useEffect(() => {
         if (selectedGroup) {
@@ -89,6 +177,7 @@ const ListingsMap = ({ listings = [], isMapExpanded }) => {
             ...prev,
             latitude: group.coordinates.latitude,
             longitude: group.coordinates.longitude,
+            zoom: 15,
             transitionDuration: 500
         }));
     };
@@ -132,14 +221,14 @@ const ListingsMap = ({ listings = [], isMapExpanded }) => {
                         </span>
                     </div>
                     <div className="text-lg font-bold text-green-600">
-                       Sold: ${property.soldPrice.toLocaleString()}
+                        Sold: ${property.soldPrice.toLocaleString()}
                         {soldHigher ? (
                             <TrendingUp className="w-5 h-5 text-green-500" />
                         ) : (
                             <TrendingDown className="w-5 h-5 text-red-500" />
                         )}
                     </div>
-                   
+
                 </div>
             );
         }
