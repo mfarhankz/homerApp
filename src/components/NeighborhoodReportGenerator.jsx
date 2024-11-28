@@ -202,6 +202,7 @@ const NeighborhoodReportGenerator = () => {
                         selectedRange={reportData.timeRange}
                         onRangeSelect={handleTimeRangeSelect}
                         defaultValue={DEFAULT_TIME_RANGE}
+                        searchCriteria={reportData}
                     />
 
                     <button

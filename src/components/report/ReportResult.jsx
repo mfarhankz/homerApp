@@ -8,7 +8,7 @@ import ListingsMap from './ListingsMap';
 import { useAuth } from '../../contexts/AuthContext';
 import LoadingScreen from '../../components/LoadingScreen'
 import { baseDataAPI } from '../../services/api'
-import { filter } from 'framer-motion/client';
+import { Share2, Save, X } from 'lucide-react';
 
 
 
@@ -21,7 +21,19 @@ const ReportResult = () => {
     const [loading, setLoading] = useState(true);
     const abortControllerRef = React.useRef(null);
     const [isMapExpanded, setIsMapExpanded] = useState(false);
-    const [mapData , setMapData] = useState();
+    const [mapData, setMapData] = useState();
+    const [showSaveDialog, setShowSaveDialog] = useState(false);
+    const [reportName, setReportName] = useState('');
+
+    // State matching the C# class structure
+    const [reportState, setReportState] = useState({
+        reportId: reportId,
+        requestDto: {},
+        hiddenListings: [],
+        displayName: '',
+        isSaved: false,
+        isShared: false
+    });
 
     const handleCancel = () => {
         if (abortControllerRef.current) {
@@ -32,15 +44,15 @@ const ReportResult = () => {
         navigate('/');
     };
 
-    const handleListingFiltered = (filtered)=>{
+    const handleListingFiltered = (filtered) => {
         setMapData(filtered);
     }
 
     useEffect(() => {
-        if (reportData && reportData.neighborhoodListings){
-        setMapData(reportData.neighborhoodListings);
+        if (reportData && reportData.neighborhoodListings) {
+            setMapData(reportData.neighborhoodListings);
         }
-     }, [reportData]);
+    }, [reportData]);
 
     useEffect(() => {
         const LoadReportData = async () => {
@@ -52,8 +64,17 @@ const ReportResult = () => {
                 }
 
                 const reportResponse = await response.data;
-                setReportData(reportResponse);              
-                setLoading(false);
+                setReportData(reportResponse);
+                // Update the report state with the response data
+                setReportState(prev => ({
+                    ...prev,
+                    reportId: reportId,
+                    requestDto: reportResponse.reportRequestDocument.searchCriteria || {},
+                    displayName: reportResponse.reportRequestDocument.displayName || '',
+                    isSaved: reportResponse.reportRequestDocument.isSaved || false,
+                    isShared: reportResponse.reportRequestDocument.isShared || false,
+                    hiddenListings: reportResponse.reportRequestDocument.hiddenListings || []
+                }));
             } catch (error) {
                 if (error.name === 'AbortError') {
                     console.log('Request was cancelled');
@@ -69,6 +90,35 @@ const ReportResult = () => {
         LoadReportData();
     }, [reportId, location.state]);
 
+    const handleSaveReport = () => {
+        setShowSaveDialog(true);
+    };
+
+    const handleShareReport = () => {
+        // Implement share functionality
+        console.log('Sharing report...');
+    };
+
+    const handleSaveConfirm = async () => {
+        if (!reportState.displayName.trim()) return;
+        try {
+            console.log('Saving report with name:', reportState.displayName);
+            setReportState(prev => ({
+                ...prev,
+                isSaved: true
+            }));
+
+        } catch (error) {
+            console.error('Error saving report:', error);
+            // You might want to show an error toast here
+        } finally {
+            setShowSaveDialog(false);
+        }
+    }
+
+    const handleCloseDialog = () => {
+        setShowSaveDialog(false);
+    };
 
     if (loading) {
         return (
@@ -84,15 +134,97 @@ const ReportResult = () => {
             <div className="mx-auto px-4 py-8 space-y-8">
                 {/* Header Section */}
                 <ReportHeader
-                    location={reportData.searchCriteria.city + ', ' + reportData.searchCriteria.region}
-                    propertyType={reportData.searchCriteria.propertyType}
-                    timeRange={reportData.searchCriteria.timeRange}
+                    location={reportData.reportRequestDocument.searchCriteria.city + ', ' + reportData.reportRequestDocument.searchCriteria.region}
+                    propertyType={reportData.reportRequestDocument.searchCriteria.propertyType}
+                    timeRange={reportData.reportRequestDocument.searchCriteria.timeRange}
                     agent={{
                         name: user.firstName + ',' + user.lastName,
                         brokerage: user.brokerageName,
                         initials: ""
                     }}
                 />
+                {/* Toolbar */}
+                <div className="bg-white shadow-sm rounded-lg overflow-hidden">
+                    <div className="flex items-center justify-between px-4 py-3 sm:px-6">
+                        <div className="flex gap-3 w-full">
+                            <button
+                                onClick={handleSaveReport}
+                                className="flex-1 flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg 
+                                         hover:bg-blue-700 transition-colors duration-200 text-sm sm:text-base"
+                            >
+                                <Save className="w-4 h-4 sm:w-5 sm:h-5" />
+                                <span>Save Report</span>
+                            </button>
+                            <button
+                                onClick={handleShareReport}
+                                className="flex-1 flex items-center justify-center gap-2 border border-blue-600 text-blue-600 
+                                         px-4 py-2 rounded-lg hover:bg-blue-50 transition-colors duration-200 text-sm sm:text-base"
+                            >
+                                <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                                <span>Share</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Save Dialog */}
+                {showSaveDialog && (
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                        <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+                            <div className="flex items-center justify-between p-4 border-b">
+                                <h3 className="text-lg font-semibold text-gray-900">Save Report</h3>
+                                <button
+                                    onClick={handleCloseDialog}
+                                    className="text-gray-400 hover:text-gray-500"
+                                >
+                                    <X className="w-5 h-5" />
+                                </button>
+                            </div>
+
+                            <div className="p-4">
+                                <div className="mb-4">
+                                    <label htmlFor="reportName" className="block text-sm font-medium text-gray-700 mb-1">
+                                        Report Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="reportName"
+                                        value={reportState.displayName}
+                                        onChange={(e) => setReportState(prev => ({
+                                            ...prev,
+                                            displayName: e.target.value
+                                        }))}
+                                        placeholder="Enter a name for your report"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none 
+                                             focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="flex justify-end gap-3 p-4 border-t bg-gray-50 rounded-b-lg">
+                                <button
+                                    onClick={handleCloseDialog}
+                                    className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 
+                                             rounded-md transition-colors duration-200"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={handleSaveConfirm}
+                                    disabled={!reportState.displayName.trim()}
+                                    className={`px-4 py-2 text-sm font-medium text-white rounded-md 
+                                                 ${reportState.displayName.trim()
+                                            ? 'bg-blue-600 hover:bg-blue-700'
+                                            : 'bg-blue-300 cursor-not-allowed'} 
+                                              transition-colors duration-200`}
+                                >
+                                    Save
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {reportData.totalListings > 0 && (
                     <>
                         <div className="rounded-lg">

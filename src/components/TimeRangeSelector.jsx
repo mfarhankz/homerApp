@@ -1,20 +1,75 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import { baseDataAPI } from '../services/api';
+import LoadingScreen from '../components/LoadingScreen'
 
-const TimeRangeSelector = ({ selectedRange, onRangeSelect, defaultValue }) => {
-    const timeRanges = [
-        { id: '30days', label: '30 days', value: 30 },
-        { id: '6months', label: '6 months', value: 180, recommended: true },
-        { id: '1year', label: '1 year', value: 365 }
-    ];
-
+const TimeRangeSelector = ({ selectedRange, onRangeSelect, defaultValue, searchCriteria }) => {
+    const [timeRanges, setTimeRanges] = useState([
+        { id: 'count30Days', label: '30 days', value: 30, count: 0 },
+        { id: 'count180Days', label: '6 months', value: 180, recommended: true, count: 0 },
+        { id: 'count365Days', label: '1 year', value: 365, count: 0 }
+    ]);
+    const [loading, setLoading] = useState(true);
+    const abortControllerRef = useRef(null);
     // Use the provided default value or find the recommended one
     useEffect(() => {
         const valueToUse = defaultValue || timeRanges.find(range => range.recommended)?.value;
         if (valueToUse && (!selectedRange || selectedRange === 30)) {
             onRangeSelect(valueToUse);
         }
-    }, [defaultValue]); // Run when defaultValue changes
+    }, [defaultValue]);
+
+    useEffect(() => {
+        const getReportListingCount = async () => {
+            try {
+                setLoading(true);
+                abortControllerRef.current = new AbortController();
+                const countPayload = {
+                    city: searchCriteria.city,
+                    region: searchCriteria.cityRegion,
+                    propertyType: searchCriteria.propertyType,
+                    timeRange: searchCriteria.timeRange
+                };
+
+
+                var response = await baseDataAPI.getReportListingCount(countPayload, abortControllerRef.current.signal);
+                if (!response.success) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const responseCount = await response.data;
+                console.log(responseCount);
+                // Update timeRanges with counts from response
+                setTimeRanges(prevRanges =>
+                    prevRanges.map(range => ({
+                        ...range,
+                        count: responseCount[range.id] || 0
+                    }))
+                );
+
+            } catch (error) {
+                if (error.name === 'AbortError') {
+                    console.log('Request was cancelled');
+                } else {
+                    console.error('Error generating report:', error);
+                }
+            } finally {
+                abortControllerRef.current = null;
+                setLoading(false);
+            }
+        };
+
+        getReportListingCount();
+
+    }, []);
+
+    if (loading) {
+        return (
+            <LoadingScreen
+                neighborhood='Loading...'
+            />
+        );
+    }
 
     return (
         <motion.div
@@ -30,20 +85,40 @@ const TimeRangeSelector = ({ selectedRange, onRangeSelect, defaultValue }) => {
                     key={range.id}
                     onClick={() => onRangeSelect(range.value)}
                     className={`
-            w-full px-4 py-3 rounded-lg border text-left relative
-            transition-all duration-200
-            ${selectedRange === range.value
+                        w-full px-4 py-3 rounded-lg border text-left relative
+                        transition-all duration-200
+                        ${selectedRange === range.value
                             ? 'date-range-item-selected'
                             : 'date-range-item-not-selected'
                         }
           `}
                 >
-                    <span className="text-gray-900">{range.label}</span>
-                    {range.recommended && (
-                        <span className="absolute right-4 top-1/2 -translate-y-1/2 recommended-text">
-                            Recommended
-                        </span>
-                    )}
+                    <div className="flex justify-between items-center">
+                        <span className="text-gray-900">{range.label}</span>
+                        <div className="flex items-center gap-2">
+                            {range.count > 0 && (
+                                <span className={`text-sm ${selectedRange === range.value
+                                    ? 'text-blue-600'
+                                    : 'text-gray-500'
+                                    }`}>
+                                    {range.count} found
+                                </span>
+                            )}
+                            {range.count === 0 && (
+                                <span className={`text-sm ${selectedRange === range.value
+                                    ? 'text-blue-600'
+                                    : 'text-gray-500'
+                                    }`}>
+                                    Not found
+                                </span>
+                            )}
+                            {range.recommended && (
+                                <span className="text-sm text-blue-600 recommended-text">
+                                    (Recommended)
+                                </span>
+                            )}
+                        </div>
+                    </div>
                 </button>
             ))}
         </motion.div>
