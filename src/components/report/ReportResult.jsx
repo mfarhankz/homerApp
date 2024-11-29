@@ -8,7 +8,7 @@ import ListingsMap from './ListingsMap';
 import { useAuth } from '../../contexts/AuthContext';
 import LoadingScreen from '../../components/LoadingScreen'
 import { baseDataAPI } from '../../services/api'
-import { Share2, Save, X } from 'lucide-react';
+import { Share2, Save, X, Loader2 } from 'lucide-react';
 
 
 
@@ -24,6 +24,7 @@ const ReportResult = () => {
     const [mapData, setMapData] = useState();
     const [showSaveDialog, setShowSaveDialog] = useState(false);
     const [reportName, setReportName] = useState('');
+    const [isSaving, setIsSaving] = useState(false);
 
     // State matching the C# class structure
     const [reportState, setReportState] = useState({
@@ -102,17 +103,54 @@ const ReportResult = () => {
     const handleSaveConfirm = async () => {
         if (!reportState.displayName.trim()) return;
         try {
+            setIsSaving(true);
             console.log('Saving report with name:', reportState.displayName);
             setReportState(prev => ({
                 ...prev,
                 isSaved: true
             }));
 
+            abortControllerRef.current = new AbortController();
+            var response = await baseDataAPI.saveReport({ reportId: reportState.reportId, displayName: reportState.displayName, save: true }, abortControllerRef.current.signal);
+            if (!response.success) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const reportResponse = await response.data;
+            console.log(reportResponse);
+
         } catch (error) {
             console.error('Error saving report:', error);
             // You might want to show an error toast here
         } finally {
             setShowSaveDialog(false);
+            abortControllerRef.current = null;
+            setIsSaving(false);
+        }
+    }
+
+    const handleRemoveFromFave = async () => {
+        try {
+            setIsSaving(true);
+            setReportState(prev => ({
+                ...prev,
+                isSaved: false
+            }));
+
+            abortControllerRef.current = new AbortController();
+            var response = await baseDataAPI.saveReport({ reportId: reportState.reportId, save: false }, abortControllerRef.current.signal);
+            if (!response.success) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const reportResponse = await response.data;
+            console.log(reportResponse);
+
+        } catch (error) {
+            console.error('Error saving report:', error);
+        } finally {
+            abortControllerRef.current = null;
+            setIsSaving(false);
         }
     }
 
@@ -147,14 +185,31 @@ const ReportResult = () => {
                 <div className="bg-white shadow-sm rounded-lg overflow-hidden">
                     <div className="flex items-center justify-between px-4 py-3 sm:px-6">
                         <div className="flex gap-3 w-full">
-                            <button
-                                onClick={handleSaveReport}
-                                className="flex-1 flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg 
+                            {!reportState.isSaved && (
+                                <button
+                                    disabled={isSaving}
+                                    onClick={handleSaveReport}
+                                    className="flex-1 flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg 
                                          hover:bg-blue-700 transition-colors duration-200 text-sm sm:text-base"
-                            >
-                                <Save className="w-4 h-4 sm:w-5 sm:h-5" />
-                                <span>Save Report</span>
-                            </button>
+                                >
+                                    <Save className="w-4 h-4 sm:w-5 sm:h-5" />
+                                    <span>Add to Fav</span>
+                                    {isSaving && <Loader2 />}
+                                </button>
+                            )}
+
+                            {reportState.isSaved && (
+                                <button
+                                    disabled={isSaving}
+                                    onClick={handleRemoveFromFave}
+                                    className="flex-1 flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg 
+                                         hover:bg-blue-700 transition-colors duration-200 text-sm sm:text-base"
+                                >
+                                    <Save className="w-4 h-4 sm:w-5 sm:h-5" />
+                                    <span>Remove from Fav</span>
+                                    {isSaving && <Loader2 />}
+                                </button>
+                            )}
                             <button
                                 onClick={handleShareReport}
                                 className="flex-1 flex items-center justify-center gap-2 border border-blue-600 text-blue-600 
@@ -211,7 +266,7 @@ const ReportResult = () => {
                                 </button>
                                 <button
                                     onClick={handleSaveConfirm}
-                                    disabled={!reportState.displayName.trim()}
+                                    disabled={!reportState.displayName.trim() || isSaving}
                                     className={`px-4 py-2 text-sm font-medium text-white rounded-md 
                                                  ${reportState.displayName.trim()
                                             ? 'bg-blue-600 hover:bg-blue-700'

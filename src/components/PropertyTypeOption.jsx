@@ -11,9 +11,8 @@ const PropertyTypeOption = ({ type, icon, label, selected, onClick }) => (
             ease: [0.43, 0.13, 0.23, 0.96] // Custom easing for smooth motion
         }}
         onClick={onClick}
-        className={`
-      p-4 rounded-lg cursor-pointer transition-all w-full
-      ${selected ? 'border-2 border-homer-propertytype-selected bg-white' : 'border border-homer-propertytype-not-selected hover:border-coral-300 bg-white'}
+        className={`p-4 rounded-lg cursor-pointer transition-all w-full
+      ${selected ? 'border-2 border-homer-propertytype-selected property-card' : 'border border-homer-propertytype-not-selected hover:border-coral-300 property-card'}
        flex flex-col items-center justify-between min-h-[160px]
     `}
     >

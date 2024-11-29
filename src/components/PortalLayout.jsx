@@ -43,26 +43,26 @@ export default function PortalLayout() {
 
             {/* Sidebar Navigation */}
             <aside className={`
-                fixed top-0 left-0 h-full w-64 side-panel-bg shadow-lg z-40 
+                fixed top-0 left-0 h-full w-64 bg-[#F4D7B7]/60 shadow-lg z-40 
                 transform transition-transform duration-300 ease-in-out rounded-r-lg
                 ${isNavOpen ? 'translate-x-0' : '-translate-x-full'}
             `}>
                 {/* Close Button */}
                 <button
                     onClick={() => setIsNavOpen(false)}
-                    className="absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100"
+                    className="absolute top-3 right-4 p-2 rounded-lg hover:bg-gray-100"
                     aria-label="Close navigation"
                 >
                     <X className="w-5 h-5 text-gray-500" />
                 </button>
 
-                {/* Logo */}
+                {/* Logo
                 <div className="p-6 border-b">
                     <span className="text-blue-900 text-xl font-medium">homer</span>
-                </div>
+                </div> */}
 
                 {/* Navigation Links */}
-                <nav className="p-4 space-y-2">
+                <nav className="p-6 space-y-2 mt-12">
                     <NavLink
                         to="/"
                         className={({ isActive }) =>
@@ -100,7 +100,7 @@ export default function PortalLayout() {
                 </nav>
 
                 {/* User Section */}
-                <div className="absolute bottom-0 w-full p-4 border-t side-panel-bg">
+                <div className="absolute bottom-0 w-full p-4">
                     <div className="flex items-center justify-between side-panel-user-bg rounded-full p-2">
                         <div className="flex items-center">
                             <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
