@@ -103,7 +103,7 @@ const ListingCard = ({ listing, onHideToggle }) => {
     }, [listing.listingKey]);
 
     return (
-        <div className={`bg-white rounded-lg overflow-hidden shadow-sm relative ${isSold ? SOLD_OPACITY : ''}`}>
+        <div className={`listing-card rounded-lg overflow-hidden shadow-sm relative ${isSold ? SOLD_OPACITY : ''}`}>
             {/* Semi-transparent overlay for sold listings */}
             {isSold && (
                 <div className={`absolute inset-0 bg-gray-200 ${OVERLAY_OPACITY} z-10 pointer-events-none`} />
@@ -123,7 +123,7 @@ const ListingCard = ({ listing, onHideToggle }) => {
                     />
                 )}
                 <div className="absolute top-2 left-2 z-20">
-                    <span className={`${isSold ? 'bg-gray-500' : 'bg-emerald-500'
+                    <span className={`${isSold ? 'sold' : 'for-sale'
                         } text-white px-3 py-1 text-xs font-medium rounded-full`}>
                         {listing.uiStatus}
                     </span>

@@ -146,7 +146,7 @@ const NeighborhoodReportGenerator = () => {
                     <button
                         onClick={handleContinue}
                         disabled={!reportData.cityRegion}
-                        className="px-6 py-2 button-homer-orange text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-6 py-2 button-blue text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         Continue
                     </button>
@@ -179,7 +179,7 @@ const NeighborhoodReportGenerator = () => {
                     <button
                         onClick={handleContinue}
                         disabled={!reportData.propertyType}
-                        className="px-6 py-2 button-homer-orange text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-6 py-2 button-blue text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         Continue
                     </button>
@@ -207,7 +207,7 @@ const NeighborhoodReportGenerator = () => {
 
                     <button
                         onClick={handleContinue}
-                        className="px-6 py-2 button-homer-orange text-white rounded-full"
+                        className="px-6 py-2 button-blue text-white rounded-full"
                     >
                         Generate my report
                     </button>

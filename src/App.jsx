@@ -43,6 +43,14 @@ export default function App() {
                         }
                     />
                     <Route
+                        path="/viewreport/:reportId"
+                        element={
+                            <PublicRoute>
+                                <ReportResult />
+                            </PublicRoute>
+                        }
+                    />
+                    <Route
                         path="/*"
                         element={
                             <PrivateRoute>

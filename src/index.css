@@ -150,12 +150,12 @@
         font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
-         .text-homer-blue-2 {
-             color: #002864 !important;
-             font-weight: 700;
-             font-size: 24px;          
-             font-family: 'Plus Jakarta Sans', sans-serif;
-         }
+    .text-homer-blue-2 {
+        color: #002864 !important;
+        font-weight: 700;
+        font-size: 24px;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
 
     .font-13 {
         font-size: 13px;
@@ -182,7 +182,8 @@
     }
 
     .report-card,
-    .property-card {
+    .property-card,
+    .metric-card {
         background-color: #FFF4E8;
     }
 
@@ -222,7 +223,7 @@
 
     .button-homer-search {
 
-        background: linear-gradient(135deg, #ED7A6E 14.88%, #D54334 87.5%);
+        background: linear-gradient(135deg, #4768b8 14.88%, #0C1B3D 87.5%);
     }
 
     .button-homer-orange {
@@ -239,7 +240,7 @@
     }
 
     .side-panel-bg {
-        background: #F4D7B7;  
+        background: #F4D7B7;
     }
 
     .side-panel-selected-item-bg {
@@ -307,6 +308,42 @@
         font-size: 20px;
         color: white;
         font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .listing-card {
+        background-color: #FAF6F1;
+    }
+
+    .button-blue {
+        background: linear-gradient(135deg, #4768b8 14.88%, #0C1B3D 87.5%) !important;
+    }
+
+    .for-sale {
+        background-color: #405F1F;
+    }
+
+    .sold {
+        background-color: #EE6F6F;
+    }
+
+    .report-toolbar {
+        background-color: #FAF6F1;
+    }
+
+    .metric-card-text {
+        font-size: 20px;
+        font-weight: 500;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        color: #0C1B3D !important;
+    }
+
+    .price-sort {
+        background-color: #E9E9E9 !important;
+    }
+
+    .listing-map-show-hide-listing {
+
+        
     }
 
     /* Update media queries accordingly */

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import ReportHeader from './ReportHeader';
 import MetricsCard from './MetricsCard';
+import DaysOnMarket from './DaysOnMarket'
 import ListingsSection from './ListingsSection';
 import PriceChart from './PriceChart';
 import ListingsMap from './ListingsMap';
@@ -9,6 +10,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import LoadingScreen from '../../components/LoadingScreen'
 import { baseDataAPI } from '../../services/api'
 import { Share2, Save, X, Loader2 } from 'lucide-react';
+import ShareModal from '../ShareModal';
 
 
 
@@ -25,6 +27,8 @@ const ReportResult = () => {
     const [showSaveDialog, setShowSaveDialog] = useState(false);
     const [reportName, setReportName] = useState('');
     const [isSaving, setIsSaving] = useState(false);
+    const [isShareOpen, setIsShareOpen] = useState(false);
+    const [shareUrl, setShareUrl] = useState('');
 
     // State matching the C# class structure
     const [reportState, setReportState] = useState({
@@ -95,10 +99,7 @@ const ReportResult = () => {
         setShowSaveDialog(true);
     };
 
-    const handleShareReport = () => {
-        // Implement share functionality
-        console.log('Sharing report...');
-    };
+
 
     const handleSaveConfirm = async () => {
         if (!reportState.displayName.trim()) return;
@@ -167,6 +168,22 @@ const ReportResult = () => {
         );
     }
 
+    const handleShare = (e, reportId) => {
+        e.stopPropagation();
+        const publicUrl = `${window.location.origin}/viewreport/${reportId}`;
+        setShareUrl(publicUrl);
+        setIsShareOpen(true);
+    };
+
+    const handleCopyUrl = async () => {
+        try {
+            await navigator.clipboard.writeText(shareUrl);
+            setIsShareOpen(false);
+        } catch (err) {
+            console.error('Failed to copy URL:', err);
+        }
+    };
+
     return (
         <div className="min-h-screen bg-gray-50 mt-6">
             <div className="mx-auto px-4 py-8 space-y-8">
@@ -182,15 +199,15 @@ const ReportResult = () => {
                     }}
                 />
                 {/* Toolbar */}
-                <div className="bg-white shadow-sm rounded-lg overflow-hidden">
+                <div className="report-toolbar shadow-sm rounded-lg overflow-hidden">
                     <div className="flex items-center justify-between px-4 py-3 sm:px-6">
                         <div className="flex gap-3 w-full">
                             {!reportState.isSaved && (
                                 <button
                                     disabled={isSaving}
                                     onClick={handleSaveReport}
-                                    className="flex-1 flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg 
-                                         hover:bg-blue-700 transition-colors duration-200 text-sm sm:text-base"
+                                    className="flex-1 flex items-center justify-center gap-2 button-blue text-white px-4 py-2 rounded-lg 
+                                          transition-colors duration-200 text-sm sm:text-base"
                                 >
                                     <Save className="w-4 h-4 sm:w-5 sm:h-5" />
                                     <span>Add to Fav</span>
@@ -202,8 +219,8 @@ const ReportResult = () => {
                                 <button
                                     disabled={isSaving}
                                     onClick={handleRemoveFromFave}
-                                    className="flex-1 flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg 
-                                         hover:bg-blue-700 transition-colors duration-200 text-sm sm:text-base"
+                                    className="flex-1 flex items-center justify-center gap-2 button-blue text-white px-4 py-2 rounded-lg 
+                                         transition-colors duration-200 text-sm sm:text-base"
                                 >
                                     <Save className="w-4 h-4 sm:w-5 sm:h-5" />
                                     <span>Remove from Fav</span>
@@ -211,13 +228,20 @@ const ReportResult = () => {
                                 </button>
                             )}
                             <button
-                                onClick={handleShareReport}
-                                className="flex-1 flex items-center justify-center gap-2 border border-blue-600 text-blue-600 
-                                         px-4 py-2 rounded-lg hover:bg-blue-50 transition-colors duration-200 text-sm sm:text-base"
+                                onClick={(e) => handleShare(e, reportState.reportId)}
+                                className="flex-1 flex items-center justify-center gap-2 border border-blue-600 button-blue text-white
+                                         px-4 py-2 rounded-lg  transition-colors duration-200 text-sm sm:text-base"
                             >
                                 <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
                                 <span>Share</span>
                             </button>
+                            {/* Simple Modal */}
+                            <ShareModal
+                                isOpen={isShareOpen}
+                                onClose={() => setIsShareOpen(false)}
+                                url={shareUrl}
+                                onCopy={handleCopyUrl}
+                            />
                         </div>
                     </div>
                 </div>
@@ -269,8 +293,8 @@ const ReportResult = () => {
                                     disabled={!reportState.displayName.trim() || isSaving}
                                     className={`px-4 py-2 text-sm font-medium text-white rounded-md 
                                                  ${reportState.displayName.trim()
-                                            ? 'bg-blue-600 hover:bg-blue-700'
-                                            : 'bg-blue-300 cursor-not-allowed'} 
+                                            ? 'button-blue'
+                                            : 'button-blue'} 
                                               transition-colors duration-200`}
                                 >
                                     Save
@@ -283,31 +307,43 @@ const ReportResult = () => {
                 {reportData.totalListings > 0 && (
                     <>
                         <div className="rounded-lg">
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                                <MetricsCard
-                                    title="Average List Price"
-                                    value={reportData.priceAnalaysis.overallAveragePrice}
-                                    highLow={{
-                                        high: reportData.priceAnalaysis.overallHighestPrice,
-                                        low: reportData.priceAnalaysis.overallLowestPrice,
-                                    }}
-                                    chart={<PriceChart data={reportData.priceAnalaysis.listingPriceAnalyses} />}
-                                />
-                                <MetricsCard
-                                    title="Average Sell Price"
-                                    value={reportData.soldPriceAnalaysis.overallAveragePrice}
-                                    highLow={{
-                                        high: reportData.soldPriceAnalaysis.overallHighestPrice,
-                                        low: reportData.soldPriceAnalaysis.overallLowestPrice,
-                                    }}
-                                    chart={<PriceChart data={reportData.soldPriceAnalaysis.listingPriceAnalyses} />}
-                                />
+                            <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                                {/* DaysOnMarket takes up 1 column */}
+                                <div className="lg:col-span-1">
+                                    <DaysOnMarket
+                                        title="Average Days on Market"
+                                        value={20}
+                                    />
+                                </div>
+
+                                {/* Each MetricsCard takes up 2 columns */}
+                                <div className="lg:col-span-2">
+                                    <MetricsCard
+                                        title="Average List Price"
+                                        value={reportData.priceAnalaysis.overallAveragePrice}
+                                        highLow={{
+                                            high: reportData.priceAnalaysis.overallHighestPrice,
+                                            low: reportData.priceAnalaysis.overallLowestPrice,
+                                        }}
+                                        chart={<PriceChart data={reportData.priceAnalaysis.listingPriceAnalyses} />}
+                                    />
+                                </div>
+
+                                <div className="lg:col-span-2">
+                                    <MetricsCard
+                                        title="Average Sell Price"
+                                        value={reportData.soldPriceAnalaysis.overallAveragePrice}
+                                        highLow={{
+                                            high: reportData.soldPriceAnalaysis.overallHighestPrice,
+                                            low: reportData.soldPriceAnalaysis.overallLowestPrice,
+                                        }}
+                                        chart={<PriceChart data={reportData.soldPriceAnalaysis.listingPriceAnalyses} />}
+                                    />
+                                </div>
                             </div>
                         </div>
-
-
                         {/* Parent container */}
-                        <div className="bg-white rounded-xl shadow-sm p-4">
+                        <div className="metric-card rounded-xl shadow-sm p-4">
                             {/* Mobile Toggle Button */}
                             <div className="lg:hidden mb-4">
                                 <button
@@ -356,21 +392,15 @@ const ReportResult = () => {
                                         {/* Desktop Toggle Button */}
                                         <button
                                             onClick={() => setIsMapExpanded(!isMapExpanded)}
-                                            className="hidden lg:block absolute top-2 left-2 z-10 bg-white p-2 rounded-md shadow-md hover:bg-gray-50 transition-colors duration-200"
+                                            className="hidden lg:block absolute top-2 left-2 z-10 button-blue text-white p-2 rounded-md shadow-md hover:bg-gray-50 transition-colors duration-200"
                                         >
                                             {isMapExpanded ? (
-                                                <div className="flex items-center gap-2">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                                        <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
-                                                    </svg>
-                                                    <span className="text-sm">Show List</span>
+                                                <div className="flex items-center gap-2">                                                   
+                                                    <span className="text-sm">Show Listings</span>
                                                 </div>
                                             ) : (
-                                                <div className="flex items-center gap-2">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                                        <path fillRule="evenodd" d="M3 4a1 1 0 011-1h4a1 1 0 010 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h4a1 1 0 010 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h4a1 1 0 010 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
-                                                    </svg>
-                                                    <span className="text-sm">Hide List</span>
+                                                <div className="flex items-center">                                                   
+                                                    <span className="text-sm">Hide Listings</span>
                                                 </div>
                                             )}
                                         </button>

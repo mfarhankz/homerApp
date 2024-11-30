@@ -2,13 +2,17 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CitySearch from './CitySearch';
 import { baseDataAPI } from '../services/api';
-import { Building2, Calendar, MapPin } from 'lucide-react';
+import { Building2, Calendar, MapPin, Share2, Trash2, X } from 'lucide-react';
+import ShareModal from './ShareModal';
+
 
 export default function MainContent({ user, isOpen }) {
     const navigate = useNavigate();
     const [reports, setReports] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isShareOpen, setIsShareOpen] = useState(false);
+    const [shareUrl, setShareUrl] = useState('');
     const abortControllerRef = useRef(null);
     useEffect(() => {
         const fetchReports = async () => {
@@ -72,6 +76,26 @@ export default function MainContent({ user, isOpen }) {
         return 'Just now';
     };
 
+    const handleDelete = (e, reportId) => {
+        e.stopPropagation();
+        onDelete(reportId);
+    };
+
+    const handleShare = (e, reportId) => {
+        e.stopPropagation();
+        const publicUrl = `${window.location.origin}/viewreport/${reportId}`;
+        setShareUrl(publicUrl);
+        setIsShareOpen(true);
+    };
+
+    const handleCopyUrl = async () => {
+        try {
+            await navigator.clipboard.writeText(shareUrl);
+            setIsShareOpen(false);
+        } catch (err) {
+            console.error('Failed to copy URL:', err);
+        }
+    };
 
     return (
         <div className="w-full max-w-5xl mx-auto px-0 sm:px-4 mt-32">
@@ -113,43 +137,73 @@ export default function MainContent({ user, isOpen }) {
                             </div>
                         )}
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {reports.map((report) => (
-                                <div
-                                    key={report.reportId}
-                                    className="report-card rounded-lg shadow hover:shadow-md transition-shadow duration-200 cursor-pointer"
-                                    onClick={() => navigate(`/report/${report.reportId}`)}
-                                >
-                                    <div className="flex h-24 items-center">
-                                        {/* Left side - Image with proper padding */}
-                                        <div className="pl-4">
-                                            <img
-                                                src={`/images/${report.propertyType}.png`}
-                                                alt={`${report.propertyType} in ${report.city}`}
-                                                className="w-[64px] h-[64px] object-contain"
-                                            />
+                        <>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {reports.map((report) => (
+                                    <div
+                                        key={report.reportId}
+                                        className="report-card rounded-lg shadow hover:shadow-md transition-shadow duration-200 cursor-pointer"
+                                    >
+                                        <div
+                                            className="flex h-24 items-center"
+                                            onClick={() => navigate(`/report/${report.reportId}`)}
+                                        >
+                                            {/* Left side - Image with proper padding */}
+                                            <div className="pl-4">
+                                                <img
+                                                    src={`/images/${report.propertyType}.png`}
+                                                    alt={`${report.propertyType} in ${report.city}`}
+                                                    className="w-16 h-16 object-contain"
+                                                />
+                                            </div>
+
+                                            {/* Right side - Content */}
+                                            <div className="flex-1 p-4 flex flex-col justify-between">
+                                                <div>
+                                                    <h2 className="text-homer-blue-2 text-sm">
+                                                        {report.displayName || ''}
+                                                    </h2>
+                                                </div>
+                                                <div>
+                                                    <h3 className="text-homer-blue text-sm">
+                                                        {report.propertyType} in {report.city}
+                                                    </h3>
+                                                </div>
+                                                <div className="text-homer-blue-9 text-sm">
+                                                    {getTimeAgo(report.createdDate)}
+                                                </div>
+                                            </div>
                                         </div>
 
-                                        {/* Right side - Content */}
-                                        <div className="flex-1 p-4 flex flex-col justify-between">
-                                            <div>
-                                                <h2 className="text-homer-blue-2 font-13">
-                                                    {report.displayName || ''}
-                                                </h2>
-                                            </div>
-                                            <div>
-                                                <h3 className="text-homer-blue font-13">
-                                                    {report.propertyType} in {report.city}
-                                                </h3>
-                                            </div>
-                                            <div className="text-homer-blue-9">
-                                                {getTimeAgo(report.createdDate)}
-                                            </div>
+                                        {/* Toolbar */}
+                                        <div className="border-t border-gray-100 px-4 py-2 flex justify-end space-x-2">
+                                            <button
+                                                onClick={(e) => handleShare(e, report.reportId)}
+                                                className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
+                                                aria-label="Share report"
+                                            >
+                                                <Share2 className="w-4 h-4 text-gray-600" />
+                                            </button>
+                                            <button
+                                                onClick={(e) => handleDelete(e, report.reportId)}
+                                                className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
+                                                aria-label="Delete report"
+                                            >
+                                                <Trash2 className="w-4 h-4 text-gray-600" />
+                                            </button>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
-                        </div>
+                                ))}
+                            </div>
+
+                            {/* Simple Modal */}
+                            <ShareModal
+                                isOpen={isShareOpen}
+                                onClose={() => setIsShareOpen(false)}
+                                url={shareUrl}
+                                onCopy={handleCopyUrl}
+                            />
+                        </>
                     </div>
                 </div>
             </div>

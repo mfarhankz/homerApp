@@ -70,7 +70,7 @@ const ListingsSection = ({ listings, onSort }) => {
                         <select
                             value={sortOption}
                             onChange={handleSortChange}
-                            className="border rounded px-2 py-1 text-sm text-blue-900 bg-white min-w-[120px]"
+                            className="border rounded px-2 py-1 text-sm text-blue-900 price-sort min-w-[120px]"
                         >
                             <option value="All">All</option>
                             <option value="Sold">Sold</option>
@@ -78,7 +78,7 @@ const ListingsSection = ({ listings, onSort }) => {
                         </select>
                         <button
                             onClick={toggleSort}
-                            className="flex items-center text-sm text-blue-900 hover:text-blue-700 transition-colors 
+                            className="flex items-center text-sm price-sort transition-colors 
                                      border rounded px-3 py-1 whitespace-nowrap min-w-[150px] justify-between"
                         >
                             <span>

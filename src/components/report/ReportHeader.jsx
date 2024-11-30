@@ -7,7 +7,7 @@ const ReportHeader = ({ location, propertyType, timeRange, agent }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <div className="flex flex-col sm:flex-row justify-between items-start gap-8 p-4 sm:p-6 bg-white shadow rounded-lg">
+        <div className="flex flex-col sm:flex-row justify-between items-start gap-8 p-4 sm:p-6 metric-card shadow rounded-lg">
             {/* Title Section */}
             <div>
                 <h1 className="text-2xl font-semibold text-blue-900">{location}</h1>

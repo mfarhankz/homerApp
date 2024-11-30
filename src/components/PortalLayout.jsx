@@ -66,7 +66,7 @@ export default function PortalLayout() {
                     <NavLink
                         to="/"
                         className={({ isActive }) =>
-                            `flex items-center p-3 rounded-lg transition-colors ${isActive ? 'side-panel-selected-item-bg text-blue-900' : 'text-gray-600 hover:bg-gray-50'
+                            `flex items-center p-3 rounded-lg transition-colors ${isActive ? 'button-blue text-white' : 'text-gray-600 hover:bg-gray-50'
                             }`
                         }
                         onClick={() => setIsNavOpen(false)}
@@ -78,7 +78,7 @@ export default function PortalLayout() {
                     <NavLink
                         to="/reports"
                         className={({ isActive }) =>
-                            `flex items-center p-3 rounded-lg transition-colors ${isActive ? 'side-panel-selected-item-bg text-blue-900' : 'text-gray-600 hover:bg-gray-50'
+                            `flex items-center p-3 rounded-lg transition-colors ${isActive ? 'button-blue text-white' : 'text-gray-600 hover:bg-gray-50'
                             }`
                         }
                         onClick={() => setIsNavOpen(false)}
@@ -89,7 +89,7 @@ export default function PortalLayout() {
                     <NavLink
                         to="/settings"
                         className={({ isActive }) =>
-                            `flex items-center p-3 rounded-lg transition-colors ${isActive ? 'side-panel-selected-item-bg text-blue-900' : 'text-gray-600 hover:bg-gray-50'
+                            `flex items-center p-3 rounded-lg transition-colors ${isActive ? 'button-blue text-white' : 'text-gray-600 hover:bg-gray-50'
                             }`
                         }
                         onClick={() => setIsNavOpen(false)}
@@ -101,7 +101,7 @@ export default function PortalLayout() {
 
                 {/* User Section */}
                 <div className="absolute bottom-0 w-full p-4">
-                    <div className="flex items-center justify-between side-panel-user-bg rounded-full p-2">
+                    <div className="flex items-center justify-between button-blue rounded-full p-2">
                         <div className="flex items-center">
                             <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
                                 <span className="text-blue-900 font-medium">

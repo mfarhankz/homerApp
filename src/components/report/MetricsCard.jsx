@@ -1,9 +1,9 @@
 // components/report/MetricsCard.jsx
 const MetricsCard = ({ title, value, highLow, chart, className = '' }) => {
     return (
-        <div className={`bg-white rounded-lg p-6 shadow-sm ${className}`}>
+        <div className={`metric-card rounded-lg p-6 shadow-sm ${className}`}>
             <div className="flex justify-between items-center">
-                <h3 className="text-lg font-medium">{title}</h3>
+                <h3 className="metric-card-text">{title}</h3>
                 <div className="flex justify-between items-center bg-gray-100 p-2 rounded-md">
                     <div className="text-center">
                         <div className="text-xs text-gray-500 font-medium">HIGH</div>

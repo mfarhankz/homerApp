@@ -30,12 +30,14 @@ export default function Component() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-[#FEF8F2] py-12 px-4 sm:px-6 lg:px-8">
-            <span className="absolute top-4 left-4 text-homer-homer-34">homer</span>
-            <h2 className="mb-8 text-center text-2xl font-semibold text-homer-blue">
-                Real-time CMA data at your fingertips
-            </h2>
-            <div className="max-w-sm w-full space-y-8 bg-white p-10 rounded-xl shadow-lg">
+        <div className="min-h-screen flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8 bg-homer-beige">
+            <span className="absolute top-8 left-4 text-homer-homer-34">homer</span>
+            <div className="mb-8 text-center font-semibold text-homer-blue flex flex-col px-4 pt-16">
+                <div className="whitespace-nowrap text-lg sm:text-xl md:text-2xl">We are currently in private beta mode,</div>
+                <div className="whitespace-nowrap text-lg sm:text-xl md:text-2xl">but we are aiming to make the HOMER Open</div>
+                <div className="whitespace-nowrap text-lg sm:text-xl md:text-2xl">to all TRREB licensed agents.</div>
+            </div>
+            <div className="max-w-sm w-full space-y-8  rounded-xl">
                 <h1 className="text-2xl font-bold text-homer-blue text-center">Sign in</h1>
                 <form className="mt-8 space-y-6" onSubmit={handleSignIn}>
                     <div>
@@ -80,7 +82,7 @@ export default function Component() {
                             </button>
                         </div>
                     </div>
-                    <div className="flex items-center justify-between">
+                    {/* <div className="flex items-center justify-between">
                         <div className="flex items-center">
                             <input
                                 id="remember-me"
@@ -90,20 +92,20 @@ export default function Component() {
                             />
                             <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
                                 Remember me
-                            </label>
+                            </label> 
                         </div>
-                    </div>
-                    <div className="flex justify-center">
+                    </div>*/}
+                    {/* <div className="flex justify-center">
                         <ReCAPTCHA
                             sitekey="YOUR_RECAPTCHA_SITE_KEY"
                             onChange={handleCaptchaChange}
                         />
-                    </div>
+                    </div> */}
                     <div>
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="group relative w-full flex items-center justify-center py-2 px-4 border button-homer-signin border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50"
+                            className="group relative w-full flex items-center justify-center py-2 px-4 border button-blue border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50"
                         >
                             {isLoading ? (
                                 <Loader className="animate-spin mr-2" />
