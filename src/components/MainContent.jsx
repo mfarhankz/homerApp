@@ -5,6 +5,8 @@ import { baseDataAPI } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 import { Building2, Calendar, MapPin, Share2, Trash2, X } from 'lucide-react';
 import ShareModal from './ShareModal';
+import DeleteConfirmationModal from './DeleteConfirmationModal';
+
 
 
 export default function MainContent({  isOpen }) {
@@ -16,6 +18,9 @@ export default function MainContent({  isOpen }) {
     const [isShareOpen, setIsShareOpen] = useState(false);
     const [shareUrl, setShareUrl] = useState('');
     const abortControllerRef = useRef(null);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [reportToDelete, setReportToDelete] = useState(null);
+
     useEffect(() => {
         const fetchReports = async () => {
             try {
@@ -79,9 +84,21 @@ export default function MainContent({  isOpen }) {
     };
 
     const handleDelete = (e, reportId) => {
-        e.stopPropagation();
-        onDelete(reportId);
+        e.stopPropagation(); // Prevent event bubbling
+        setReportToDelete(reportId);
+        setIsDeleteModalOpen(true);
     };
+
+    const handleConfirmDelete = async () => {
+        try {
+            await handleDelete(reportToDelete);
+            setIsDeleteModalOpen(false);
+            setReportToDelete(null);
+        } catch (error) {
+            console.error('Error deleting report:', error);
+        }
+    };
+
 
     const handleShare = (e, reportId) => {
         e.stopPropagation();
@@ -210,6 +227,15 @@ export default function MainContent({  isOpen }) {
                                                 </button>
                                             </div>
                                         </div>
+                                        {/* Add the modal component */}
+                                        <DeleteConfirmationModal
+                                            isOpen={isDeleteModalOpen}
+                                            onClose={() => {
+                                                setIsDeleteModalOpen(false);
+                                                setReportToDelete(null);
+                                            }}
+                                            onConfirm={handleConfirmDelete}
+                                        />
                                     </div>
                                 ))}
                             </div>
