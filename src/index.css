@@ -131,6 +131,11 @@
 
     body,
     #root {
+        --bg-300: 210 40% 96%;
+        /* Example HSL values - adjust as needed */
+        --bg-400: 210 40% 90%;
+        /* Example HSL values - adjust as needed */
+        --border-300: 210 40% 96%;
         width: 100vw;
         min-height: 100vh;
         margin: 0;
@@ -341,10 +346,7 @@
         background-color: #E9E9E9 !important;
     }
 
-    .listing-map-show-hide-listing {
-
-        
-    }
+    .listing-map-show-hide-listing {}
 
     /* Update media queries accordingly */
     @media (max-width: 640px) {

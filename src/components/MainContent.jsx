@@ -2,11 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CitySearch from './CitySearch';
 import { baseDataAPI } from '../services/api';
+import { useAuth } from '../contexts/AuthContext';
 import { Building2, Calendar, MapPin, Share2, Trash2, X } from 'lucide-react';
 import ShareModal from './ShareModal';
 
 
-export default function MainContent({ user, isOpen }) {
+export default function MainContent({  isOpen }) {
+    const { user, logout } = useAuth();
     const navigate = useNavigate();
     const [reports, setReports] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -97,9 +99,22 @@ export default function MainContent({ user, isOpen }) {
         }
     };
 
+    const getGreeting = () => {
+        const hour = new Date().getHours();
+
+        if (hour < 12) {
+            return "Good morning";
+        } else if (hour < 17) {
+            return "Good afternoon";
+        } else {
+            return "Good evening";
+        }
+    };
+
     return (
         <div className="w-full max-w-5xl mx-auto px-0 sm:px-4 mt-32">
             <div className="w-full">
+                <p className="text-homer-blue text-center text-xl mb-6">{getGreeting()} {user?.displayName || 'REZA'}</p>
                 <div className="content-center space-y-8 justify-center items-center">
                     <div className="start-report text-center flex flex-col">
                         <div className="flex-1 flex flex-col justify-center mb-12">
@@ -153,12 +168,12 @@ export default function MainContent({ user, isOpen }) {
                                                 <img
                                                     src={`/images/${report.propertyType}.png`}
                                                     alt={`${report.propertyType} in ${report.city}`}
-                                                    className="w-16 h-16 object-contain"
+                                                    className="mt-3 w-24 h-24 object-contain"
                                                 />
                                             </div>
 
                                             {/* Right side - Content */}
-                                            <div className="flex-1 p-4 flex flex-col justify-between">
+                                            <div className="flex-1 mt-2 p-4 flex flex-col justify-between">
                                                 <div>
                                                     <h2 className="text-homer-blue-2 text-sm">
                                                         {report.displayName || ''}
@@ -169,28 +184,31 @@ export default function MainContent({ user, isOpen }) {
                                                         {report.propertyType} in {report.city}
                                                     </h3>
                                                 </div>
-                                                <div className="text-homer-blue-9 text-sm">
-                                                    {getTimeAgo(report.createdDate)}
-                                                </div>
+
                                             </div>
                                         </div>
 
                                         {/* Toolbar */}
-                                        <div className="border-t border-gray-100 px-4 py-2 flex justify-end space-x-2">
-                                            <button
-                                                onClick={(e) => handleShare(e, report.reportId)}
-                                                className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
-                                                aria-label="Share report"
-                                            >
-                                                <Share2 className="w-4 h-4 text-gray-600" />
-                                            </button>
-                                            <button
-                                                onClick={(e) => handleDelete(e, report.reportId)}
-                                                className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
-                                                aria-label="Delete report"
-                                            >
-                                                <Trash2 className="w-4 h-4 text-gray-600" />
-                                            </button>
+                                        <div className="border-t border-gray-100 flex justify-between items-center">
+                                            <div className="text-homer-blue-9  px-2">
+                                                {getTimeAgo(report.createdDate)}
+                                            </div>
+                                            <div className="flex space-x-2">
+                                                <button
+                                                    onClick={(e) => handleShare(e, report.reportId)}
+                                                    className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
+                                                    aria-label="Share report"
+                                                >
+                                                    <Share2 className="w-4 h-4 text-gray-600" />
+                                                </button>
+                                                <button
+                                                    onClick={(e) => handleDelete(e, report.reportId)}
+                                                    className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
+                                                    aria-label="Delete report"
+                                                >
+                                                    <Trash2 className="w-4 h-4 text-gray-600" />
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 ))}

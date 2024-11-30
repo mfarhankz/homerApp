@@ -9,7 +9,7 @@ export default function LandingPage() {
     return (
         <div className="flex min-h-screen">
             <div className='absolute top-4 left-4'><span className="text-homer-homer-34">homer</span></div>
-            <MainContent user={user} />
+            <MainContent  />
         </div>
     );
 }
