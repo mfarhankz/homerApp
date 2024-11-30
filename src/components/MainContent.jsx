@@ -114,7 +114,7 @@ export default function MainContent({  isOpen }) {
     return (
         <div className="w-full max-w-5xl mx-auto px-0 sm:px-4 mt-32">
             <div className="w-full">
-                <p className="text-homer-blue text-center text-xl mb-6">{getGreeting()} {user?.displayName || 'REZA'}</p>
+                <p className="greeting text-center text-xl mb-6">{getGreeting()} {user?.displayName || 'REZA'}</p>
                 <div className="content-center space-y-8 justify-center items-center">
                     <div className="start-report text-center flex flex-col">
                         <div className="flex-1 flex flex-col justify-center mb-12">
@@ -199,14 +199,14 @@ export default function MainContent({  isOpen }) {
                                                     className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
                                                     aria-label="Share report"
                                                 >
-                                                    <Share2 className="w-4 h-4 text-gray-600" />
+                                                    <Share2 className="w-4 h-4 text-gray-600" color='#615E83' />
                                                 </button>
                                                 <button
                                                     onClick={(e) => handleDelete(e, report.reportId)}
                                                     className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
                                                     aria-label="Delete report"
                                                 >
-                                                    <Trash2 className="w-4 h-4 text-gray-600" />
+                                                    <Trash2 className="w-4 h-4 text-gray-600" color='#EE6F6F'/>
                                                 </button>
                                             </div>
                                         </div>

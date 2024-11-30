@@ -296,7 +296,7 @@
         background-size: cover;
         background-position: center;
         border-radius: 24px;
-        padding: 40px 20px;
+        padding: 20px 10px 10px 20px;
         position: relative;
         overflow: visible;
     }
@@ -347,6 +347,13 @@
     }
 
     .listing-map-show-hide-listing {}
+
+    .greeting{
+        color:#615E83;
+        font-family:'Plus Jakarta Sans',
+            sans-serif;
+            font-weight: 900;
+    }
 
     /* Update media queries accordingly */
     @media (max-width: 640px) {
