@@ -226,6 +226,16 @@
         background: linear-gradient(90deg, #EE7B6F 0%, #D54233 100%);
     }
 
+    .nav-item {
+        height: 50px;
+        background: linear-gradient(90deg, #FFF4E8 0%, #F9E7D4 100%);
+    }
+
+    .nav-item-selected {
+        height: 50px;
+        background: linear-gradient(90deg, #F4D7B7 0%, #FFF4E8 100%);
+    }
+
     .button-homer-search {
 
         background: linear-gradient(135deg, #4768b8 14.88%, #0C1B3D 87.5%);

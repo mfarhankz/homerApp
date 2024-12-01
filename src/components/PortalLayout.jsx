@@ -77,7 +77,7 @@ export default function PortalLayout() {
             {/* Sidebar Navigation */}
             <aside className={`fixed top-4 left-0 h-[calc(100%-2rem)] transition-all duration-300 ease-in-out 
                 ${isNavOpen ?
-                    'w-64 backdrop-blur bg-gradient-to-b from-[##F4D7B7]/70 to-[##F4D7B7]/80  shadow-lg rounded-r-2xl z-40' :
+                    'w-64 backdrop-blur bg-gradient-to-b from-[#F4D7B7]/70 to-[#F4D7B7]/80  shadow-lg rounded-r-2xl z-40' :
                     'w-10'
                 }`} onMouseLeave={handleMouseLeave}>
 
@@ -105,7 +105,7 @@ export default function PortalLayout() {
 
                         to="/"
                         className={({ isActive }) =>
-                            `flex items-center p-3 rounded-lg transition-colors   ${isActive ? 'button-blue text-white' : 'text-gray-600 hover:bg-gray-50/50'}`
+                            `flex items-center p-3 rounded-lg transition-colors   ${isActive ? 'nav-item text-grey-600' : 'nav-item-selected text-gray-600 hover:bg-gray-50/50'}`
                         }
                         onClick={() => setIsNavOpen(false)}
                         end
@@ -116,36 +116,35 @@ export default function PortalLayout() {
                 </nav>
 
                 {/* User Section */}
-                <div className="absolute bottom-4 w-full px-2">
-                    <div className={`flex items-center justify-between 
-                    ${isNavOpen ? 'button-blue rounded-full p-2 mx-2' : 'justify-center'}
-                                transition-all duration-300
-                    `}>
-                        {isDesktop && 
-                        <div className="flex items-center">
-                            <div className={`
-                    w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center
-                    ${!isNavOpen && 'hover:ring-2 hover:ring-blue-200 transition-all cursor-pointer'}
-                `}>
-                  
+                <div className="absolute bottom-4 w-full">
+                    {isNavOpen ? (
+                        <div className="button-homer-signin rounded-full p-2 mx-2 flex items-center justify-between">
+                            <div className="flex items-center">
+                                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <span className="text-blue-900 font-medium">
+                                        {user?.displayName?.[0] || 'U'}
+                                    </span>
+                                </div>
+                                <span className="ml-3 text-sm text-white">
+                                    {user?.displayName}
+                                </span>
+                            </div>
+                            <button
+                                onClick={handleSignOut}
+                                className="p-2 text-white hover:text-white-100 rounded-lg"
+                            >
+                                <LogOut className="w-5 h-5" />
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="w-10 mx-auto px-1">
+                            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center hover:ring-2 hover:ring-blue-200 transition-all cursor-pointer">
                                 <span className="text-blue-900 font-medium">
                                     {user?.displayName?.[0] || 'U'}
                                 </span>
-
                             </div>
-                            <span className={`ml-3 text-sm text-white transition-opacity duration-300 ${isNavOpen ? 'opacity-100' : 'opacity-0 w-0'}`}>
-                                {user?.displayName}
-                            </span>
                         </div>
-}
-                        <button
-                            onClick={handleSignOut}
-                            className={`p-2 text-white hover:text-white-100 rounded-lg transition-opacity duration-300 ${isNavOpen ? 'opacity-100' : 'opacity-0 w-0'}`}
-                        >
-                            <LogOut className="w-5 h-5" />
-                        </button>
-                    </div>
-                            
+                    )}
                 </div>
             </aside>
 
