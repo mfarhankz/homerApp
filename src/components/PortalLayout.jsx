@@ -45,11 +45,11 @@ export default function PortalLayout() {
     return (
         <div className="min-h-screen">
             {/* Homer Text - Increased z-index to stay on top */}
-            {isDesktop && 
-            <div className='absolute top-4 left-4 z-50'>
-                <span className="text-homer-homer-34 cursor-pointer" onMouseEnter={handleMouseEnter}>homer</span>
-            </div>
-}
+            {isDesktop &&
+                <div className='absolute top-4 left-4 z-50'>
+                    <span className="text-homer-homer-34 cursor-pointer" onMouseEnter={handleMouseEnter}>homer</span>
+                </div>
+            }
             {/* Hover Area for Desktop */}
             <div
                 className="fixed top-0 left-0 w-16 h-full z-20 lg:block hidden"
@@ -99,7 +99,7 @@ export default function PortalLayout() {
 
 
                 {/* Navigation Links */}
-                <nav className={`p-6 space-y-2 mt-12 transition-opacity duration-300 pointer-events-auto ${isNavOpen ? 'opacity-100' : 'opacity-0'}`}>
+                <nav className={`p-6 space-y-2 lg:mt-12 transition-opacity duration-300 pointer-events-auto ${isNavOpen ? 'opacity-100' : 'opacity-0'}`}>
                     <NavLink
 
 
@@ -149,7 +149,7 @@ export default function PortalLayout() {
             </aside>
 
             {/* Main Content Area */}
-            <main className="w-full max-w-7xl mx-auto px-4 py-6">
+            <main className="w-full   max-w-7xl mx-auto px-4 py-6">
                 <Outlet />
             </main>
         </div>

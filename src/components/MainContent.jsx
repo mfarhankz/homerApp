@@ -149,7 +149,7 @@ export default function MainContent({ isOpen }) {
     };
 
     return (
-        <div className="w-full max-w-5xl mx-auto px-0 sm:px-4 mt-32">
+        <div className="w-full max-w-5xl mx-auto px-0 sm:px-4 mt-32 mt-11 lg:mt-0">
             <div className="w-full">
                 <p className="greeting text-center text-xl mb-6">{getGreeting()} {user?.displayName || 'REZA'}</p>
                 <div className="content-center space-y-8 justify-center items-center">
