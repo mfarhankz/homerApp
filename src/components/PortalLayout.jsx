@@ -77,7 +77,7 @@ export default function PortalLayout() {
             {/* Sidebar Navigation */}
             <aside className={`fixed top-4 left-0 h-[calc(100%-2rem)] transition-all duration-300 ease-in-out 
                 ${isNavOpen ?
-                    'w-64 backdrop-blur bg-gradient-to-b from-bg-300/70 to-bg-400/70  shadow-lg rounded-r-2xl z-40' :
+                    'w-64 backdrop-blur bg-gradient-to-b from-[##F4D7B7]/70 to-[##F4D7B7]/80  shadow-lg rounded-r-2xl z-40' :
                     'w-10'
                 }`} onMouseLeave={handleMouseLeave}>
 
@@ -91,6 +91,12 @@ export default function PortalLayout() {
                     aria-label="Close navigation">
                     <X className="w-5 h-5 text-white" />
                 </button>
+                {isNavOpen && !isDesktop && (
+                    <div className="p-6 pt-2 z-40">
+                        <span className="text-homer-homer-34 cursor-pointer">homer</span>
+                    </div>
+                )}
+
 
                 {/* Navigation Links */}
                 <nav className={`p-6 space-y-2 mt-12 transition-opacity duration-300 pointer-events-auto ${isNavOpen ? 'opacity-100' : 'opacity-0'}`}>
