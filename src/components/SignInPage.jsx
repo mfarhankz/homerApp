@@ -34,8 +34,8 @@ export default function Component() {
             <span className="absolute top-8 left-4 text-homer-homer-34">homer</span>
             <div className="mb-8 text-center font-semibold text-homer-blue flex flex-col px-4 pt-16">
                 <div className="whitespace-nowrap text-lg sm:text-xl md:text-2xl">We are currently in private beta mode,</div>
-                <div className="whitespace-nowrap text-lg sm:text-xl md:text-2xl">but we are aiming to make the HOMER Open</div>
-                <div className="whitespace-nowrap text-lg sm:text-xl md:text-2xl">to all TRREB licensed agents.</div>
+                <div className="whitespace-nowrap text-lg sm:text-xl md:text-2xl">but we are aiming to make the HOMER</div>
+                <div className="whitespace-nowrap text-lg sm:text-xl md:text-2xl">open to all TRREB licensed agents.</div>
             </div>
             <div className="max-w-sm w-full space-y-8  rounded-xl">
                 <h1 className="text-2xl font-bold text-homer-blue text-center">Sign in</h1>

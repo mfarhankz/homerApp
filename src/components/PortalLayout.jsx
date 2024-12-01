@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Home, FileText, Settings, LogOut, Menu, X } from 'lucide-react';
+import { Home, FileText, Settings, LogOut, Menu, X, } from 'lucide-react';
 import CityRegionSearch from './CityRegionSearch'
 
 export default function PortalLayout() {
@@ -45,9 +45,11 @@ export default function PortalLayout() {
     return (
         <div className="min-h-screen">
             {/* Homer Text - Increased z-index to stay on top */}
+            {isDesktop && 
             <div className='absolute top-4 left-4 z-50'>
                 <span className="text-homer-homer-34 cursor-pointer" onMouseEnter={handleMouseEnter}>homer</span>
             </div>
+}
             {/* Hover Area for Desktop */}
             <div
                 className="fixed top-0 left-0 w-16 h-full z-20 lg:block hidden"
@@ -57,11 +59,12 @@ export default function PortalLayout() {
             {!isNavOpen && !isDesktop && (
                 <button
                     onClick={() => setIsNavOpen(true)}
-                    className="fixed top-[70px] left-4 z-20 w-12 h-12 flex items-center justify-center rounded-full bg-blue-50 hover:bg-blue-100 transition-colors lg:hidden"
+                    className="fixed top-[25px]  z-20 w-12 h-12 flex items-center justify-center    transition-colors lg:hidden"
                     aria-label="Open navigation"
                 >
-                    <Menu className="w-6 h-6 text-blue-900" />
-                </button>)}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 32 32"><path d="M26 16a1 1 0 0 1-1 1H5a1 1 0 0 1 0-2h20a1 1 0 0 1 1 1ZM5 9h18a1 1 0 1 0 0-2H5a1 1 0 0 0 0 2Zm16 14H5a1 1 0 0 0 0 2h16a1 1 0 0 0 0-2Z"></path></svg>
+                </button>
+            )}
 
             {/* Overlay Background - Only for mobile */}
             {isNavOpen && !isDesktop && (
@@ -112,19 +115,23 @@ export default function PortalLayout() {
                     ${isNavOpen ? 'button-blue rounded-full p-2 mx-2' : 'justify-center'}
                                 transition-all duration-300
                     `}>
+                        {isDesktop && 
                         <div className="flex items-center">
                             <div className={`
                     w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center
                     ${!isNavOpen && 'hover:ring-2 hover:ring-blue-200 transition-all cursor-pointer'}
                 `}>
+                  
                                 <span className="text-blue-900 font-medium">
                                     {user?.displayName?.[0] || 'U'}
                                 </span>
+
                             </div>
                             <span className={`ml-3 text-sm text-white transition-opacity duration-300 ${isNavOpen ? 'opacity-100' : 'opacity-0 w-0'}`}>
                                 {user?.displayName}
                             </span>
                         </div>
+}
                         <button
                             onClick={handleSignOut}
                             className={`p-2 text-white hover:text-white-100 rounded-lg transition-opacity duration-300 ${isNavOpen ? 'opacity-100' : 'opacity-0 w-0'}`}
@@ -132,6 +139,7 @@ export default function PortalLayout() {
                             <LogOut className="w-5 h-5" />
                         </button>
                     </div>
+                            
                 </div>
             </aside>
 
