@@ -40,7 +40,7 @@ export default function PortalLayout() {
             setIsNavOpen(false);
         }
     };
-    
+
 
     return (
         <div className="min-h-screen">
@@ -54,13 +54,14 @@ export default function PortalLayout() {
                 onMouseEnter={handleMouseEnter}
             />
             {/* Toggle Button - Only visible on mobile */}
-            <button
-                onClick={() => setIsNavOpen(true)}
-                className="fixed top-10 left-6 z-20 w-12 h-12 flex items-center justify-center rounded-full bg-blue-50 hover:bg-blue-100 transition-colors lg:hidden"
-                aria-label="Open navigation"
-            >
-                <Menu className="w-6 h-6 text-blue-900" />
-            </button>
+            {!isNavOpen && !isDesktop && (
+                <button
+                    onClick={() => setIsNavOpen(true)}
+                    className="fixed top-[70px] left-4 z-20 w-12 h-12 flex items-center justify-center rounded-full bg-blue-50 hover:bg-blue-100 transition-colors lg:hidden"
+                    aria-label="Open navigation"
+                >
+                    <Menu className="w-6 h-6 text-blue-900" />
+                </button>)}
 
             {/* Overlay Background - Only for mobile */}
             {isNavOpen && !isDesktop && (
@@ -71,67 +72,46 @@ export default function PortalLayout() {
             )}
 
             {/* Sidebar Navigation */}
-            <aside className={`
-    fixed top-4 left-0 h-[calc(100%-2rem)] 
-    transition-all duration-300 ease-in-out 
-    ${isNavOpen ?
-                    'w-64 backdrop-blur bg-gradient-to-b from-bg-300/70 to-bg-400/70 border border-border-300 rounded-r-2xl shadow-lg' :
-                    'w-14'
-                }
-`}
-                onMouseLeave={handleMouseLeave}
-            >
-                {/* Close Button
+            <aside className={`fixed top-4 left-0 h-[calc(100%-2rem)] transition-all duration-300 ease-in-out 
+                ${isNavOpen ?
+                    'w-64 backdrop-blur bg-gradient-to-b from-bg-300/70 to-bg-400/70  shadow-lg rounded-r-2xl z-40' :
+                    'w-10'
+                }`} onMouseLeave={handleMouseLeave}>
+
+                {/* Close Button*/}
                 <button
-                    onClick={() => setIsNavOpen(false)}
-                    className={`absolute top-3 right-4 p-2 rounded-lg hover:bg-gray-100/50 transition-opacity duration-300 ${isNavOpen ? 'opacity-100' : 'opacity-0'}`}
-                    aria-label="Close navigation"
-                >
-                    <X className="w-5 h-5 text-gray-500" />
-                </button> */}
+                    onClick={(e) => {
+                        e.preventDefault();  // Prevent default navigation
+                        setIsNavOpen(false);
+                    }}
+                    className={`absolute top-3 right-4 p-2 rounded-lg bg-white/20 hover:bg-white/30 transition-opacity lg:hidden duration-300 ${isNavOpen ? 'opacity-100' : 'opacity-0'}`}
+                    aria-label="Close navigation">
+                    <X className="w-5 h-5 text-white" />
+                </button>
 
                 {/* Navigation Links */}
-                <nav className={`p-6 space-y-2 mt-12 transition-opacity duration-300 ${isNavOpen ? 'opacity-100' : 'opacity-0'}`}>
+                <nav className={`p-6 space-y-2 mt-12 transition-opacity duration-300 pointer-events-auto ${isNavOpen ? 'opacity-100' : 'opacity-0'}`}>
                     <NavLink
+
+
                         to="/"
                         className={({ isActive }) =>
-                            `flex items-center p-3 rounded-lg transition-colors ${isActive ? 'button-blue text-white' : 'text-gray-600 hover:bg-gray-50/50'}`
+                            `flex items-center p-3 rounded-lg transition-colors   ${isActive ? 'button-blue text-white' : 'text-gray-600 hover:bg-gray-50/50'}`
                         }
                         onClick={() => setIsNavOpen(false)}
                         end
                     >
                         <Home className="w-5 h-5 mr-3" />
-                        <span>Dashboard</span>
-                    </NavLink>
-                    <NavLink
-                        to="/reports"
-                        className={({ isActive }) =>
-                            `flex items-center p-3 rounded-lg transition-colors ${isActive ? 'button-blue text-white' : 'text-gray-600 hover:bg-gray-50/50'}`
-                        }
-                        onClick={() => setIsNavOpen(false)}
-                    >
-                        <FileText className="w-5 h-5 mr-3" />
-                        <span>Reports</span>
-                    </NavLink>
-                    <NavLink
-                        to="/settings"
-                        className={({ isActive }) =>
-                            `flex items-center p-3 rounded-lg transition-colors ${isActive ? 'button-blue text-white' : 'text-gray-600 hover:bg-gray-50/50'}`
-                        }
-                        onClick={() => setIsNavOpen(false)}
-                    >
-                        <Settings className="w-5 h-5 mr-3" />
-                        <span>Settings</span>
+                        <span>Home</span>
                     </NavLink>
                 </nav>
 
                 {/* User Section */}
                 <div className="absolute bottom-4 w-full px-2">
-                    <div className={`
-            flex items-center justify-between 
-            ${isNavOpen ? 'button-blue rounded-full p-2 mx-2' : 'justify-center'}
-            transition-all duration-300
-        `}>
+                    <div className={`flex items-center justify-between 
+                    ${isNavOpen ? 'button-blue rounded-full p-2 mx-2' : 'justify-center'}
+                                transition-all duration-300
+                    `}>
                         <div className="flex items-center">
                             <div className={`
                     w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center

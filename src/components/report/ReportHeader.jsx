@@ -18,6 +18,7 @@ const ReportHeader = ({ location, propertyType, timeRange, agent }) => {
 
             {/* Agent Info Section */}
             <div className="flex items-center gap-2">
+                {agent && 
                 <div className="flex items-center gap-2">
                     <div className="w-10 h-10 bg-blue-900 rounded-full flex items-center justify-center">
                         <span className="text-white">{agent.initials}</span>
@@ -26,10 +27,10 @@ const ReportHeader = ({ location, propertyType, timeRange, agent }) => {
                         <p className="font-medium">{agent.name}</p>
                         <p className="text-gray-500">{agent.brokerage}</p>
                     </div>
-                </div>
+                </div>}
 
                 {/* Dropdown Menu */}
-                <div className="relative">
+                {/* <div className="relative">
                     <button
                         onClick={() => setIsOpen(!isOpen)}
                         className="p-2 rounded-full hover:bg-gray-100 focus:outline-none"
@@ -63,7 +64,7 @@ const ReportHeader = ({ location, propertyType, timeRange, agent }) => {
                             </div>
                         </div>
                     )}
-                </div>
+                </div> */}
             </div>
         </div>
     );

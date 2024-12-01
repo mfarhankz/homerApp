@@ -77,8 +77,8 @@ export function AuthProvider({ children }) {
                         });
 
                         // Setup timers
-                        setupRefreshTimer(timeUntilExpiry);
-                        setupExpirationTimer(timeUntilExpiry);
+                        //setupRefreshTimer(timeUntilExpiry);
+                        //setupExpirationTimer(timeUntilExpiry);
                     }
                 }
             } catch (error) {

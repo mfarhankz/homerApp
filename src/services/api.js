@@ -277,6 +277,31 @@ export const baseDataAPI = {
       }
     }
   },
+  fetchClientReportData: async (reportId, abortSignal) => {
+    try {
+      const response = await apiClient.get(
+        '/Client/LoadReport?reportId=' + reportId,
+        {
+          signal: abortSignal || null, // Pass additional configurations here
+        },
+      )
+      if (response.data) {
+        return {
+          success: true,
+          data: response.data,
+        }
+      }
+      return {
+        success: false,
+        error: response.data.message || 'Failed to report data',
+      }
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message || 'An error occurred while fetching report data',
+      }
+    }
+  },
 }
 
 // Report related API calls (for future use)

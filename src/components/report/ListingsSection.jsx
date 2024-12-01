@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ListingCard from './ListingCard';
 
-const ListingsSection = ({ listings, onSort }) => {
+const ListingsSection = ({ listings, onSort, isClientView  = false}) => {
     const [sortOption, setSortOption] = useState('All');
     const [filteredListings, setFilteredListings] = useState(listings);
     const [sortDirection, setSortDirection] = useState('asc'); // 'asc' or 'desc'
@@ -111,6 +111,7 @@ const ListingsSection = ({ listings, onSort }) => {
                             key={listing.listingKey}
                             listing={listing}
                             onHideToggle={() => {/* handle hide */ }}
+                            isClient={isClientView}
                         />
                     ))}
                 </div>

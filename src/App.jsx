@@ -6,6 +6,8 @@ import MainContent from './components/MainContent'
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import NeighborhoodReportGenerator from './components/NeighborhoodReportGenerator';
 import ReportResult from './components/report/ReportResult'
+import ClientReport from './components/report/ClientReport'
+import ClientLayout from './components/ClientLayout'
 
 
 // PublicRoute component
@@ -23,6 +25,7 @@ const PublicRoute = ({ children }) => {
 
     return children;
 };
+
 
 function PrivateRoute({ children }) {
     const { isAuthenticated } = useAuth();
@@ -42,14 +45,10 @@ export default function App() {
                             </PublicRoute>
                         }
                     />
-                    <Route
-                        path="/viewreport/:reportId"
-                        element={
-                            <PublicRoute>
-                                <ReportResult />
-                            </PublicRoute>
-                        }
-                    />
+                    {/* Client Report with its own layout */}
+                    <Route element={<ClientLayout />}>
+                        <Route path="/viewreport/:reportId" element={<ClientReport />} />
+                    </Route>
                     <Route
                         path="/*"
                         element={

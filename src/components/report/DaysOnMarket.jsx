@@ -3,7 +3,7 @@ const DaysOnMarket = ({ title,value, className = '' }) => {
     return (
         <div className={`metric-card rounded-lg p-6 shadow-sm ${className}`}>
             <div className="flex justify-between items-center mt-3">
-                <h3 className="metric-card-text">{title}</h3>                
+                <span className="metric-card-text">{title}</span>                
             </div>
             <div className="flex justify-between items-start mb-4 mt-2">
                 <div className="text-4xl font-semibold">

@@ -66,7 +66,7 @@ const clearOldCache = () => {
     }
 };
 
-const ListingCard = ({ listing, onHideToggle }) => {
+const ListingCard = ({ listing, onHideToggle, isClient }) => {
     const [imageUrl, setImageUrl] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const fallbackImage = '/images/listing-home.jpg';
@@ -128,13 +128,13 @@ const ListingCard = ({ listing, onHideToggle }) => {
                         {listing.uiStatus}
                     </span>
                 </div>
-                <button
+                {!isClient &&   <button
                     onClick={onHideToggle}
                     className="absolute top-2 right-2 px-3 py-1 bg-white text-gray-700 text-xs font-medium 
                              rounded-full shadow hover:bg-gray-50 transition-colors flex items-center gap-1 z-20"
                 >
                     <span>Hide</span>
-                </button>
+                </button>}
             </div>
 
             {/* Content Section */}
