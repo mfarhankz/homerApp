@@ -9,7 +9,7 @@ const ShareModal = ({ isOpen, onClose, url, onCopy }) => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-lg p-6 max-w-md w-full">
                 <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-semibold">Share Report</h3>
+                    <h3 className="text-lg font-semibold">Copy Report URL to Share it</h3>
                     <button
                         onClick={onClose}
                         className="p-1 hover:bg-gray-100 rounded-full"

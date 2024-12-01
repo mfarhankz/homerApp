@@ -6,10 +6,11 @@ import { useAuth } from '../contexts/AuthContext';
 import { Building2, Calendar, MapPin, Share2, Trash2, X } from 'lucide-react';
 import ShareModal from './ShareModal';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
+import NotificationDialog from './NotificationDialog'
 
 
 
-export default function MainContent({  isOpen }) {
+export default function MainContent({ isOpen }) {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
     const [reports, setReports] = useState([]);
@@ -20,6 +21,8 @@ export default function MainContent({  isOpen }) {
     const abortControllerRef = useRef(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [reportToDelete, setReportToDelete] = useState(null);
+    const [isNotificationVisible, setIsNotificationVisible] = useState(false);
+    const [notificationMessage, setNotificationMessage] = useState('')
 
     useEffect(() => {
         const fetchReports = async () => {
@@ -56,13 +59,6 @@ export default function MainContent({  isOpen }) {
         });
     };
 
-    const formatDate = (dateString) => {
-        return new Date(dateString).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-        });
-    };
 
     const getTimeAgo = (dateString) => {
         const now = new Date();
@@ -91,14 +87,38 @@ export default function MainContent({  isOpen }) {
 
     const handleConfirmDelete = async () => {
         try {
-            await handleDelete(reportToDelete);
+            await proceedWithDelete(reportToDelete);
+            // await handleDelete(reportToDelete);
             setIsDeleteModalOpen(false);
-            setReportToDelete(null);
+            // setReportToDelete(null);
         } catch (error) {
             console.error('Error deleting report:', error);
         }
     };
 
+    const proceedWithDelete = async (reportToDelete) => {
+        try {
+            abortControllerRef.current = new AbortController();
+            const response = await baseDataAPI.deleteReportData(reportToDelete, abortControllerRef.current.signal);
+            if (!response.success) {
+                setNotificationMessage({ text: "Could not delete the report. try again later!", type: 'error' });
+                setIsNotificationVisible(true);
+            }
+
+            const reportDeleteResponse = await response.data;
+
+            if (reportDeleteResponse.count && reportDeleteResponse.count > 0) {
+                setNotificationMessage({ text: "Report deleted successfully!", type: 'info' });
+                setIsNotificationVisible(true);
+                setReports(reportDeleteResponse.savedReports);
+            }
+
+        } catch (error) {
+            console.error('Error deleting report:', error);
+        } finally {
+            abortControllerRef.current = null;
+        }
+    }
 
     const handleShare = (e, reportId) => {
         e.stopPropagation();
@@ -223,7 +243,7 @@ export default function MainContent({  isOpen }) {
                                                     className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
                                                     aria-label="Delete report"
                                                 >
-                                                    <Trash2 className="w-4 h-4 text-gray-600" color='#EE6F6F'/>
+                                                    <Trash2 className="w-4 h-4 text-gray-600" color='#EE6F6F' />
                                                 </button>
                                             </div>
                                         </div>
@@ -235,6 +255,12 @@ export default function MainContent({  isOpen }) {
                                                 setReportToDelete(null);
                                             }}
                                             onConfirm={handleConfirmDelete}
+                                        />
+
+                                        <NotificationDialog
+                                            message={notificationMessage}
+                                            isVisible={isNotificationVisible}
+                                            onClose={() => setIsNotificationVisible(false)}
                                         />
                                     </div>
                                 ))}
