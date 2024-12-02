@@ -145,6 +145,9 @@
 
     .min-h-screen {
         background: #F9E7D4 !important;
+        min-height: 100vh;
+            /* Fallback */
+            min-height: -webkit-fill-available;
     }
 
     .text-homer-blue {
@@ -220,7 +223,9 @@
     }
 
 
-
+.button-delete {
+    background: linear-gradient(90deg, #EE7B6F 0%, #D54233 100%);
+}
     .button-homer-signin {
         height: 50px;
         background: linear-gradient(90deg, #EE7B6F 0%, #D54233 100%);

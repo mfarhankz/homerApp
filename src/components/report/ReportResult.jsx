@@ -193,48 +193,44 @@ const ReportResult = () => {
                     propertyType={reportData.reportRequestDocument.searchCriteria.propertyType}
                     timeRange={reportData.reportRequestDocument.searchCriteria.timeRange}
                     agent={{
-                        name: user.firstName + ',' + user.lastName,
+                        firstName: user.firstName,
+                        lastName: user.lastName,
                         brokerage: user.brokerageName,
-                        initials: ""
+                        emailAddress: user.emailAddress,
+                        displayPullDown: false
                     }}
                 />
                 {/* Toolbar */}
                 <div className="report-toolbar shadow-sm rounded-lg overflow-hidden">
                     <div className="flex items-center justify-between px-4 py-3 sm:px-6">
-                        <div className="flex gap-3 w-full">
-                            {!reportState.isSaved && (
-                                <button
-                                    disabled={isSaving}
-                                    onClick={handleSaveReport}
-                                    className="flex-1 flex items-center justify-center gap-2 button-blue text-white px-4 py-2 rounded-lg 
-                                          transition-colors duration-200 text-sm sm:text-base"
-                                >
-                                    <Save className="w-4 h-4 sm:w-5 sm:h-5" />
-                                    <span>Add to Fav</span>
-                                    {isSaving && <Loader2 />}
-                                </button>
-                            )}
+                        <div className="flex flex-col sm:flex-row gap-2 w-full">
+                            <button
+                                disabled={isSaving}
+                                className="flex items-center justify-center gap-2 button-delete text-white px-4 py-2 rounded-lg transition-colors duration-200 text-sm sm:text-base"
+                            >
+                                <Save className="w-4 h-4 sm:w-5 sm:h-5" />
+                                <span>Delete</span>
+                                {isSaving && <Loader2 className="animate-spin" />}
+                            </button>
 
-                            {reportState.isSaved && (
-                                <button
-                                    disabled={isSaving}
-                                    onClick={handleRemoveFromFave}
-                                    className="flex-1 flex items-center justify-center gap-2 button-blue text-white px-4 py-2 rounded-lg 
-                                         transition-colors duration-200 text-sm sm:text-base"
-                                >
-                                    <Save className="w-4 h-4 sm:w-5 sm:h-5" />
-                                    <span>Remove from Fav</span>
-                                    {isSaving && <Loader2 />}
-                                </button>
-                            )}
+                            <button
+                                disabled={isSaving}
+                                onClick={handleSaveReport}
+                                className="flex items-center justify-center gap-2 button-blue text-white px-4 py-2 rounded-lg transition-colors duration-200 text-sm sm:text-base"
+                            >
+                                <Save className="w-4 h-4 sm:w-5 sm:h-5" />
+                                <span>Set a Friendly Name</span>
+                                {isSaving && <Loader2 className="animate-spin" />}
+                            </button>
+
                             <button
                                 onClick={(e) => handleShare(e, reportState.reportId)}
-                                className="flex-1 flex items-center justify-center gap-2 border border-blue-600 button-blue text-white
-                                         px-4 py-2 rounded-lg  transition-colors duration-200 text-sm sm:text-base"
+                                className="flex items-center justify-center gap-2 border border-blue-600 button-blue text-white px-4 py-2 rounded-lg transition-colors duration-200 text-sm sm:text-base"
                             >
                                 <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
                                 <span>Share</span>
                             </button>
+
                             {/* Simple Modal */}
                             <ShareModal
                                 isOpen={isShareOpen}
@@ -312,7 +308,7 @@ const ReportResult = () => {
                                 <div className="lg:col-span-1">
                                     <DaysOnMarket
                                         title="Average Days on Market"
-                                        value={20}
+                                        value={reportData.avergaeDaysOnMarket}
                                     />
                                 </div>
 
@@ -395,11 +391,11 @@ const ReportResult = () => {
                                             className="hidden lg:block absolute top-2 left-2 z-10 button-blue text-white p-2 rounded-md shadow-md hover:bg-gray-50 transition-colors duration-200"
                                         >
                                             {isMapExpanded ? (
-                                                <div className="flex items-center gap-2">                                                   
+                                                <div className="flex items-center gap-2">
                                                     <span className="text-sm">Show Listings</span>
                                                 </div>
                                             ) : (
-                                                <div className="flex items-center">                                                   
+                                                <div className="flex items-center">
                                                     <span className="text-sm">Hide Listings</span>
                                                 </div>
                                             )}

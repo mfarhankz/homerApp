@@ -65,6 +65,7 @@ const ClientReport = () => {
                 }
 
                 const reportResponse = await response.data;
+                console.log('res',reportResponse);
                 setReportData(reportResponse);
                 // Update the report state with the response data
                 setReportState(prev => ({
@@ -145,6 +146,13 @@ const ClientReport = () => {
                     location={reportData.reportRequestDocument.searchCriteria.city + ', ' + reportData.reportRequestDocument.searchCriteria.region}
                     propertyType={reportData.reportRequestDocument.searchCriteria.propertyType}
                     timeRange={reportData.reportRequestDocument.searchCriteria.timeRange}
+                    agent={{
+                        firstName: reportData.agentInfo.firstName,
+                        lastName: reportData.agentInfo.lastName,
+                        brokerageName: reportData.agentInfo.brokerageName,
+                        emailAddress: reportData.agentInfo.emailAddress,
+                        displayPullDown:true
+                    }}
                 />
 
                 {/* Save Dialog */}
@@ -280,7 +288,7 @@ const ClientReport = () => {
                                         listings={reportData.neighborhoodListings}
                                         onSort={(items) => handleListingFiltered(items)}
                                         sortOption="price-low"
-                                        isClientView = {true}
+                                        isClientView={true}
                                     />
                                 </div>
 

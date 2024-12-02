@@ -7,7 +7,7 @@ const DaysOnMarket = ({ title,value, className = '' }) => {
             </div>
             <div className="flex justify-between items-start mb-4 mt-2">
                 <div className="text-4xl font-semibold">
-                    {typeof value === 'number' ? value : `${value}`}
+                    {typeof value === 'number' ? value.toFixed() : 'NAN'}
                 </div>
             </div>
         </div>
