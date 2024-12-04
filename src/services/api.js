@@ -226,10 +226,10 @@ export const baseDataAPI = {
       }
     }
   },
-  saveReport: async (payLoad, abortSignal) => {
+  SaveReportTitle: async (payLoad, abortSignal) => {
     try {
       const response = await apiClient.post(
-        '/Listing/SaveReport',
+        '/Listing/SaveReportTitle',
         payLoad, // This is the actual payload
         {
           headers: {
@@ -308,6 +308,35 @@ export const baseDataAPI = {
       const response = await apiClient.delete(
         '/Listing/DeleteReport?reportId=' + reportId,
         {
+          signal: abortSignal || null, // Pass additional configurations here
+        },
+      )
+      if (response.data) {
+        return {
+          success: true,
+          data: response.data,
+        }
+      }
+      return {
+        success: false,
+        error: response.data.message || 'Failed to report data',
+      }
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message || 'An error occurred while fetching report data',
+      }
+    }
+  },
+  saveReportHiddenListings: async (payLoad, abortSignal) => {
+    try {
+      const response = await apiClient.post(
+        '/Listing/SaveReport',
+        payLoad, // This is the actual payload
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
           signal: abortSignal || null, // Pass additional configurations here
         },
       )

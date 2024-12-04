@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import ListingCard from './ListingCard';
+import { useFetcher } from 'react-router-dom';
 
-const ListingsSection = ({ listings, onSort, isClientView  = false}) => {
+const ListingsSection = ({ listings, onSort, isClientView = false, onHideListing }) => {
     const [sortOption, setSortOption] = useState('All');
     const [filteredListings, setFilteredListings] = useState(listings);
     const [sortDirection, setSortDirection] = useState('asc'); // 'asc' or 'desc'
@@ -60,6 +61,26 @@ const ListingsSection = ({ listings, onSort, isClientView  = false}) => {
         console.log('Toggle sort clicked', { isSortingEnabled, sortDirection });
     };
 
+    const onHideListingClicked = (key) => {
+        if (onHideListing) {
+            onHideListing(key);
+        }
+
+        setFilteredListings(prevListings => {
+            const updatedListings = prevListings.map(listing => {
+                if (listing.listingKey === key) {
+                    return { ...listing, hide: !listing.hide };
+                }
+                return listing;
+            });
+            return updatedListings;
+        });
+    }
+
+    // useEffect(()=>{
+    //     	    console.log(filteredListings);
+    // },[filteredListings])
+
     return (
         <div className="h-full flex flex-col">
             {/* Mobile-optimized header */}
@@ -110,7 +131,7 @@ const ListingsSection = ({ listings, onSort, isClientView  = false}) => {
                         <ListingCard
                             key={listing.listingKey}
                             listing={listing}
-                            onHideToggle={() => {/* handle hide */ }}
+                            onHideToggle={(key) => onHideListingClicked(key)}
                             isClient={isClientView}
                         />
                     ))}

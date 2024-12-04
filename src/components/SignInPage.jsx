@@ -4,14 +4,15 @@ import { useNavigate } from 'react-router-dom';
 import { Loader, Eye, EyeOff } from 'lucide-react';
 import ReCAPTCHA from "react-google-recaptcha";
 
-export default function Component() {
-    const { login, errorMessage } = useAuth();
+export default function SignInPage() {
+    const { login } = useAuth();
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [captchaValue, setCaptchaValue] = useState(null);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleSignIn = async (e) => {
         e.preventDefault();
@@ -19,10 +20,17 @@ export default function Component() {
             alert("Please complete the CAPTCHA");
             return;
         }*/
-        setIsLoading(true);
-        await login(email, password);
-        setIsLoading(false);
-        navigate('/');
+        try {
+            setIsLoading(true);
+            await login(email, password);
+
+            navigate('/');
+        } catch (error) {
+            setErrorMessage(error.message || 'An error occurred during sign in');
+        } finally {
+            setIsLoading(false);
+        }
+
     };
 
     const handleCaptchaChange = (value) => {

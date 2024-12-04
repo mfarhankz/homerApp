@@ -17,11 +17,11 @@ const PropertyTypeOption = ({ type, icon, label, selected, onClick }) => (
     `}
     >
         <div className="flex flex-col items-center flex-1 justify-center w-full">
-            <div className="w-[78px] h-[78px] flex items-center justify-center mb-3">
+            <div className="w-[72px] h-[72px] flex items-center justify-center mb-3">
                 <img
                     src={icon}
                     alt={label}
-                    className="w-[78px] h-[78px] object-contain"
+                    className="w-[72px] h-[72px] object-contain"
                 />
             </div>
             <span className="text-homer-blue-600-12 text-center whitespace-nowrap">{label}</span>

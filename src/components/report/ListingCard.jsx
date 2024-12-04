@@ -70,7 +70,7 @@ const ListingCard = ({ listing, onHideToggle, isClient }) => {
     const [imageUrl, setImageUrl] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const fallbackImage = '/images/listing-home.jpg';
-    const isSold = listing.uiStatus === 'Sold';
+    const isHidden =  listing.hide === true;
 
     useEffect(() => {
         const loadImage = async () => {
@@ -103,9 +103,9 @@ const ListingCard = ({ listing, onHideToggle, isClient }) => {
     }, [listing.listingKey]);
 
     return (
-        <div className={`listing-card rounded-lg overflow-hidden shadow-sm relative ${isSold ? SOLD_OPACITY : ''}`}>
+        <div className={`listing-card rounded-lg overflow-hidden shadow-sm relative `}>
             {/* Semi-transparent overlay for sold listings */}
-            {isSold && (
+            {isHidden && (
                 <div className={`absolute inset-0 bg-gray-200 ${OVERLAY_OPACITY} z-10 pointer-events-none`} />
             )}
 
@@ -118,28 +118,28 @@ const ListingCard = ({ listing, onHideToggle, isClient }) => {
                 ) : (
                     <img
                         src={imageUrl}
-                        className={`w-full h-48 object-cover ${isSold ? 'filter grayscale' : ''}`}
+                        className={`w-full h-48 object-cover ${isHidden ? 'filter grayscale' : ''}`}
                         alt={`Listing ${listing.listingKey}`}
                     />
                 )}
                 <div className="absolute top-2 left-2 z-20">
-                    <span className={`${isSold ? 'sold' : 'for-sale'
+                    <span className={`${isHidden ? 'sold' : 'for-sale'
                         } text-white px-3 py-1 text-xs font-medium rounded-full`}>
                         {listing.uiStatus}
                     </span>
                 </div>
-                {!isClient &&   <button
-                    onClick={onHideToggle}
+                {!isClient && <button
+                    onClick={() => onHideToggle(listing.listingKey)}
                     className="absolute top-2 right-2 px-3 py-1 bg-white text-gray-700 text-xs font-medium 
                              rounded-full shadow hover:bg-gray-50 transition-colors flex items-center gap-1 z-20"
                 >
-                    <span>Hide</span>
+                    <span>{isHidden ? 'Show' : 'Hide'}</span>
                 </button>}
             </div>
 
             {/* Content Section */}
             <div className="p-4">
-                <div className={`text-xl font-semibold mb-1 ${isSold ? 'text-gray-600' : ''}`}>
+                <div className={`text-xl font-semibold mb-1 ${isHidden ? 'text-gray-600' : ''}`}>
                     ${listing.formattedListPrice}
                 </div>
 
@@ -149,18 +149,18 @@ const ListingCard = ({ listing, onHideToggle, isClient }) => {
 
                 <div className="flex items-center gap-4 text-gray-600 text-sm mb-2">
                     <div className="flex items-center">
-                        <BedIcon className={isSold ? SOLD_OPACITY : ''} />
+                        <BedIcon className={isHidden ? SOLD_OPACITY : ''} />
                         <span>{listing.bedroomsTotal}</span>
                         <span className="ml-1">beds</span>
                     </div>
                     <div className="flex items-center">
-                        <BathIcon className={isSold ? SOLD_OPACITY : ''} />
+                        <BathIcon className={isHidden ? SOLD_OPACITY : ''} />
                         <span>{listing.bathroomsTotalInteger}</span>
                         <span className="ml-1">baths</span>
                     </div>
                 </div>
 
-                <div className={`listing-card-mls-badge listing-card-mls-badge-label ${isSold ? SOLD_OPACITY : ''}`}>
+                <div className={`listing-card-mls-badge listing-card-mls-badge-label ${isHidden ? SOLD_OPACITY : ''}`}>
                     MLS® {listing.listingKey}
                 </div>
             </div>

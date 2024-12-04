@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import ReportHeader from './ReportHeader';
+import { debounce } from 'lodash';
 import MetricsCard from './MetricsCard';
 import DaysOnMarket from './DaysOnMarket'
 import ListingsSection from './ListingsSection';
@@ -29,6 +30,8 @@ const ReportResult = () => {
     const [isSaving, setIsSaving] = useState(false);
     const [isShareOpen, setIsShareOpen] = useState(false);
     const [shareUrl, setShareUrl] = useState('');
+    const [hiddenListings, setHiddenListings] = useState([]);
+    const [isHiddenListingsSaving, setIsHiddenListingsSaving] = useState(false);
 
     // State matching the C# class structure
     const [reportState, setReportState] = useState({
@@ -39,6 +42,53 @@ const ReportResult = () => {
         isSaved: false,
         isShared: false
     });
+
+    const handleHideListing = (key) => {
+        setReportData(prevData => {
+            const updatedListings = prevData.neighborhoodListings.map(listing => {
+                if (listing.listingKey === key) {
+                    return { ...listing, hide: !listing.hide };
+                }
+                return listing;
+            });
+
+            // Trigger debounced save whenever listings are updated
+            debouncedSaveHiddenListings(updatedListings);
+
+            return {
+                ...prevData,
+                neighborhoodListings: updatedListings
+            };
+        });
+    };
+
+    // Add this debounced save function near other constants
+    const debouncedSaveHiddenListings = debounce(async (listings) => {
+        if (isHiddenListingsSaving) return;
+
+        try {
+            setIsHiddenListingsSaving(true);
+            const hiddenOnes = listings.filter(listing => listing.hide)
+                .map(listing => listing.listingKey);
+            console.log('auto save', hiddenOnes);
+            const response = await baseDataAPI.saveReportHiddenListings({
+                displayName: reportState.displayName,
+                reportId: reportState.reportId,
+                hiddenListings: hiddenOnes
+            });
+
+            console.log(response);
+            // if (!response.success) {
+            //     throw new Error('Failed to save hidden listings');
+            // }
+            console.log('Hidden listings saved');
+        } catch (error) {
+            console.error('Error saving hidden listings:', error);
+        } finally {
+            setIsHiddenListingsSaving(false);
+        }
+    }, 5000); // Wait 2 seconds after last change before saving
+
 
     const handleCancel = () => {
         if (abortControllerRef.current) {
@@ -53,9 +103,21 @@ const ReportResult = () => {
         setMapData(filtered);
     }
 
+
+    useEffect(() => {
+        return () => {
+            debouncedSaveHiddenListings.cancel();
+        };
+    }, []);
+
     useEffect(() => {
         if (reportData && reportData.neighborhoodListings) {
             setMapData(reportData.neighborhoodListings);
+            // Save any hidden listings from initial load
+            const hasHiddenListings = reportData.neighborhoodListings.some(listing => listing.hide);
+            if (hasHiddenListings) {
+                debouncedSaveHiddenListings(reportData.neighborhoodListings);
+            }
         }
     }, [reportData]);
 
@@ -70,7 +132,6 @@ const ReportResult = () => {
 
                 const reportResponse = await response.data;
                 setReportData(reportResponse);
-                // Update the report state with the response data
                 setReportState(prev => ({
                     ...prev,
                     reportId: reportId,
@@ -100,7 +161,6 @@ const ReportResult = () => {
     };
 
 
-
     const handleSaveConfirm = async () => {
         if (!reportState.displayName.trim()) return;
         try {
@@ -112,7 +172,7 @@ const ReportResult = () => {
             }));
 
             abortControllerRef.current = new AbortController();
-            var response = await baseDataAPI.saveReport({ reportId: reportState.reportId, displayName: reportState.displayName, save: true }, abortControllerRef.current.signal);
+            var response = await baseDataAPI.SaveReportTitle({ reportId: reportState.reportId, displayName: reportState.displayName, save: true }, abortControllerRef.current.signal);
             if (!response.success) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -128,32 +188,7 @@ const ReportResult = () => {
             abortControllerRef.current = null;
             setIsSaving(false);
         }
-    }
-
-    const handleRemoveFromFave = async () => {
-        try {
-            setIsSaving(true);
-            setReportState(prev => ({
-                ...prev,
-                isSaved: false
-            }));
-
-            abortControllerRef.current = new AbortController();
-            var response = await baseDataAPI.saveReport({ reportId: reportState.reportId, save: false }, abortControllerRef.current.signal);
-            if (!response.success) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const reportResponse = await response.data;
-            console.log(reportResponse);
-
-        } catch (error) {
-            console.error('Error saving report:', error);
-        } finally {
-            abortControllerRef.current = null;
-            setIsSaving(false);
-        }
-    }
+    }   
 
     const handleCloseDialog = () => {
         setShowSaveDialog(false);
@@ -375,6 +410,7 @@ const ReportResult = () => {
                                         listings={reportData.neighborhoodListings}
                                         onSort={(items) => handleListingFiltered(items)}
                                         sortOption="price-low"
+                                        onHideListing={handleHideListing}
                                     />
                                 </div>
 
