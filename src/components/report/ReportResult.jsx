@@ -87,7 +87,7 @@ const ReportResult = () => {
         } finally {
             setIsHiddenListingsSaving(false);
         }
-    }, 5000); // Wait 2 seconds after last change before saving
+    }, 2000); // Wait 2 seconds after last change before saving
 
 
     const handleCancel = () => {
@@ -188,7 +188,7 @@ const ReportResult = () => {
             abortControllerRef.current = null;
             setIsSaving(false);
         }
-    }   
+    }
 
     const handleCloseDialog = () => {
         setShowSaveDialog(false);
