@@ -151,6 +151,8 @@ const ClientReport = () => {
                         lastName: reportData.agentInfo.lastName,
                         brokerageName: reportData.agentInfo.brokerageName,
                         emailAddress: reportData.agentInfo.emailAddress,
+                        photo: reportData.agentInfo.photo,
+                        phone: reportData.agentInfo.phoneNumber,      
                         displayPullDown:true
                     }}
                 />

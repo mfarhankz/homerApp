@@ -54,7 +54,7 @@ export function AuthProvider({ children }) {
                     const currentTime = Date.now();
                     const expirationTime = tokenData.exp * 1000;
                     const timeUntilExpiry = expirationTime - currentTime;
-
+                    console.log(profileToken.emailAddress);
                     if (timeUntilExpiry <= 0) {
                         // Token is already expired
                         await handleLogout();
@@ -74,6 +74,9 @@ export function AuthProvider({ children }) {
                             firstName: profileToken?.firstName || 'Unknown',
                             lastName: profileToken?.lastName || 'Unknown',
                             brokerageName: profileToken?.brokerageName || 'Unknown',
+                            photo: profileToken.photo,
+                            phone: profileToken.phoneNumber,
+                            emailAddress: profileToken.emailAddress
                         });
 
                         // Setup timers
@@ -121,6 +124,9 @@ export function AuthProvider({ children }) {
                     firstName: data.profileSettings.firstName,
                     lastName: data.profileSettings.lastName,
                     brokerageName: data.profileSettings.brokerageName,
+                    photo: data.profileSettings.photo,
+                    phone: data.profileSettings.phoneNumber,
+                    emailAddress: data.profileSettings.emailAddress
                 });
 
                 // Save city data if it comes with the response

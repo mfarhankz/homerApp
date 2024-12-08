@@ -23,6 +23,8 @@ const ReportHeader = ({ location, propertyType, timeRange, agent }) => {
                 lastName={agent.lastName}
                 brokerageName={agent.brokerageName}
                 displayPullDown={agent.displayPullDown}
+                phone={agent.phone}
+                emailAddress={agent.emailAddress}
             />}
         </div>
     );

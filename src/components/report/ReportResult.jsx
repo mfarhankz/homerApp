@@ -32,7 +32,7 @@ const ReportResult = () => {
     const [shareUrl, setShareUrl] = useState('');
     const [hiddenListings, setHiddenListings] = useState([]);
     const [isHiddenListingsSaving, setIsHiddenListingsSaving] = useState(false);
-
+console.log('reza',user);
     // State matching the C# class structure
     const [reportState, setReportState] = useState({
         reportId: reportId,
@@ -230,9 +230,11 @@ const ReportResult = () => {
                     agent={{
                         firstName: user.firstName,
                         lastName: user.lastName,
-                        brokerage: user.brokerageName,
-                        emailAddress: user.emailAddress,
-                        displayPullDown: false
+                        brokerageName: user.brokerageName,
+                        emailAddress: user.emailAddress ,
+                        displayPullDown: false,
+                        photo: user.photo,
+                        phone:user.phone,                        
                     }}
                 />
                 {/* Toolbar */}
