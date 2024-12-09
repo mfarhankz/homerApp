@@ -25,7 +25,7 @@ const ReportHeader = ({ location, propertyType, timeRange, agent }) => {
                 </div>
 
                 {/* Always visible agent name */}
-                {agent && (
+                {agent && !isExpanded && (
                     <div className="text-right">
                         <span className="font-medium">
                             {agent.firstName} {agent.lastName}
