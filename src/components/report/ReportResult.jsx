@@ -10,7 +10,7 @@ import ListingsMap from './ListingsMap';
 import { useAuth } from '../../contexts/AuthContext';
 import LoadingScreen from '../../components/LoadingScreen'
 import { baseDataAPI } from '../../services/api'
-import { Share2, Save, X, Loader2 } from 'lucide-react';
+import { Share2, Save, X, Loader2,  } from 'lucide-react';
 import ShareModal from '../ShareModal';
 
 
@@ -26,13 +26,10 @@ const ReportResult = () => {
     const [isMapExpanded, setIsMapExpanded] = useState(false);
     const [mapData, setMapData] = useState();
     const [showSaveDialog, setShowSaveDialog] = useState(false);
-    const [reportName, setReportName] = useState('');
     const [isSaving, setIsSaving] = useState(false);
     const [isShareOpen, setIsShareOpen] = useState(false);
     const [shareUrl, setShareUrl] = useState('');
-    const [hiddenListings, setHiddenListings] = useState([]);
     const [isHiddenListingsSaving, setIsHiddenListingsSaving] = useState(false);
-console.log('reza',user);
     // State matching the C# class structure
     const [reportState, setReportState] = useState({
         reportId: reportId,
@@ -220,52 +217,37 @@ console.log('reza',user);
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 mt-6">
-            <div className="mx-auto px-4 py-8 space-y-8">
-                {/* Header Section */}
-                <ReportHeader
-                    location={reportData.reportRequestDocument.searchCriteria.city + ', ' + reportData.reportRequestDocument.searchCriteria.region}
-                    propertyType={reportData.reportRequestDocument.searchCriteria.propertyType}
-                    timeRange={reportData.reportRequestDocument.searchCriteria.timeRange}
-                    agent={{
-                        firstName: user.firstName,
-                        lastName: user.lastName,
-                        brokerageName: user.brokerageName,
-                        emailAddress: user.emailAddress ,
-                        displayPullDown: false,
-                        photo: user.photo,
-                        phone:user.phone,                        
-                    }}
-                />
+        <div className="min-h-screen">
+            <div className="mx-auto px-4  space-y-8">
                 {/* Toolbar */}
-                <div className="report-toolbar shadow-sm rounded-lg overflow-hidden">
-                    <div className="flex items-center justify-between px-4 py-3 sm:px-6">
-                        <div className="flex flex-col sm:flex-row gap-2 w-full">
+                <div className="report-toolbar metric-card shadow-sm rounded-lg overflow-hidden">
+                    <div className="flex items-center justify-end px-4 py-3 sm:px-6">
+                        <div className="flex flex-row gap-2"> {/* Removed flex-col */}
                             <button
                                 disabled={isSaving}
-                                className="flex items-center justify-center gap-2 button-delete text-white px-4 py-2 rounded-lg transition-colors duration-200 text-sm sm:text-base"
+                                className="flex items-center justify-center gap-2 button-delete text-white px-3 sm:px-4 py-2 rounded-lg transition-colors duration-200"
                             >
-                                <Save className="w-4 h-4 sm:w-5 sm:h-5" />
-                                <span>Delete</span>
+                                <Save className="w-4 h-4" />
+                                <span className="hidden sm:inline text-xs">Delete</span>
                                 {isSaving && <Loader2 className="animate-spin" />}
                             </button>
 
                             <button
                                 disabled={isSaving}
                                 onClick={handleSaveReport}
-                                className="flex items-center justify-center gap-2 button-blue text-white px-4 py-2 rounded-lg transition-colors duration-200 text-sm sm:text-base"
+                                className="flex items-center justify-center gap-2 button-blue text-white px-3 sm:px-4 py-2 rounded-lg transition-colors duration-200"
                             >
-                                <Save className="w-4 h-4 sm:w-5 sm:h-5" />
-                                <span>Set a Friendly Name</span>
+                                <Save className="w-4 h-4" />
+                                <span className="hidden sm:inline text-xs">Set a Friendly Name</span>
                                 {isSaving && <Loader2 className="animate-spin" />}
                             </button>
 
                             <button
                                 onClick={(e) => handleShare(e, reportState.reportId)}
-                                className="flex items-center justify-center gap-2 border border-blue-600 button-blue text-white px-4 py-2 rounded-lg transition-colors duration-200 text-sm sm:text-base"
+                                className="flex items-center justify-center gap-2 border border-blue-600 button-blue text-white px-3 sm:px-4 py-2 rounded-lg transition-colors duration-200"
                             >
-                                <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
-                                <span>Share</span>
+                                <Share2 className="w-4 h-4" />
+                                <span className="hidden sm:inline text-xs">Share</span>
                             </button>
 
                             {/* Simple Modal */}
@@ -278,6 +260,22 @@ console.log('reza',user);
                         </div>
                     </div>
                 </div>
+
+                {/* Header Section */}
+                <ReportHeader
+                    location={reportData.reportRequestDocument.searchCriteria.city + ', ' + reportData.reportRequestDocument.searchCriteria.region}
+                    propertyType={reportData.reportRequestDocument.searchCriteria.propertyType}
+                    timeRange={reportData.reportRequestDocument.searchCriteria.timeRange}
+                    agent={{
+                        firstName: user.firstName,
+                        lastName: user.lastName,
+                        brokerageName: user.brokerageName,
+                        emailAddress: user.emailAddress,
+                        displayPullDown: false,
+                        photo: user.photo,
+                        phone: user.phone,
+                    }}
+                />
 
                 {/* Save Dialog */}
                 {showSaveDialog && (
@@ -344,13 +342,13 @@ console.log('reza',user);
                                 {/* DaysOnMarket takes up 1 column */}
                                 <div className="lg:col-span-1">
                                     <DaysOnMarket
-                                        title="Average Days on Market"
+                                        title="Avg Days on Market"
                                         value={reportData.avergaeDaysOnMarket}
                                     />
                                 </div>
 
                                 {/* Each MetricsCard takes up 2 columns */}
-                                <div className="lg:col-span-2">
+                                <div className="lg:col-span-2">                          
                                     <MetricsCard
                                         title="Average List Price"
                                         value={reportData.priceAnalaysis.overallAveragePrice}
@@ -401,13 +399,12 @@ console.log('reza',user);
                                 </button>
                             </div>
 
-                            <div className="flex flex-col lg:flex-row gap-6 relative h-[calc(100vh-16rem)]">
+                            <div className="flex flex-col lg:flex-row gap-6 relative h-[610px]">
                                 {/* Listings Section */}
                                 <div className={`
                             ${isMapExpanded ? 'hidden lg:block' : 'block'} 
                             h-full transition-all duration-300 
-                            ${isMapExpanded ? 'lg:w-0 lg:hidden' : 'lg:w-1/2'}
-                        `}>
+                            ${isMapExpanded ? 'lg:w-0 lg:hidden' : 'lg:w-1/2'}`}>
                                     <ListingsSection
                                         listings={reportData.neighborhoodListings}
                                         onSort={(items) => handleListingFiltered(items)}
@@ -423,21 +420,22 @@ console.log('reza',user);
                             ${isMapExpanded ? 'lg:w-full' : 'lg:w-1/2'}
                         `}>
                                     <div className="h-full relative">
-                                        {/* Desktop Toggle Button */}
-                                        <button
-                                            onClick={() => setIsMapExpanded(!isMapExpanded)}
-                                            className="hidden lg:block absolute top-2 left-2 z-10 button-blue text-white p-2 rounded-md shadow-md hover:bg-gray-50 transition-colors duration-200"
-                                        >
-                                            {isMapExpanded ? (
-                                                <div className="flex items-center gap-2">
-                                                    <span className="text-sm">Show Listings</span>
-                                                </div>
-                                            ) : (
-                                                <div className="flex items-center">
-                                                    <span className="text-sm">Hide Listings</span>
-                                                </div>
-                                            )}
-                                        </button>
+                                        {/* Desktop Toggle Buttons */}
+                                        <div className="hidden lg:flex absolute top-2 left-2 z-10 gap-2">
+                                            <button
+                                                onClick={() => setIsMapExpanded(!isMapExpanded)}
+                                                className="button-blue text-white p-2 rounded-md shadow-md hover:bg-gray-50 transition-colors duration-200">
+                                                {isMapExpanded ? (
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-sm">Show Listings</span>
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex items-center">
+                                                        <span className="text-sm">Hide Listings</span>
+                                                    </div>
+                                                )}
+                                            </button>
+                                        </div>
                                         <ListingsMap
                                             listings={mapData}
                                             isMapExpanded={isMapExpanded}

@@ -70,7 +70,7 @@ const ListingCard = ({ listing, onHideToggle, isClient }) => {
     const [imageUrl, setImageUrl] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const fallbackImage = '/images/listing-home.jpg';
-    const isHidden =  listing.hide === true;
+    const isHidden = listing.hide === true;
 
     useEffect(() => {
         const loadImage = async () => {
@@ -118,7 +118,7 @@ const ListingCard = ({ listing, onHideToggle, isClient }) => {
                 ) : (
                     <img
                         src={imageUrl}
-                        className={`w-full h-48 object-cover ${isHidden ? 'filter grayscale' : ''}`}
+                        className={`w-full h-36 object-cover ${isHidden ? 'filter grayscale' : ''}`}
                         alt={`Listing ${listing.listingKey}`}
                     />
                 )}
@@ -138,25 +138,25 @@ const ListingCard = ({ listing, onHideToggle, isClient }) => {
             </div>
 
             {/* Content Section */}
-            <div className="p-4">
-                <div className={`text-xl font-semibold mb-1 ${isHidden ? 'text-gray-600' : ''}`}>
+            <div className="p-1">
+                <div className={`text-sm font-semibold mb-1 ${isHidden ? 'text-gray-600' : ''}`}>
                     ${listing.formattedListPrice}
                 </div>
 
-                <div className="text-gray-700 mb-2">
+                <div className="text-xs mb-2">
                     {listing.uiCity}, {listing.postalCode}
                 </div>
 
-                <div className="flex items-center gap-4 text-gray-600 text-sm mb-2">
+                <div className="flex items-center gap-1 text-gray-600 text-sm mb-2">
                     <div className="flex items-center">
                         <BedIcon className={isHidden ? SOLD_OPACITY : ''} />
-                        <span>{listing.bedroomsTotal}</span>
-                        <span className="ml-1">beds</span>
+                        <span className="text-xs">{listing.bedroomsTotal}</span>
+                        <span className="text-xs">beds</span>
                     </div>
                     <div className="flex items-center">
                         <BathIcon className={isHidden ? SOLD_OPACITY : ''} />
-                        <span>{listing.bathroomsTotalInteger}</span>
-                        <span className="ml-1">baths</span>
+                        <span className="text-xs  ">{listing.bathroomsTotalInteger}</span>
+                        <span className="text-xs  ml-1">baths</span>
                     </div>
                 </div>
 

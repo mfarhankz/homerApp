@@ -82,7 +82,7 @@ const ListingsSection = ({ listings, onSort, isClientView = false, onHideListing
     // },[filteredListings])
 
     return (
-        <div className="h-full flex flex-col">
+        <div className="h-[600px] flex flex-col">
             {/* Mobile-optimized header */}
             <div className="flex-none flex flex-col sm:flex-row items-start sm:items-center  gap-3 sm:gap-4 mb-4">
                 <h2 className="font-medium">Listings</h2>

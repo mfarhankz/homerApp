@@ -146,8 +146,8 @@
     .min-h-screen {
         background: #F9E7D4 !important;
         min-height: 100vh;
-            /* Fallback */
-            min-height: -webkit-fill-available;
+        /* Fallback */
+        min-height: -webkit-fill-available;
     }
 
     .text-homer-blue {
@@ -223,9 +223,10 @@
     }
 
 
-.button-delete {
-    background: linear-gradient(90deg, #EE7B6F 0%, #D54233 100%);
-}
+    .button-delete {
+        background: linear-gradient(90deg, #EE7B6F 0%, #D54233 100%);
+    }
+
     .button-homer-signin {
         height: 50px;
         background: linear-gradient(90deg, #EE7B6F 0%, #D54233 100%);
@@ -347,12 +348,12 @@
     }
 
     .report-toolbar {
-        background-color: #FAF6F1;
+        background-color: #FFF4E8 !important;
     }
 
     .metric-card-text {
-        font-size: 20px;
-        font-weight: 500;
+        font-size: 15px;
+        font-weight: 400;
         font-family: 'Plus Jakarta Sans', sans-serif;
         color: #0C1B3D !important;
     }
