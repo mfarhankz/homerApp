@@ -348,7 +348,7 @@
     }
 
     .report-toolbar {
-        background-color: #FFF4E8 !important;
+        border: none !important;
     }
 
     .metric-card-text {

@@ -5,13 +5,13 @@ const MetricsCard = ({ title, value, highLow, chart, className = '' }) => {
     const [isExpanded, setIsExpanded] = useState(true);
 
     return (
-        <div className={`metric-card rounded-lg p-3 shadow-sm ${className}`}>
+        <div className={`metric-card rounded-lg p-2 shadow-sm ${className}`}>
             <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
-                    <h3 className="metric-card-text">{title}</h3>
+                   
                     <button
                         onClick={() => setIsExpanded(!isExpanded)}
-                        className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                        className="p-1 bg-gray-200 rounded-full transition-colors"
                     >
                         {isExpanded ? (
                             <ChevronUp className="w-4 h-4 text-gray-500" />
@@ -19,6 +19,7 @@ const MetricsCard = ({ title, value, highLow, chart, className = '' }) => {
                             <ChevronDown className="w-4 h-4 text-gray-500" />
                         )}
                     </button>
+                    <h3 className="metric-card-text">{title}</h3>
                 </div>
                 <div className="flex justify-between items-center bg-gray-100 p-2 rounded-md">
                     <div className="text-center">

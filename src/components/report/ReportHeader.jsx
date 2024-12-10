@@ -13,7 +13,7 @@ const ReportHeader = ({ location, propertyType, timeRange, agent }) => {
                 <div className="flex items-center gap-2">
                     <button
                         onClick={() => setIsExpanded(!isExpanded)}
-                        className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                        className="p-1 bg-gray-200 rounded-full transition-colors"
                     >
                         {isExpanded ? (
                             <ChevronUp className="w-4 h-4 text-gray-500" />

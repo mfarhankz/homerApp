@@ -10,7 +10,7 @@ import ListingsMap from './ListingsMap';
 import { useAuth } from '../../contexts/AuthContext';
 import LoadingScreen from '../../components/LoadingScreen'
 import { baseDataAPI } from '../../services/api'
-import { Share2, Save, X, Loader2,  } from 'lucide-react';
+import { Share2, Save, X, Loader2, } from 'lucide-react';
 import ShareModal from '../ShareModal';
 
 
@@ -220,7 +220,7 @@ const ReportResult = () => {
         <div className="min-h-screen">
             <div className="mx-auto px-4  space-y-8">
                 {/* Toolbar */}
-                <div className="report-toolbar metric-card shadow-sm rounded-lg overflow-hidden">
+                <div className="report-toolbar  rounded-lg overflow-hidden">
                     <div className="flex items-center justify-end px-4 py-3 sm:px-6">
                         <div className="flex flex-row gap-2"> {/* Removed flex-col */}
                             <button
@@ -348,7 +348,7 @@ const ReportResult = () => {
                                 </div>
 
                                 {/* Each MetricsCard takes up 2 columns */}
-                                <div className="lg:col-span-2">                          
+                                <div className="lg:col-span-2">
                                     <MetricsCard
                                         title="Average List Price"
                                         value={reportData.priceAnalaysis.overallAveragePrice}
