@@ -297,13 +297,13 @@ const ListingsMap = ({ listings = [], isMapExpanded }) => {
         return Object.values(groupedListings).map(group => {
             const key = `${group.coordinates.latitude}-${group.coordinates.longitude}`;
             const isExpanded = expandedClusters.has(key);
-    
+                console.log(group);
             // If cluster is expanded, show individual markers
             if (isExpanded && group.properties.length > 1) {
                 return group.properties.map((property, index) => (
                     <Marker
                         key={`${key}-${index}`}
-                        latitude={group.coordinates.latitude + (index * 0.0001)}
+                        latitude={group.coordinates.latitude + (index * 0.0001)} // Slight offset for visibility
                         longitude={group.coordinates.longitude + (index * 0.0001)}
                         onClick={() => {
                             setSelectedGroup({ ...group, properties: [property] });
@@ -312,17 +312,17 @@ const ListingsMap = ({ listings = [], isMapExpanded }) => {
                             setCurrentImage(cachedImageUrl || fallbackImage);
                         }}
                     >
-                        <div className="transition-transform duration-200 hover:scale-105">
-                            <div className="px-3 py-1 rounded-full bg-white shadow-lg border border-gray-100">
-                                <span className="text-sm font-semibold">
-                                    ${property.formattedListPrice}
-                                </span>
+                        <div className="relative w-[60px] h-[60px]">
+                            <div className="absolute w-full h-full rounded-full bg-blue-500/20 border-blue-500 border-2" />
+                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
+                                bg-blue-500 text-white px-2 py-1 rounded font-bold cursor-pointer">
+                                ${property.formattedListPrice}
                             </div>
                         </div>
                     </Marker>
                 ));
             }
-    
+
             // Regular marker/cluster display
             return (
                 <Marker
@@ -331,20 +331,16 @@ const ListingsMap = ({ listings = [], isMapExpanded }) => {
                     longitude={group.coordinates.longitude}
                     onClick={() => handleMarkerClick(group)}
                 >
-                    <div className="transition-transform duration-200 hover:scale-105">
-                        <div className={`px-3 py-1 rounded-full bg-white shadow-lg border border-gray-100`}>
-                            <span className={`text-sm font-semibold ${
-                                group.properties.length > 1 
-                                    ? 'text-purple-600' 
-                                    : group.properties[0].uiStatus === 'Sold'
-                                        ? 'text-red-600'
-                                        : 'text-black'
-                            }`}>
-                                {group.properties.length > 1
-                                    ? `${group.properties.length} homes`
-                                    : `$${group.properties[0].formattedListPrice}`
-                                }
-                            </span>
+                    <div className="relative w-[60px] h-[60px]">
+                        <div className={`absolute w-full h-full rounded-full ${group.properties.length > 1 ? 'bg-purple-500/20 border-purple-500' : group.properties[0].uiStatus === 'Sold' ? 'bg-red-500/20 border-red-500' : 'bg-blue-500/20 border-blue-500'
+                            } border-2`} />
+                        <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
+                            ${group.properties.length > 1 ? 'bg-purple-500' :  group.properties[0].uiStatus === 'Sold' ? 'bg-red-500 border-red-500' : 'bg-blue-500'}
+                            text-white px-2 py-1 rounded font-bold cursor-pointer`}>
+                            {group.properties.length > 1
+                                ? group.properties.length
+                                : `$${group.properties[0].formattedListPrice}`
+                            }
                         </div>
                     </div>
                 </Marker>
@@ -374,7 +370,7 @@ const ListingsMap = ({ listings = [], isMapExpanded }) => {
                 ref={mapRef}
                 onMove={handleViewStateChange}
                 style={{ width: '100%', height: '100%', borderRadius: '0.5rem' }}
-                mapStyle="mapbox://styles/mapbox/streets-v12"
+                mapStyle="mapbox://styles/mapbox/streets-v11"
                 mapboxAccessToken={MAPBOX_ACCESS_TOKEN}
             >
                 <NavigationControl position="top-right" />
