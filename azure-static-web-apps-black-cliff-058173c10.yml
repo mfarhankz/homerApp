@@ -10,43 +10,20 @@ trigger:
       - master
 
 jobs:
-  - job: build_and_deploy_dev
-    displayName: Build and Deploy Dev
-    condition: |
-      or(
-        eq(variables['Build.Reason'], 'Manual'), 
-        or(
-          eq(variables['Build.Reason'], 'PullRequest'), 
-          eq(variables['Build.Reason'], 'IndividualCI')
-        )
-      )
-    pool:
-      vmImage: ubuntu-latest
-    variables:
-      - group: Azure-Static-Web-Apps-agreeable-moss-0dfd21910-variable-group
-    steps:
-      - checkout: self
-        submodules: true
-      - task: AzureStaticWebApp@0
-        inputs:
-          azure_static_web_apps_api_token: $(AZURE_STATIC_WEB_APPS_API_TOKEN_AGREEABLE_MOSS_0DFD21910)
-          app_location: "/"
-          api_location: ""
-          output_location: "dist"
-
-  - job: build_and_deploy_uat
-    dependsOn: build_and_deploy_dev
-    condition: succeeded()
-    pool:
-      vmImage: ubuntu-latest
-    variables:
-      - group: Azure-Static-Web-Apps-black-cliff-058173c10-variable-group
-    steps:
-      - checkout: self
-        submodules: true
-      - task: AzureStaticWebApp@0
-        inputs:
-          azure_static_web_apps_api_token: $(AZURE_STATIC_WEB_APPS_API_TOKEN_BLACK_CLIFF_058173C10)
-          app_location: "/"
-          api_location: ""
-          output_location: "dist"
+- job: build_and_deploy_job
+  displayName: Build and Deploy Job
+  environment: Dev
+  condition: or(eq(variables['Build.Reason'], 'Manual'),or(eq(variables['Build.Reason'], 'PullRequest'),eq(variables['Build.Reason'], 'IndividualCI')))
+  pool:
+    vmImage: ubuntu-latest
+  variables:
+  - group: Azure-Static-Web-Apps-agreeable-moss-0dfd21910-variable-group
+  steps:
+  - checkout: self
+    submodules: true
+  - task: AzureStaticWebApp@0
+    inputs:
+      azure_static_web_apps_api_token: $(AZURE_STATIC_WEB_APPS_API_TOKEN_AGREEABLE_MOSS_0DFD21910)
+      app_location: "/"
+      api_location: ""
+      output_location: "dist"
