@@ -12,7 +12,14 @@ trigger:
 jobs:
   - job: build_and_deploy_dev
     displayName: Build and Deploy Dev
-    condition: or(eq(variables['Build.Reason'], 'Manual'), or(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.Reason'], 'IndividualCI')))
+    condition: |
+      or(
+        eq(variables['Build.Reason'], 'Manual'), 
+        or(
+          eq(variables['Build.Reason'], 'PullRequest'), 
+          eq(variables['Build.Reason'], 'IndividualCI')
+        )
+      )
     pool:
       vmImage: ubuntu-latest
     variables:
