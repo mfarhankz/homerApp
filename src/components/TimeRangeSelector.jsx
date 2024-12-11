@@ -6,6 +6,9 @@ import LoadingScreen from '../components/LoadingScreen'
 const TimeRangeSelector = ({ selectedRange, onRangeSelect, defaultValue, searchCriteria }) => {
     const [timeRanges, setTimeRanges] = useState([
         { id: 'count30Days', label: '30 days', value: 30, count: 0 },
+        { id: 'count60Days', label: '60 days', value: 60, count: 0 },
+        { id: 'count90Days', label: '90 days', value: 90, count: 0 },
+        { id: 'count120Days', label: '120 days', value: 120, count: 0 },
         { id: 'count180Days', label: '6 months', value: 180, recommended: true, count: 0 },
         { id: 'count365Days', label: '1 year', value: 365, count: 0 }
     ]);

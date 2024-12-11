@@ -144,7 +144,8 @@ const ListingCard = ({ listing, onHideToggle, isClient }) => {
                 </div>
 
                 <div className="text-xs mb-2">
-                    {listing.uiCity}, {listing.postalCode}
+                    {listing.address}
+                    <p>{listing.uiCity}</p>
                 </div>
 
                 <div className="flex items-center gap-1 text-gray-600 text-sm mb-2">

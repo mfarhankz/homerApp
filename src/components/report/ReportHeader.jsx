@@ -21,13 +21,19 @@ const ReportHeader = ({ location, propertyType, timeRange, agent }) => {
                             <ChevronDown className="w-4 h-4 text-gray-500" />
                         )}
                     </button>
-                    <h1 className="text-2xl font-semibold text-blue-900">{location}</h1>
+                    <h1 className="text-xl font-semibold text-blue-900">{location}</h1>
+                    {/* Details Section */}
+                    <div>
+                        <p className="text-xl font-semibold text-blue">
+                            <b>{propertyType}</b> homes for sale over the past <b>{(timeRange / 30).toFixed()} months</b>
+                        </p>
+                    </div>
                 </div>
 
                 {/* Always visible agent name */}
                 {agent && !isExpanded && (
                     <div className="text-right">
-                        <span className="font-medium">
+                        <span className="text-lg font-semibold">
                             {agent.firstName} {agent.lastName}
                         </span>
                     </div>
@@ -37,14 +43,7 @@ const ReportHeader = ({ location, propertyType, timeRange, agent }) => {
             {/* Collapsible Content */}
             <div className={`transition-all duration-300 ease-in-out overflow-hidden ${isExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
                 }`}>
-                <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mt-2">
-                    {/* Details Section */}
-                    <div>
-                        <p className="text-gray-600">
-                            <b>{propertyType}</b> homes for sale over the past <b>{(timeRange / 30).toFixed()} months</b>
-                        </p>
-                    </div>
-
+                <div className="flex flex-col sm:flex-row justify-end gap-4 mt-2">
                     {/* Full Agent Info Section */}
                     {agent && (
                         <AgentInfo
