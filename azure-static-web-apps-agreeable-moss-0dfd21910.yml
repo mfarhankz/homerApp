@@ -28,6 +28,7 @@ stages:
         app_location: "/"
         api_location: ""
         output_location: "dist"
+        app_build_command: "npm run build:production"
 
 - stage: UAT
   dependsOn: Dev  # This ensures Dev runs first
@@ -52,3 +53,4 @@ stages:
               app_location: "/"
               api_location: ""
               output_location: "dist"
+              app_build_command: "npm run build:uat"
