@@ -9,24 +9,47 @@ trigger:
     include:
       - master
 
-jobs:
-- job: build_and_deploy_job
-  displayName: Build and Deploy Job
-  condition: or(eq(variables['Build.Reason'], 'Manual'),or(eq(variables['Build.Reason'], 'PullRequest'),eq(variables['Build.Reason'], 'IndividualCI')))
-  pool:
-    vmImage: ubuntu-latest
-  variables:
-  - group: Azure-Static-Web-Apps-agreeable-moss-0dfd21910-variable-group
-  steps:
-  - checkout: self
-    submodules: true
-  - task: AzureStaticWebApp@0
-    inputs:
-      azure_static_web_apps_api_token: $(AZURE_STATIC_WEB_APPS_API_TOKEN_AGREEABLE_MOSS_0DFD21910)
-###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
-# For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-      app_location: "/" # App source code path
-      api_location: "" # Api source code path - optional
-      output_location: "dist" # Built app content directory - optional
-###### End of Repository/Build Configurations ######
+stages:
+- stage: Dev
+  jobs:
+  - job: build_and_deploy_dev
+    displayName: Build and Deploy Dev
+    environment: Dev
+    condition: or(eq(variables['Build.Reason'], 'Manual'),or(eq(variables['Build.Reason'], 'PullRequest'),eq(variables['Build.Reason'], 'IndividualCI')))
+    pool:
+      vmImage: ubuntu-latest
+    variables:
+    - group: Azure-Static-Web-Apps-agreeable-moss-0dfd21910-variable-group
+    steps:
+    - checkout: self
+      submodules: true
+    - task: AzureStaticWebApp@0
+      inputs:
+        azure_static_web_apps_api_token: $(AZURE_STATIC_WEB_APPS_API_TOKEN_AGREEABLE_MOSS_0DFD21910)
+        app_location: "/"
+        api_location: ""
+        output_location: "dist"
 
+- stage: UAT
+  dependsOn: Dev  # This ensures Dev runs first
+  condition: succeeded()  # Only run if Dev stage succeeded
+  jobs:
+  - deployment: deploy_to_uat
+    displayName: Deploy to UAT
+    environment: 'UAT'  # This enables approval gates
+    variables:
+    - group: Azure-Static-Web-Apps-black-cliff-058173c10-variable-group
+    pool:
+      vmImage: ubuntu-latest
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+            submodules: true
+          - task: AzureStaticWebApp@0
+            inputs:
+              azure_static_web_apps_api_token: $(AZURE_STATIC_WEB_APPS_API_TOKEN_BLACK_CLIFF_058173C10)
+              app_location: "/"
+              api_location: ""
+              output_location: "dist"
