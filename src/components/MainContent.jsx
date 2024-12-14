@@ -190,14 +190,14 @@ export default function MainContent({ isOpen }) {
                         )}
 
                         <>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                                 {reports.map((report) => (
                                     <div
                                         key={report.reportId}
-                                        className="report-card rounded-lg shadow hover:shadow-md transition-shadow duration-200 cursor-pointer"
+                                        className="report-card  cursor-pointer"
                                     >
                                         <div
-                                            className="flex h-24 items-center p-4"
+                                            className="flex items-center  pb-2 "
                                             onClick={() => navigate(`/report/${report.reportId}`)}
                                         >
                                             {/* Left side - Image with proper padding */}
@@ -226,7 +226,7 @@ export default function MainContent({ isOpen }) {
                                         </div>
 
                                         {/* Toolbar */}
-                                        <div className="border-t border-gray-100 flex justify-between items-center">
+                                        <div className="border-t flex justify-between items-center">
                                             <div className="text-homer-blue-9  px-2">
                                                 {getTimeAgo(report.createdDate)}
                                             </div>
