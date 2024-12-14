@@ -356,7 +356,7 @@ const ReportResult = () => {
                                 </div>
 
                                 {/* Each MetricsCard takes up 2 columns */}
-                                <div className="lg:col-span-2 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
+                                <div className="lg:col-span-2   ">
                                     <MetricsCard
                                         title="Average List Price"
                                         value={reportData.priceAnalaysis.overallAveragePrice}
@@ -368,7 +368,7 @@ const ReportResult = () => {
                                     />
                                 </div>
 
-                                <div className="lg:col-span-2 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
+                                <div className="lg:col-span-2   ">
                                     <MetricsCard
                                         title="Average Sell Price"
                                         value={reportData.soldPriceAnalaysis.overallAveragePrice}
@@ -382,7 +382,7 @@ const ReportResult = () => {
                             </div>
                         </div>
                         {/* Parent container */}
-                        <div className="metric-card rounded-xl shadow-sm p-4 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
+                        <div className="metric-card  shadow-sm hover:shadow-md transition-shadow duration-200">
                             {/* Mobile Toggle Button */}
                             <div className="lg:hidden mb-4">
                                 <button

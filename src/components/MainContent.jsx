@@ -190,7 +190,7 @@ export default function MainContent({ isOpen }) {
                         )}
 
                         <>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
                                 {reports.map((report) => (
                                     <div
                                         key={report.reportId}

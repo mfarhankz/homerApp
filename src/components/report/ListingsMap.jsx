@@ -372,7 +372,7 @@ const ListingsMap = ({ listings = [], isMapExpanded }) => {
                 {...viewState}
                 ref={mapRef}
                 onMove={handleViewStateChange}
-                style={{ width: '100%', height: '100%', borderRadius: '0.5rem' }}
+                style={{ width: '100%',  borderRadius: '0.5rem' }}
                 mapStyle="mapbox://styles/mapbox/streets-v12"
                 mapboxAccessToken={MAPBOX_ACCESS_TOKEN}
             >

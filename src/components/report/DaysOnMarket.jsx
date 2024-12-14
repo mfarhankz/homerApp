@@ -5,7 +5,7 @@ const DaysOnMarket = ({ title, value, className = '' }) => {
     const [isExpanded, setIsExpanded] = useState(true);
 
     return (
-        <div className={`metric-card rounded-lg p-2 shadow-sm ${className}`}>
+        <div className={`metric-card ${className}`}>
             <div className="flex justify-between items-center ">
                 <div className="flex items-center gap-2">
                     <button

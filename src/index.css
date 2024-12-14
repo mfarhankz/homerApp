@@ -195,10 +195,14 @@
         border: 1px solid #f3f4f6;
         border-radius: 12px;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-        transition: box-shadow 0.2s ease;    }
-    
+        transition: box-shadow 0.2s ease;
+    }
+
     .metric-card {
         background-color: white;
+        border-width: 1px;
+        border-radius: 0.5rem;
+        padding: 0.5rem;
     }
 
 
@@ -314,21 +318,25 @@
 
     .start-report {
         @apply w-full flex flex-col items-center justify-center;
-        padding: 80px 0 60px; /* Adjusted padding for better vertical spacing */
+        padding: 80px 0 60px;
+        /* Adjusted padding for better vertical spacing */
     }
 
     .start-report-first-label {
-        @apply text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4; /* Reduced bottom margin */
+        @apply text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4;
+        /* Reduced bottom margin */
         font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
     .start-report-second-label {
-        @apply text-xl md:text-2xl text-gray-600 mb-8; /* Reduced bottom margin */
+        @apply text-xl md:text-2xl text-gray-600 mb-8;
+        /* Reduced bottom margin */
         font-family: 'Plus Jakarta Sans', sans-serif;
     }
+
     .search-input-container {
-    @apply relative w-full max-w-3xl mx-auto;
-}
+        @apply relative w-full max-w-3xl mx-auto;
+    }
 
     .listing-card {
         background-color: #FAF6F1;

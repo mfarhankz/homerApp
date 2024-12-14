@@ -7,7 +7,7 @@ const ReportHeader = ({ location, propertyType, timeRange, agent }) => {
     const [isExpanded, setIsExpanded] = useState(true);
 
     return (
-        <div className="flex flex-col metric-card shadow rounded-lg p-2 sm:p-3">
+        <div className="flex flex-col metric-card rounded-lg p-2 border-[1px]  sm:p-3">
             {/* Header with Toggle */}
             <div className="flex items-center justify-between w-full">
                 <div className="flex items-center gap-2">
