@@ -224,11 +224,11 @@ const ReportResult = () => {
     };
 
     return (
-        <div className="min-h-screen">
+        <div >
             <div className="mx-auto px-4  space-y-8">
                 {/* Toolbar */}
                 <div className="report-toolbar  rounded-lg overflow-hidden">
-                    <div className="flex items-center justify-end px-4 py-3 sm:px-6">
+                    <div className="flex items-center justify-end ">
                         <div className="flex flex-row gap-2"> {/* Removed flex-col */}
                             <button
                                 disabled={isSaving}
@@ -284,7 +284,7 @@ const ReportResult = () => {
                     }}
                 />
 
-              {isHiddenListingsSaving &&   <LoadingScreen  overlay={true} />}
+                {isHiddenListingsSaving && <LoadingScreen overlay={true} />}
                 {/* Save Dialog */}
                 {showSaveDialog && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -460,7 +460,7 @@ const ReportResult = () => {
 
                 )}
             </div>
-            
+
         </div>
     );
 };

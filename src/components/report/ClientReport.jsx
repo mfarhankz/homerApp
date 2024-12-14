@@ -64,8 +64,7 @@ const ClientReport = () => {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
-                const reportResponse = await response.data;
-                console.log('res',reportResponse);
+                const reportResponse = await response.data;             
                 setReportData(reportResponse);
                 // Update the report state with the response data
                 setReportState(prev => ({
@@ -139,7 +138,7 @@ const ClientReport = () => {
 
 
     return (
-        <div className="min-h-screen bg-gray-50 mt-6">
+        <div className="mt-6">
             <div className="mx-auto px-4 py-8 space-y-8">
                 {/* Header Section */}
                 <ReportHeader
@@ -152,8 +151,8 @@ const ClientReport = () => {
                         brokerageName: reportData.agentInfo.brokerageName,
                         emailAddress: reportData.agentInfo.emailAddress,
                         photo: reportData.agentInfo.photo,
-                        phone: reportData.agentInfo.phoneNumber,      
-                        displayPullDown:true
+                        phone: reportData.agentInfo.phoneNumber,
+                        displayPullDown: true
                     }}
                 />
 
