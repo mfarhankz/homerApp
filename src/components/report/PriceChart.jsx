@@ -35,7 +35,7 @@ const PriceChart = ({ data }) => {
                 <Tooltip
                     formatter={(value, name, props) => {
                         const { payload } = props;
-                        return [payload.formattedAveragePrice, "Average Price"];
+                        return [payload.formattedAveragePrice, "Avg"];
                     }}
                 />
                 <Area

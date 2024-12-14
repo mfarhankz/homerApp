@@ -60,31 +60,38 @@ const ReportResult = () => {
     };
 
     // Add this debounced save function near other constants
-    const debouncedSaveHiddenListings = debounce(async (listings) => {
+    const debouncedSaveHiddenListings = async (listings) => {
         if (isHiddenListingsSaving) return;
 
         try {
             setIsHiddenListingsSaving(true);
             const hiddenOnes = listings.filter(listing => listing.hide)
                 .map(listing => listing.listingKey);
-            console.log('auto save', hiddenOnes);
+
             const response = await baseDataAPI.saveReportHiddenListings({
                 displayName: reportState.displayName,
                 reportId: reportState.reportId,
                 hiddenListings: hiddenOnes
             });
 
-            console.log(response);
-            // if (!response.success) {
-            //     throw new Error('Failed to save hidden listings');
-            // }
+            const reportResponse = await response.data;
+            setReportData(reportResponse);
+            setReportState(prev => ({
+                ...prev,
+                reportId: reportId,
+                requestDto: reportResponse.reportRequestDocument.searchCriteria || {},
+                displayName: reportResponse.reportRequestDocument.displayName || '',
+                isSaved: reportResponse.reportRequestDocument.isSaved || false,
+                isShared: reportResponse.reportRequestDocument.isShared || false,
+                hiddenListings: reportResponse.reportRequestDocument.hiddenListings || []
+            }));
             console.log('Hidden listings saved');
         } catch (error) {
             console.error('Error saving hidden listings:', error);
         } finally {
             setIsHiddenListingsSaving(false);
         }
-    }, 2000); // Wait 2 seconds after last change before saving
+    }; // Wait 2 seconds after last change before saving
 
 
     const handleCancel = () => {
@@ -101,22 +108,22 @@ const ReportResult = () => {
     }
 
 
-    useEffect(() => {
-        return () => {
-            debouncedSaveHiddenListings.cancel();
-        };
-    }, []);
+    // useEffect(() => {
+    //     return () => {
+    //         debouncedSaveHiddenListings.cancel();
+    //     };
+    // }, []);
 
-    useEffect(() => {
-        if (reportData && reportData.neighborhoodListings) {
-            setMapData(reportData.neighborhoodListings);
-            // Save any hidden listings from initial load
-            const hasHiddenListings = reportData.neighborhoodListings.some(listing => listing.hide);
-            if (hasHiddenListings) {
-                debouncedSaveHiddenListings(reportData.neighborhoodListings);
-            }
-        }
-    }, [reportData]);
+    // useEffect(() => {
+    //     if (reportData && reportData.neighborhoodListings) {
+    //         setMapData(reportData.neighborhoodListings);
+    //         // Save any hidden listings from initial load
+    //         const hasHiddenListings = reportData.neighborhoodListings.some(listing => listing.hide);
+    //         if (hasHiddenListings) {
+    //             debouncedSaveHiddenListings(reportData.neighborhoodListings);
+    //         }
+    //     }
+    // }, [reportData]);
 
     useEffect(() => {
         const LoadReportData = async () => {
@@ -277,6 +284,7 @@ const ReportResult = () => {
                     }}
                 />
 
+              {isHiddenListingsSaving &&   <LoadingScreen  overlay={true} />}
                 {/* Save Dialog */}
                 {showSaveDialog && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -452,6 +460,7 @@ const ReportResult = () => {
 
                 )}
             </div>
+            
         </div>
     );
 };

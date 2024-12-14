@@ -297,7 +297,6 @@ const ListingsMap = ({ listings = [], isMapExpanded }) => {
         return Object.values(groupedListings).map(group => {
             const key = `${group.coordinates.latitude}-${group.coordinates.longitude}`;
             const isExpanded = expandedClusters.has(key);
-                console.log(group);
             // If cluster is expanded, show individual markers
             if (isExpanded && group.properties.length > 1) {
                 return group.properties.map((property, index) => (
@@ -335,7 +334,7 @@ const ListingsMap = ({ listings = [], isMapExpanded }) => {
                         <div className={`absolute w-full h-full rounded-full ${group.properties.length > 1 ? 'bg-purple-500/20 border-purple-500' : group.properties[0].uiStatus === 'Sold' ? 'bg-red-500/20 border-red-500' : 'bg-blue-500/20 border-blue-500'
                             } border-2`} />
                         <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
-                            ${group.properties.length > 1 ? 'bg-purple-500' :  group.properties[0].uiStatus === 'Sold' ? 'bg-red-500 border-red-500' : 'bg-blue-500'}
+                            ${group.properties.length > 1 ? 'bg-purple-500' : group.properties[0].uiStatus === 'Sold' ? 'bg-red-500 border-red-500' : 'bg-blue-500'}
                             text-white px-2 py-1 rounded font-bold cursor-pointer`}>
                             {group.properties.length > 1
                                 ? group.properties.length
