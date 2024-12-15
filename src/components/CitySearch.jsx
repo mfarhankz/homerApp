@@ -109,7 +109,7 @@ const CitySearch = ({ onSelect, onClicked }) => {
     const { favoriteLocations, otherLocations } = getFilteredLocations();
 
     return (
-        <div className="w-full relative px-2 sm:px-8 md:px-12">
+        <div className="w-full">
             <div className="relative">
                 <input
                     ref={inputRef}

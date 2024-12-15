@@ -149,16 +149,16 @@ export default function MainContent({ isOpen }) {
     };
 
     return (
-        <div className="w-full max-w-7xl mx-auto px-0 sm:px-4 mt-32 mt-11 lg:mt-0">
+        <div className="w-full max-w-7xl mx-auto px-0 sm:px-4 mt-32 mt-11 ">
             <div className="w-full">
-                <p className="greeting text-center text-3xl mb-6">{getGreeting()} {user?.displayName || 'REZA'}</p>
+                <p className="greeting text-center ">{getGreeting()} {user?.displayName || 'REZA'}</p>
                 <div className="content-center space-y-8 justify-center items-center">
                     <div className="start-report text-center flex flex-col">
-                        <div className="flex-1 flex flex-col justify-center mb-12">
-                            <h1 className="start-report-first-label">
+                        <div className="flex-1 flex flex-col justify-center mb-6">
+                            <p className="start-report-first-label">
                                 Generate a neighbourhood report
-                            </h1>
-                            <p className="start-report-second-label mt-2">
+                            </p>
+                            <p className="start-report-second-label lg:mt-6">
                                 Get instant market insights to share with your clients.
                             </p>
                         </div>

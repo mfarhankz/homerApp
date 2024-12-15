@@ -197,11 +197,11 @@
         transition: box-shadow 0.2s ease;
     }
 
-    .report-card {        
+    .report-card {
         border-width: 1px;
-            border-radius: 0.5rem;
-            padding: 0.5rem;
-        
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+
     }
 
     .metric-card {
@@ -329,13 +329,29 @@
     }
 
     .start-report-first-label {
-        @apply text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4;
-        /* Reduced bottom margin */
-        font-family: 'Plus Jakarta Sans', sans-serif;
+        @apply text-xl font-bold text-gray-900;
+
+        @screen sm {
+            font-size: 1.125rem;
+            /* text-lg */
+        }
+
+        @screen md {
+            font-size: 3rem;
+            /* text-5xl */
+        }
+
+        @screen lg {
+            font-size: 3.75rem;
+            /* text-6xl */
+        }
+
+        font-family: 'Plus Jakarta Sans',
+        sans-serif;
     }
 
     .start-report-second-label {
-        @apply text-xl md:text-2xl text-gray-600 mb-2;
+        @apply text-sm lg:text-3xl md:text-2xl text-gray-600 mb-2;
         /* Reduced bottom margin */
         font-family: 'Plus Jakarta Sans', sans-serif;
     }
@@ -379,9 +395,22 @@
 
     .greeting {
         color: #615E83;
-        font-family: 'Plus Jakarta Sans',
-            sans-serif;
-        padding-top: 6rem;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+
+           @screen sm {
+                font-size: 1rem;
+                /* text-lg */
+            }
+        
+            @screen md {
+                font-size: 1.75rem;
+                /* text-5xl */
+            }
+        
+            @screen lg {
+                font-size: 2.75rem;
+                /* text-6xl */
+            }
     }
 
     /* Update media queries accordingly */
@@ -394,8 +423,7 @@
 
     @media (max-width: 768px) {
         .start-report {
-            border-radius: 0;
-            margin-left: -1rem;
+            border-radius: 0;        
             margin-right: -1rem;
             padding-left: 1rem;
             padding-right: 1rem;
