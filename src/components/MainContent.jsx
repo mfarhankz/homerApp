@@ -158,7 +158,7 @@ export default function MainContent({ isOpen }) {
                             <p className="start-report-first-label">
                                 Generate a neighbourhood report
                             </p>
-                            <p className="start-report-second-label lg:mt-6">
+                            <p className="start-report-second-label lg:mt-8">
                                 Get instant market insights to share with your clients.
                             </p>
                         </div>

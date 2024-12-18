@@ -5,7 +5,7 @@ import Map, {
 import { WebMercatorViewport } from '@math.gl/web-mercator';
 
 import { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight, X, TrendingUp, TrendingDown } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, TrendingUp, TrendingDown, BedIcon, BathIcon } from 'lucide-react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 // Reuse the cache constants and helper function from ListingCard
@@ -32,7 +32,7 @@ const getCachedImage = (listingKey) => {
     }
 };
 
-const ListingsMap = ({ listings = [], isMapExpanded }) => {
+const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
     const MAPBOX_ACCESS_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
     const mapRef = useRef(null);
     const [expandedClusters, setExpandedClusters] = useState(new Set());
@@ -168,24 +168,9 @@ const ListingsMap = ({ listings = [], isMapExpanded }) => {
         }
     }, [selectedGroup, currentPropertyIndex]);
 
-    // const handleMarkerClick = (group) => {
-    //     setSelectedGroup(group);
-    //     setCurrentPropertyIndex(0);
-    //     const cachedImageUrl = getCachedImage(group.properties[0].listingKey);
-    //     setCurrentImage(cachedImageUrl || fallbackImage);
-
-    //     setViewState(prev => ({
-    //         ...prev,
-    //         latitude: group.coordinates.latitude,
-    //         longitude: group.coordinates.longitude,
-    //         zoom: 15,
-    //         transitionDuration: 500
-    //     }));
-    // };
 
     const handleMarkerClick = (group) => {
         const key = `${group.coordinates.latitude}-${group.coordinates.longitude}`;
-
         // If it's a cluster (more than one property)
         if (group.properties.length > 1) {
             setExpandedClusters(prev => {
@@ -220,6 +205,10 @@ const ListingsMap = ({ listings = [], isMapExpanded }) => {
                 zoom: 15,
                 transitionDuration: 500
             }));
+
+            if (propagateClick) {
+                propagateClick(group.properties[0].listingKey)
+            }
         }
     };
 
@@ -266,14 +255,14 @@ const ListingsMap = ({ listings = [], isMapExpanded }) => {
             const soldHigher = property.soldPrice > property.listPrice;
             return (
                 <div className="space-y-1">
-                    <div className="text-lg font-bold text-gray-400 relative">
-                        <span className="relative">
+                    <div className="text-sm font-bold text-gray-600 relative">
+                        List:  <span className="relative">
                             <span className="absolute top-1/2 left-0 right-0 h-0.5 bg-red-900 transform -rotate-180"></span>
                             ${property.formattedListPrice}
                         </span>
                     </div>
-                    <div className="text-lg font-bold text-green-600">
-                        Sold: ${property.soldPrice.toLocaleString()}
+                    <div className="text-sm font-bold text-green-600 flex items-center gap-1">
+                        <span>Sold: ${property.soldPrice.toLocaleString()}</span>
                         {soldHigher ? (
                             <TrendingUp className="w-5 h-5 text-green-500" />
                         ) : (
@@ -309,6 +298,10 @@ const ListingsMap = ({ listings = [], isMapExpanded }) => {
                             setCurrentPropertyIndex(0);
                             const cachedImageUrl = getCachedImage(property.listingKey);
                             setCurrentImage(cachedImageUrl || fallbackImage);
+                            if (propagateClick) {
+                                propagateClick(property.listingKey)
+                            }
+
                         }}
                     >
                         <div className="transition-transform duration-200 hover:scale-105">
@@ -325,28 +318,27 @@ const ListingsMap = ({ listings = [], isMapExpanded }) => {
             // Regular marker/cluster display
             return (
                 <Marker
-                key={key}
-                latitude={group.coordinates.latitude}
-                longitude={group.coordinates.longitude}
-                onClick={() => handleMarkerClick(group)}
-            >
-                <div className="transition-transform duration-200 hover:scale-105">
-                    <div className={`px-3 py-1 rounded-full bg-white shadow-lg border border-gray-100`}>
-                        <span className={`text-sm font-semibold ${
-                            group.properties.length > 1 
-                                ? 'text-purple-600' 
+                    key={key}
+                    latitude={group.coordinates.latitude}
+                    longitude={group.coordinates.longitude}
+                    onClick={() => handleMarkerClick(group)}
+                >
+                    <div className="transition-transform duration-200 hover:scale-105">
+                        <div className={`px-3 py-1 rounded-full bg-white shadow-lg border border-gray-100`}>
+                            <span className={`text-sm font-semibold ${group.properties.length > 1
+                                ? 'text-purple-600'
                                 : group.properties[0].uiStatus === 'Sold'
                                     ? 'text-red-600'
                                     : 'text-black'
-                        }`}>
-                            {group.properties.length > 1
-                                ? `${group.properties.length} homes`
-                                : `$${group.properties[0].formattedListPrice}`
-                            }
-                        </span>
+                                }`}>
+                                {group.properties.length > 1
+                                    ? `${group.properties.length} homes`
+                                    : group.properties[0].uiStatus === 'Sold' ? `$${group.properties[0].formattedSoldPrice}` : `$${group.properties[0].formattedListPrice}`
+                                }
+                            </span>
+                        </div>
                     </div>
-                </div>
-            </Marker>
+                </Marker>
             );
         });
     };
@@ -372,7 +364,7 @@ const ListingsMap = ({ listings = [], isMapExpanded }) => {
                 {...viewState}
                 ref={mapRef}
                 onMove={handleViewStateChange}
-                style={{ width: '100%',  borderRadius: '0.5rem' }}
+                style={{ width: '100%', borderRadius: '0.5rem' }}
                 mapStyle="mapbox://styles/mapbox/streets-v12"
                 mapboxAccessToken={MAPBOX_ACCESS_TOKEN}
             >
@@ -387,7 +379,7 @@ const ListingsMap = ({ listings = [], isMapExpanded }) => {
                         {/* Header */}
                         <div className="p-2 border-b  flex justify-between items-center">
                             <h3 className="text-base font-bold text-gray-900">
-                                Property Details
+                                Property Details - MLS®{selectedGroup.properties[currentPropertyIndex].listingKey}
                             </h3>
                             <button
                                 onClick={handleClose}
@@ -407,16 +399,18 @@ const ListingsMap = ({ listings = [], isMapExpanded }) => {
 
                                 </div>
 
-                                <div className="flex gap-2">
-                                    <span className="bg-gray-100 px-2 py-1 rounded text-sm">
-                                        {selectedGroup.properties[currentPropertyIndex].bedroomsTotal} beds
+                                <div className="flex text-center">
+                                    <span className="bg-gray-100 px-2 py-1 rounded text-sm  text-center">
+                                        <BedIcon />{selectedGroup.properties[currentPropertyIndex].bedroomsTotal} beds
                                     </span>
-                                    <span className="bg-gray-100 px-2 py-1 rounded text-sm">
-                                        {selectedGroup.properties[currentPropertyIndex].bathroomsTotalInteger} baths
+                                    <span className="bg-gray-100 px-2 py-1 rounded text-sm  text-center">
+                                        <BathIcon />{selectedGroup.properties[currentPropertyIndex].bathroomsTotalInteger} baths
                                     </span>
                                 </div>
-
-                                <div className="text-gray-600 text-sm">
+                                <div className="text-gray-600 text-xs">
+                                    {selectedGroup.properties[currentPropertyIndex].address}
+                                </div>
+                                <div className="text-gray-600 text-xs">
                                     {selectedGroup.properties[currentPropertyIndex].uiCity},
                                     {selectedGroup.properties[currentPropertyIndex].province}
                                 </div>
@@ -425,9 +419,7 @@ const ListingsMap = ({ listings = [], isMapExpanded }) => {
                                     <span className="text-green-600 bg-green-50 px-2 py-1 rounded">
                                         {selectedGroup.properties[currentPropertyIndex].uiStatus}
                                     </span>
-                                    <span className="text-gray-500">
-                                        {selectedGroup.properties[currentPropertyIndex].postalCode}
-                                    </span>
+
                                 </div>
                             </div>
 

@@ -30,6 +30,7 @@ const ReportResult = () => {
     const [isShareOpen, setIsShareOpen] = useState(false);
     const [shareUrl, setShareUrl] = useState('');
     const [isHiddenListingsSaving, setIsHiddenListingsSaving] = useState(false);
+    const [selectedListingKey, setSelectedListingKey] = useState(null);
     // State matching the C# class structure
     const [reportState, setReportState] = useState({
         reportId: reportId,
@@ -107,23 +108,6 @@ const ReportResult = () => {
         setMapData(filtered);
     }
 
-
-    // useEffect(() => {
-    //     return () => {
-    //         debouncedSaveHiddenListings.cancel();
-    //     };
-    // }, []);
-
-    // useEffect(() => {
-    //     if (reportData && reportData.neighborhoodListings) {
-    //         setMapData(reportData.neighborhoodListings);
-    //         // Save any hidden listings from initial load
-    //         const hasHiddenListings = reportData.neighborhoodListings.some(listing => listing.hide);
-    //         if (hasHiddenListings) {
-    //             debouncedSaveHiddenListings(reportData.neighborhoodListings);
-    //         }
-    //     }
-    // }, [reportData]);
 
     useEffect(() => {
         const LoadReportData = async () => {
@@ -222,6 +206,10 @@ const ReportResult = () => {
             console.error('Failed to copy URL:', err);
         }
     };
+
+    const handleMapMarkerClicked = (key) => {
+        setSelectedListingKey(key);
+    }
 
     return (
         <div >
@@ -418,6 +406,7 @@ const ReportResult = () => {
                                         onSort={(items) => handleListingFiltered(items)}
                                         sortOption="price-low"
                                         onHideListing={handleHideListing}
+                                        selectedListingKey={selectedListingKey}
                                     />
                                 </div>
 
@@ -447,6 +436,7 @@ const ReportResult = () => {
                                         <ListingsMap
                                             listings={mapData}
                                             isMapExpanded={isMapExpanded}
+                                            propagateClick={(key) => handleMapMarkerClicked(key)}
                                         />
                                     </div>
                                 </div>

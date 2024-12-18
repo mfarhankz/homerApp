@@ -123,7 +123,7 @@ const ListingCard = ({ listing, onHideToggle, isClient }) => {
                     />
                 )}
                 <div className="absolute top-2 left-2 z-20">
-                    <span className={`${isHidden ? 'sold' : 'for-sale'
+                    <span className={`${listing.uiStatus=== 'Sold' ? 'sold ' : 'for-sale'
                         } text-white px-3 py-1 text-xs font-medium rounded-full`}>
                         {listing.uiStatus}
                     </span>

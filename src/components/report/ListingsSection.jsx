@@ -1,18 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ListingCard from './ListingCard';
 import { useFetcher } from 'react-router-dom';
 
-const ListingsSection = ({ listings, onSort, isClientView = false, onHideListing }) => {
+const ListingsSection = ({ listings, onSort, isClientView = false, onHideListing, selectedListingKey }) => {
     const [sortOption, setSortOption] = useState('All');
     const [filteredListings, setFilteredListings] = useState(listings);
     const [sortDirection, setSortDirection] = useState('asc'); // 'asc' or 'desc'
     const [isSortingEnabled, setIsSortingEnabled] = useState(false);
 
+    const listingsRef = useRef({});
+
+
+    useEffect(() => {
+        if (selectedListingKey && listingsRef.current[selectedListingKey]) {
+            listingsRef.current[selectedListingKey].scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest'
+            });
+        }
+    }, [selectedListingKey]);
+
     useEffect(() => {
         const filterAndSortListings = () => {
-            console.log('Current sort direction:', sortDirection);
-            console.log('Sorting enabled:', isSortingEnabled);
-
             // First filter the listings
             let filtered = [...listings];
             switch (sortOption) {
@@ -77,13 +86,8 @@ const ListingsSection = ({ listings, onSort, isClientView = false, onHideListing
         });
     }
 
-    // useEffect(()=>{
-    //     	    console.log(filteredListings);
-    // },[filteredListings])
-
     return (
         <div className="h-[600px] flex flex-col">
-            {/* Mobile-optimized header */}
             <div className="flex-none flex flex-col sm:flex-row items-start sm:items-center  gap-3 sm:gap-4 mb-4">
                 <h2 className="font-medium">Listings</h2>
                 <div className="flex flex-wrap items-center gap-2 sm:gap-4 w-full sm:w-auto">
@@ -100,8 +104,7 @@ const ListingsSection = ({ listings, onSort, isClientView = false, onHideListing
                         <button
                             onClick={toggleSort}
                             className="flex items-center text-sm price-sort transition-colors 
-                                     border rounded px-3 py-1 whitespace-nowrap min-w-[150px] justify-between"
-                        >
+                                     border rounded px-3 py-1 whitespace-nowrap min-w-[150px] justify-between">
                             <span>
                                 Price: {!isSortingEnabled ? 'No Sort' : (sortDirection === 'asc' ? 'Low to High' : 'High to Low')}
                             </span>
@@ -125,15 +128,24 @@ const ListingsSection = ({ listings, onSort, isClientView = false, onHideListing
             </div>
 
             {/* Listings Grid */}
-            <div className="flex-1 overflow-y-auto pr-2">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="flex-1 overflow-y-auto p-2">
+                <div className="grid grid-cols-1  sm:grid-cols-2 gap-4">
                     {filteredListings.map(listing => (
-                        <ListingCard
+                        <div
                             key={listing.listingKey}
-                            listing={listing}
-                            onHideToggle={(key) => onHideListingClicked(key)}
-                            isClient={isClientView}
-                        />
+                            ref={el => listingsRef.current[listing.listingKey] = el}
+                            className={`transition-all rounded-lg duration-300 ${selectedListingKey === listing.listingKey
+                                ? 'ring-2 ring-blue-500 ring-offset-2'
+                                : ''
+                                }`}
+                        >
+                            <ListingCard
+                                key={listing.listingKey}
+                                listing={listing}
+                                onHideToggle={(key) => onHideListingClicked(key)}
+                                isClient={isClientView}
+                            />
+                        </div>
                     ))}
                 </div>
             </div>
