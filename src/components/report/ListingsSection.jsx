@@ -87,7 +87,7 @@ const ListingsSection = ({ listings, onSort, isClientView = false, onHideListing
     }
 
     return (
-        <div className="h-[600px] flex flex-col">
+        <div className="listing-container h-[600px] flex flex-col ">
             <div className="flex-none flex flex-col sm:flex-row items-start sm:items-center  gap-3 sm:gap-4 mb-4">
                 <h2 className="font-medium">Listings</h2>
                 <div className="flex flex-wrap items-center gap-2 sm:gap-4 w-full sm:w-auto">
@@ -129,7 +129,7 @@ const ListingsSection = ({ listings, onSort, isClientView = false, onHideListing
 
             {/* Listings Grid */}
             <div className="flex-1 overflow-y-auto p-2">
-                <div className="grid grid-cols-1  sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1  sm:grid-cols-2 gap-4 ">
                     {filteredListings.map(listing => (
                         <div
                             key={listing.listingKey}
