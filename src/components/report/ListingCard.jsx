@@ -66,7 +66,7 @@ const clearOldCache = () => {
     }
 };
 
-const ListingCard = ({ listing, onHideToggle, isClient }) => {
+const ListingCard = ({ listing, onHideToggle, isClient, isActive }) => {
     const [imageUrl, setImageUrl] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const fallbackImage = '/images/listing-home.jpg';
@@ -103,7 +103,7 @@ const ListingCard = ({ listing, onHideToggle, isClient }) => {
     }, [listing.listingKey]);
 
     return (
-        <div className={`listing-card rounded-lg overflow-hidden shadow-sm relative `}>
+        <div className={`listing-card rounded-lg overflow-hidden relative h-full w-[200px]  ${isActive ? 'card-active' : ''}`}>
             {/* Semi-transparent overlay for sold listings */}
             {isHidden && (
                 <div className={`absolute inset-0 bg-gray-200 ${OVERLAY_OPACITY} z-10 pointer-events-none`} />
@@ -118,12 +118,12 @@ const ListingCard = ({ listing, onHideToggle, isClient }) => {
                 ) : (
                     <img
                         src={imageUrl}
-                        className={`w-full h-36 object-cover ${isHidden ? 'filter grayscale' : ''}`}
+                        className={`w-full h-[120px] object-cover ${isHidden ? 'filter grayscale' : ''}`}
                         alt={`Listing ${listing.listingKey}`}
                     />
                 )}
                 <div className="absolute top-2 left-2 z-20">
-                    <span className={`${listing.uiStatus=== 'Sold' ? 'sold ' : 'for-sale'
+                    <span className={`${listing.uiStatus === 'Sold' ? 'sold ' : 'for-sale'
                         } text-white px-3 py-1 text-xs font-medium rounded-full`}>
                         {listing.uiStatus}
                     </span>
@@ -138,14 +138,17 @@ const ListingCard = ({ listing, onHideToggle, isClient }) => {
             </div>
 
             {/* Content Section */}
-            <div className="p-1">
-                <div className={`text-sm font-semibold mb-1 ${isHidden ? 'text-gray-600' : ''}`}>
-                    ${listing.formattedListPrice}
+            <div className="p-2">
+                <div className="flex justify-between items-center mb-1">
+                    <div className={`text-xs font-semibold ${isHidden ? 'text-gray-600' : ''}`}>
+                        ${listing.formattedListPrice}
+                    </div>
+                    <div className={`listing-card-mls-badge listing-card-mls-badge-label ${isHidden ? SOLD_OPACITY : ''}`}>
+                        MLS® {listing.listingKey}
+                    </div>
                 </div>
-
                 <div className="text-xs mb-2">
                     {listing.address}
-                    <p>{listing.uiCity}</p>
                 </div>
 
                 <div className="flex items-center gap-1 text-gray-600 text-sm mb-2">
@@ -161,9 +164,7 @@ const ListingCard = ({ listing, onHideToggle, isClient }) => {
                     </div>
                 </div>
 
-                <div className={`listing-card-mls-badge listing-card-mls-badge-label ${isHidden ? SOLD_OPACITY : ''}`}>
-                    MLS® {listing.listingKey}
-                </div>
+
             </div>
         </div>
     );

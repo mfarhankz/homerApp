@@ -396,45 +396,39 @@ const ReportResult = () => {
                             </div>
 
                             <div className="flex flex-col lg:flex-row gap-6 relative h-[610px]">
-                                {/* Listings Section */}
+                                {/* Charts Section */}
                                 <div className={`
                             ${isMapExpanded ? 'hidden lg:block' : 'block'} 
                             h-full transition-all duration-300 
                             ${isMapExpanded ? 'lg:w-0 lg:hidden' : 'lg:w-1/2'}`}>
-                                    <ListingsSection
-                                        listings={reportData.neighborhoodListings}
-                                        onSort={(items) => handleListingFiltered(items)}
-                                        sortOption="price-low"
-                                        onHideListing={handleHideListing}
-                                        selectedListingKey={selectedListingKey}
-                                    />
+                                    <p>Charts and data visualizations placeholder</p>
                                 </div>
 
                                 {/* Map Section */}
                                 <div className={`
-                            ${isMapExpanded ? 'block' : 'hidden lg:block'}
-                            h-[70vh] lg:h-full transition-all duration-300
-                            ${isMapExpanded ? 'lg:w-full' : 'lg:w-1/2'}
-                        `}>
+                                        ${isMapExpanded ? 'block' : 'hidden lg:block'}
+                                        h-[70vh] lg:h-full transition-all duration-300
+                                        ${isMapExpanded ? 'lg:w-full' : 'lg:w-3/5'}
+                                    `}>
                                     <div className="h-full relative">
                                         {/* Desktop Toggle Buttons */}
                                         <div className="hidden lg:flex absolute top-2 left-2 z-10 gap-2">
                                             <button
                                                 onClick={() => setIsMapExpanded(!isMapExpanded)}
-                                                className="button-blue text-white p-2 rounded-md shadow-md hover:bg-gray-50 transition-colors duration-200">
+                                                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 bg-blue-500 text-white flex items-center gap-2`}>
                                                 {isMapExpanded ? (
                                                     <div className="flex items-center gap-2">
-                                                        <span className="text-sm">Show Listings</span>
+                                                        <span className="text-sm">Collapse</span>
                                                     </div>
                                                 ) : (
                                                     <div className="flex items-center">
-                                                        <span className="text-sm">Hide Listings</span>
+                                                        <span className="text-sm">Expand</span>
                                                     </div>
                                                 )}
                                             </button>
                                         </div>
                                         <ListingsMap
-                                            listings={mapData}
+                                            listings={reportData.neighborhoodListings}
                                             isMapExpanded={isMapExpanded}
                                             propagateClick={(key) => handleMapMarkerClicked(key)}
                                         />

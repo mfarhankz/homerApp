@@ -6,6 +6,7 @@
 /* width */
 ::-webkit-scrollbar {
     width: 10px;
+    height: 10px;
 }
 /* Track */
 ::-webkit-scrollbar-track {
@@ -436,6 +437,10 @@
             font-size: 2rem;
             /* text-6xl */
         }
+    }
+
+    .card-active {
+        border : solid 2px rgb(59 130 246);
     }
 
     /* Update media queries accordingly */

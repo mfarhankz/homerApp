@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import ListingCard from './ListingCard';
 import { useFetcher } from 'react-router-dom';
 
-const ListingsSection = ({ listings, onSort, isClientView = false, onHideListing, selectedListingKey }) => {
+const ListingsSection = ({ listings, onSort, isClientView = false,
+    onHideListing, selectedListingKey, activeView = 'both', parentIsExpanded = false }) => {
     const [sortOption, setSortOption] = useState('All');
     const [filteredListings, setFilteredListings] = useState(listings);
     const [sortDirection, setSortDirection] = useState('asc'); // 'asc' or 'desc'
@@ -87,69 +88,31 @@ const ListingsSection = ({ listings, onSort, isClientView = false, onHideListing
     }
 
     return (
-        <div className="listing-container h-[600px] flex flex-col ">
-            <div className="flex-none flex flex-col sm:flex-row items-start sm:items-center  gap-3 sm:gap-4 mb-4">
-                <h2 className="font-medium">Listings</h2>
-                <div className="flex flex-wrap items-center gap-2 sm:gap-4 w-full sm:w-auto">
-                    <div className="flex flex-wrap items-center gap-2 sm:gap-4">
-                        <select
-                            value={sortOption}
-                            onChange={handleSortChange}
-                            className="border rounded px-2 py-1 text-sm text-blue-900 price-sort min-w-[120px]"
-                        >
-                            <option value="All">All</option>
-                            <option value="Sold">Sold</option>
-                            <option value="Available">Available</option>
-                        </select>
-                        <button
-                            onClick={toggleSort}
-                            className="flex items-center text-sm price-sort transition-colors 
-                                     border rounded px-3 py-1 whitespace-nowrap min-w-[150px] justify-between">
-                            <span>
-                                Price: {!isSortingEnabled ? 'No Sort' : (sortDirection === 'asc' ? 'Low to High' : 'High to Low')}
-                            </span>
-                            {isSortingEnabled && (
-                                <svg
-                                    className={`w-4 h-4 transform ${sortDirection === 'desc' ? 'rotate-180' : ''} transition-transform ml-2`}
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                >
-                                    <path d="M8 4l4 4 4-4M8 12l4 4 4-4" />
-                                </svg>
-                            )}
-                        </button>
+        <div className={`flex-1 h-full flex flex-col ${activeView === 'list'
+            ? 'p-2 mt-12'
+            : 'pb-1'}`}
+        >
+            <div className={`flex-1 overflow-y-auto ${activeView === 'list'
+                ? (parentIsExpanded ? 'grid grid-cols-5 gap-2 auto-rows-min pb-12' : 'grid grid-cols-3 gap-2 auto-rows-min pb-12')
+                : 'grid grid-flow-col gap-2'
+                }`}>
+                {filteredListings.map(listing => (
+                    <div
+                        key={listing.listingKey}
+                        ref={el => listingsRef.current[listing.listingKey] = el}
+                        className={`transition-all duration-300 `}
+                    >
+                        <ListingCard
+                            listing={listing}
+                            onHideToggle={(key) => onHideListingClicked(key)}
+                            isClient={isClientView}
+                            isActive={selectedListingKey === listing.listingKey}
+                        />
                     </div>
-                    <span className="text-sm text-gray-600 ml-auto sm:ml-0">
-                        <b>{filteredListings.length} homes</b>
-                    </span>
-                </div>
-            </div>
-
-            {/* Listings Grid */}
-            <div className="flex-1 overflow-y-auto p-2">
-                <div className="grid grid-cols-1  sm:grid-cols-2 gap-4 ">
-                    {filteredListings.map(listing => (
-                        <div
-                            key={listing.listingKey}
-                            ref={el => listingsRef.current[listing.listingKey] = el}
-                            className={`transition-all rounded-lg duration-300 ${selectedListingKey === listing.listingKey
-                                ? 'ring-2 ring-blue-500 ring-offset-2'
-                                : ''
-                                }`}
-                        >
-                            <ListingCard
-                                key={listing.listingKey}
-                                listing={listing}
-                                onHideToggle={(key) => onHideListingClicked(key)}
-                                isClient={isClientView}
-                            />
-                        </div>
-                    ))}
-                </div>
+                ))}
             </div>
         </div>
+
     );
 };
 
