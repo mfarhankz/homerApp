@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import ReportHeader from './ReportHeader';
-import { debounce } from 'lodash';
 import MetricsCard from './MetricsCard';
 import DaysOnMarket from './DaysOnMarket'
-import ListingsSection from './ListingsSection';
+import DaysOnMarkerPriceRangeChart from './DaysOnMarkerPriceRangeChart'
 import PriceChart from './PriceChart';
 import ListingsMap from './ListingsMap';
 import { useAuth } from '../../contexts/AuthContext';
@@ -401,7 +400,7 @@ const ReportResult = () => {
                             ${isMapExpanded ? 'hidden lg:block' : 'block'} 
                             h-full transition-all duration-300 
                             ${isMapExpanded ? 'lg:w-0 lg:hidden' : 'lg:w-1/2'}`}>
-                                    <p>Charts and data visualizations placeholder</p>
+                                    <DaysOnMarkerPriceRangeChart daysOnMarketData={reportData.daysOnMarketByPrice} />
                                 </div>
 
                                 {/* Map Section */}
