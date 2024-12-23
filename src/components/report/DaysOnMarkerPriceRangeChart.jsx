@@ -103,7 +103,7 @@ const DaysOnMarkerPriceRangeChart = ({ daysOnMarketData }) => {
                         />
                         <YAxis
                             label={{
-                                value: 'Average Days on Market',
+                                value: 'Avg Days',
                                 angle: -90,
                                 position: 'insideLeft',
                                 style: { textAnchor: 'middle', fontSize: 14 }
