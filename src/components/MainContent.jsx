@@ -190,7 +190,7 @@ export default function MainContent({ isOpen }) {
                         )}
 
                         <>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
                                 {reports.map((report) => (
                                     <div
                                         key={report.reportId}
@@ -201,11 +201,11 @@ export default function MainContent({ isOpen }) {
                                             onClick={() => navigate(`/report/${report.reportId}`)}
                                         >
                                             {/* Left side - Image with proper padding */}
-                                            <div className="pl-4">
+                                            <div className="pl-0">
                                                 <img
-                                                    src={`/images/${report.propertyType}.png`}
+                                                    src={`/images/${report.propertyType}.avif`}
                                                     alt={`${report.propertyType} in ${report.city}`}
-                                                    className="mt-3 w-24 h-24 object-contain"
+                                                    className="w-20 h-20 object-contain"
                                                 />
                                             </div>
 

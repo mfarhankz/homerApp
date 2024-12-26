@@ -1,20 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import {
-    BarChart,
-    Bar,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    Legend,
-    ResponsiveContainer,
-    Text
-} from 'recharts';
+import ReactApexChart from 'react-apexcharts';
 
 const DaysOnMarkerPriceRangeChart = ({ daysOnMarketData }) => {
-    console.log(daysOnMarketData)
-    const [data, setData] = useState(daysOnMarketData);
-    const [regionTypes, setRegionTypes] = useState([]);
+    const [chartData, setChartData] = useState({
+        series: [],
+        options: {}
+    });
 
     const getPriceLowerBound = (category) => {
         const map = {
@@ -30,27 +21,9 @@ const DaysOnMarkerPriceRangeChart = ({ daysOnMarketData }) => {
         return map[category] || 0;
     };
 
-    // Custom tooltip with larger font
-    const CustomTooltip = ({ active, payload, label }) => {
-        if (active && payload && payload.length) {
-            return (
-                <div className="bg-white p-4 border border-gray-200 shadow-lg rounded">
-                    <p className="text-base font-semibold mb-2">{label}</p>
-                    {payload.map((entry, index) => (
-                        <p key={index} className="text-sm" style={{ color: entry.color }}>
-                            {entry.name}: {entry.value.toFixed(0)} days
-                        </p>
-                    ))}
-                </div>
-            );
-        }
-        return null;
-    };
-
     const transformData = (apiData) => {
         // Get unique region types
         const uniqueRegionTypes = [...new Set(apiData.map(item => item.regionType))];
-        setRegionTypes(uniqueRegionTypes);
 
         // Group by priceCategory
         const groupedByPrice = apiData.reduce((acc, item) => {
@@ -64,69 +37,140 @@ const DaysOnMarkerPriceRangeChart = ({ daysOnMarketData }) => {
             return acc;
         }, {});
 
-        // Convert to array and sort
-        return Object.values(groupedByPrice)
+        // Convert to array and sort by price range
+        const sortedData = Object.values(groupedByPrice)
             .sort((a, b) => getPriceLowerBound(a.priceCategory) - getPriceLowerBound(b.priceCategory));
+
+        // Transform data for ApexCharts format
+        const categories = sortedData.map(item => item.priceCategory);
+        const series = uniqueRegionTypes.map(region => ({
+            name: region,
+            data: sortedData.map(item => Math.round(item[region])) // Round to whole numbers
+        }));
+
+        return { categories, series };
     };
 
     useEffect(() => {
-        const transformedData = transformData(daysOnMarketData);
-        setData(transformedData);
-    }, []);
+        const { categories, series } = transformData(daysOnMarketData);
 
+        // Colors array matching the original
+        const colors = ['#01C0C8', '#FB9678'];
 
-    // Array of colors for different regions
-    const colors = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#00C49F'];
+        const options = {
+            chart: {
+                type: 'bar',               
+                stacked: false,
+                toolbar: {
+                    show: false
+                }
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    borderRadius: 5,
+                    columnWidth: '75%',
+                    distributed: true,
+                    endingShape: "rounded",
+                    dataLabels: {
+                        position: 'top'
+                    }
+                }
+            },
+            dataLabels: {
+                enabled: true,
+                formatter: function (val) {
+                    return Math.round(val);
+                },
+                style: {
+                    fontSize: '12px',
+                    colors: ['#666']
+                },
+                offsetY: -20
+            },
+            xaxis: {
+                categories: categories,
+                labels: {
+                    rotate: -45,
+                    style: {
+                        fontSize: '12px'
+                    }
+                },
+                title: {
+                    text: ''
+                }
+            },
+            yaxis: {
+                title: {
+                    text: '',
+                    style: {
+                        fontSize: '14px'
+                    }
+                },
+                labels: {
+                    style: {
+                        fontSize: '12px'
+                    }
+                }
+            },
+            tooltip: {
+                theme: 'light',
+                y: {
+                    formatter: function (val) {
+                        return Math.round(val) + ' days';
+                    }
+                },
+                custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+                    const categoryName = w.globals.labels[dataPointIndex];
+                    const regionName = w.globals.seriesNames[seriesIndex];
+                    const value = series[seriesIndex][dataPointIndex];
+
+                    return (
+                        '<div class="bg-white p-4 border border-gray-200 shadow-lg rounded">' +
+                        '<div class="text-base font-semibold mb-2">' + categoryName + '</div>' +
+                        '<div class="text-sm" style="color: ' + colors[seriesIndex] + '">' +
+                        regionName + ': ' + Math.round(value) + ' days' +
+                        '</div>' +
+                        '</div>'
+                    );
+                }
+            },
+            title: {
+                text: 'Average Days on Market by Price Range',
+                align: 'center',
+                style: {
+                    fontSize: '16px'
+                }
+            },
+            legend: {
+                position: 'bottom',
+                fontSize: '12px',
+                markers: {
+                    width: 12,
+                    height: 12,
+                    radius: 2
+                }
+            },
+            colors: colors,
+            grid: {
+                show: false,
+                borderColor: '#90A4AE',
+                strokeDashArray: 3
+            }
+        };
+
+        setChartData({ series, options });
+    }, [daysOnMarketData]);
 
     return (
         <div className="w-full">
-            <h2 className="text-l font-bold text-center">Average Days on Market by Price Range</h2>
             <div className="h-96 p-1">
-                <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
-                        data={data}
-                        margin={{
-                            top: 20,
-                            right: 30,
-                            left: 20,
-                            bottom: 5,
-                        }}
-                    >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis
-                            dataKey="priceCategory"
-                            angle={-45}
-                            textAnchor="end"
-                            height={100}
-                            interval={0}
-                            tick={{ fontSize: 12 }}
-                        />
-                        <YAxis
-                            label={{
-                                value: 'Avg Days',
-                                angle: -90,
-                                position: 'insideLeft',
-                                style: { textAnchor: 'middle', fontSize: 14 }
-                            }}
-                            tick={{ fontSize: 12 }}
-                        />
-                        <Tooltip content={<CustomTooltip />} />
-                        <Legend wrapperStyle={{ fontSize: '12px' }} />
-                        {regionTypes.map((region, index) => (
-                            <Bar
-                                key={region}
-                                dataKey={region}
-                                fill={colors[index % colors.length]}
-                                label={{
-                                    position: 'top',
-                                    fontSize: 12,
-                                    fill: '#666',
-                                    formatter: (value) => value.toFixed(0)
-                                }}
-                            />
-                        ))}
-                    </BarChart>
-                </ResponsiveContainer>
+                <ReactApexChart
+                    options={chartData.options}
+                    series={chartData.series}
+                    type="bar"
+                    height="100%"
+                />
             </div>
         </div>
     );

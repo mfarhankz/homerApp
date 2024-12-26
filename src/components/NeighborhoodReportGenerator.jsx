@@ -168,7 +168,7 @@ const NeighborhoodReportGenerator = () => {
                         {propertyTypeData.map((type) => (
                             <PropertyTypeOption
                                 key={type}
-                                icon={type === 'Other' ? '/images/property-type.png' : `/images/${type}.png`}
+                                icon={type === 'Other' ? '/images/property-type.png' : `/images/${type}.avif`}
                                 label={type}
                                 selected={reportData.propertyType === type}
                                 onClick={() => handlePropertyTypeSelect(type)}

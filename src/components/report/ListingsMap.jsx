@@ -272,6 +272,7 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
                     latitude={group.coordinates.latitude}
                     longitude={group.coordinates.longitude}
                     onClick={() => handleMarkerClick(group)}
+                    style={{'cursor':'pointer'}}
                 >
                     <div className="transition-transform duration-200 hover:scale-105">
                         <div className={`px-3 py-1 rounded-full bg-white shadow-lg border border-gray-100`}>
