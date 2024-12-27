@@ -64,7 +64,7 @@ const ClientReport = () => {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
-                const reportResponse = await response.data;             
+                const reportResponse = await response.data;
                 setReportData(reportResponse);
                 // Update the report state with the response data
                 setReportState(prev => ({
@@ -130,9 +130,10 @@ const ClientReport = () => {
     if (loading) {
         return (
             <LoadingScreen
-                neighborhood='Loading...'
                 onCancel={handleCancel}
-            />
+            >
+                <p>Loading...</p>
+            </LoadingScreen>
         );
     }
 

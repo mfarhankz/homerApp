@@ -24,15 +24,15 @@ const WelcomeBox = ({ location, propertyType, timeRange, agent, priceAnalysis, t
 
                             {/* Right side - Stats in a row */}
                             <div className="flex gap-8">
-                                <div>
-                                    <p className="text-white/70 text-sm mb-0.5">Active Listings</p>
-                                    <h2 className="text-white text-2xl font-semibold">{totalActive}</h2>
+                                <div className="border-e border-white/20 pe-4">
+                                    <p className="text-white/70 text-sm mb-0.5 ">Active Listings</p>
+                                    <h2 className="text-white text-2xl font-semibold ">{totalActive}</h2>
                                 </div>
-                                <div>
+                                <div className="border-e border-white/20 pe-4">
                                     <p className="text-white/70 text-sm mb-0.5">Sold Listings</p>
                                     <h2 className="text-white text-2xl font-semibold">{totalSold}</h2>
                                 </div>
-                                <div>
+                                <div >
                                     <p className="text-white/70 text-sm mb-0.5">Avg DoM</p>
                                     <h2 className="text-white text-2xl font-semibold">
                                         {typeof priceAnalysis.avgDaysOnMarket === 'number'
@@ -52,7 +52,7 @@ const WelcomeBox = ({ location, propertyType, timeRange, agent, priceAnalysis, t
                     <img
                         src={`/images/${propertyType}.avif`}
                         alt="property"
-                        className="w-32 h-32 object-contain drop-shadow-2xl"                                  
+                        className="w-16 h-16 md:w-32 md:h-32 object-contain drop-shadow-2xl"
                     />
                 </div>
             </div>

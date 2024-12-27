@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import ReportHeader from './ReportHeader';
-import MetricsCard from './MetricsCard';
-import DaysOnMarket from './DaysOnMarket'
 import DaysOnMarkerPriceRangeChart from './DaysOnMarkerPriceRangeChart'
-import PriceChart from './PriceChart';
 import ListingsMap from './ListingsMap';
 import { useAuth } from '../../contexts/AuthContext';
 import LoadingScreen from '../../components/LoadingScreen'
@@ -12,10 +9,9 @@ import { baseDataAPI } from '../../services/api'
 import { Share2, Save, X, Loader2, } from 'lucide-react';
 import ShareModal from '../ShareModal';
 import CardBox from '../shared/CardBox';
-import Chart from 'react-apexcharts';
 import WelcomeBox from './WelcomeBox';
-
-
+import RegionNeighborhoodSalesRatio from './RegionNeighborhoodSalesRatio'
+import SoldByPropertyType from './SoldByPropertyType';
 
 const ReportResult = () => {
     const location = useLocation();
@@ -33,56 +29,6 @@ const ReportResult = () => {
     const [shareUrl, setShareUrl] = useState('');
     const [isHiddenListingsSaving, setIsHiddenListingsSaving] = useState(false);
     const [selectedListingKey, setSelectedListingKey] = useState(null);
-
-    const ChartData = {
-        series: [
-            {
-                name: "customers",
-                data: [36, 45, 31, 47, 38, 43],
-                color: "var(--color-secondary)",
-            },
-        ],
-
-        chart: {
-            type: "area",
-            height: 70,
-            sparkline: {
-                enabled: true,
-            },
-            group: "sparklines",
-            fontFamily: "inherit",
-            foreColor: "#adb0bb",
-        },
-        color: "var(--color-secondary)",
-        stroke: {
-            curve: "smooth",
-            width: 2,
-        },
-        fill: {
-            type: "gradient",
-            color: "var(--color-secondary)",
-            gradient: {
-                shadeIntensity: 0,
-                inverseColors: false,
-                opacityFrom: 0.2,
-                opacityTo: 0.8,
-                stops: [100],
-            },
-        },
-        markers: {
-            size: 0,
-        },
-        tooltip: {
-            theme: "dark",
-            fixed: {
-                enabled: true,
-                position: "right",
-            },
-            x: {
-                show: false,
-            },
-        },
-    };
 
     // State matching the C# class structure
     const [reportState, setReportState] = useState({
@@ -238,9 +184,10 @@ const ReportResult = () => {
     if (loading) {
         return (
             <LoadingScreen
-                neighborhood='Loading...'
                 onCancel={handleCancel}
-            />
+            >
+                <p>Loading...</p>
+            </LoadingScreen>
         );
     }
 
@@ -359,7 +306,7 @@ const ReportResult = () => {
                     <DaysOnMarkerPriceRangeChart daysOnMarketData={reportData.daysOnMarketByPrice} />
                 </div>
 
-                <div className="order-4 md:order-none md:col-span-7 md:row-span-5 md:col-start-6 md:row-start-2 bg-green-50 rounded-lg shadow-lg mb-6 md:mb-0">
+                <div className="order-4 md:order-none md:col-span-7 md:row-span-5 md:col-start-6 md:row-start-2 bg-green-50 rounded-lg  mb-6 md:mb-0">
                     <div className="h-full relative">
                         {/* <div className="hidden lg:flex absolute top-2 left-2 z-10 gap-2">
                             <button
@@ -384,14 +331,15 @@ const ReportResult = () => {
                     </div>
                 </div>
 
-                <div className="order-5 md:order-none md:col-span-5 md:row-span-5 md:row-start-6 bg-orange-50 rounded-lg shadow-lg p-6 mb-6 md:mb-0">
-                    <h2 className="text-2xl font-bold text-orange-800">Section 5</h2>
-                    <p className="text-orange-600">Content for section 5</p>
+                <div className="order-5 md:order-none md:col-span-5 md:row-span-2 md:row-start-6  p-0 mb-6 md:mb-0 overflow-hidden">
+                    <RegionNeighborhoodSalesRatio
+                        dataSeries={reportData.salesRatio.series}
+                        categories={reportData.salesRatio.categories} />
                 </div>
 
-                <div className="order-6 md:order-none md:col-span-7 md:row-span-3 md:col-start-6 md:row-start-7 bg-red-50 rounded-lg shadow-lg p-6 mb-6 md:mb-0">
-                    <h2 className="text-2xl font-bold text-red-800">Section 6</h2>
-                    <p className="text-red-600">Content for section 6</p>
+                <div className="order-6 md:order-none md:col-span-7 md:row-span-3 md:col-start-6 md:row-start-7 rounded-lg border  p-0 mb-6 md:mb-0 overflow-hidden">
+                    <SoldByPropertyType dataSeries={reportData.propertyTypeChartData.series}
+                        labels={reportData.propertyTypeChartData.labels} />
                 </div>
             </div>
             <div className="mx-auto px-4  space-y-8">
@@ -460,7 +408,6 @@ const ReportResult = () => {
 
                 )}
             </div>
-
         </div>
     );
 };
