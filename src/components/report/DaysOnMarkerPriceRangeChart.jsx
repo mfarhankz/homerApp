@@ -22,10 +22,7 @@ const DaysOnMarkerPriceRangeChart = ({ daysOnMarketData }) => {
     };
 
     const transformData = (apiData) => {
-        // Get unique region types
         const uniqueRegionTypes = [...new Set(apiData.map(item => item.regionType))];
-
-        // Group by priceCategory
         const groupedByPrice = apiData.reduce((acc, item) => {
             if (!acc[item.priceCategory]) {
                 acc[item.priceCategory] = {
@@ -52,8 +49,7 @@ const DaysOnMarkerPriceRangeChart = ({ daysOnMarketData }) => {
     };
 
     useEffect(() => {
-        const { categories, series } = transformData(daysOnMarketData);
-
+        const { categories, series } = transformData(daysOnMarketData);      
         // Colors array matching the original
         const colors = ['#01C0C8', '#FB9678'];
 
@@ -70,7 +66,7 @@ const DaysOnMarkerPriceRangeChart = ({ daysOnMarketData }) => {
                     horizontal: false,
                     borderRadius: 5,
                     columnWidth: '75%',
-                    distributed: true,
+                    distributed: false,
                     endingShape: "rounded",
                     dataLabels: {
                         position: 'top'

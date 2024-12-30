@@ -323,13 +323,13 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
             </div>
  */}
             {/* iOS-style Toggle Buttons */}
-            <div className="absolute  top-1 left-1/2 transform -translate-x-1/2 z-20">
-                <div className="flex bg-[grey] text-white rounded-lg space-x-1">
+            <div className="absolute top-1 md:left-1/2 left-1 md:transform md:-translate-x-1/2 z-20">
+                <div className="flex flex-col md:flex-row bg-[grey] text-white rounded-lg space-y-1 md:space-y-0 md:space-x-1">
                     <button
                         onClick={() => setActiveView('map')}
                         className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 ${activeView === 'map'
-                            ? 'bg-blue-500 text-white'
-                            : 'text-white-600 '
+                                ? 'bg-blue-500 text-white'
+                                : 'text-white-600'
                             }`}
                     >
                         Map
@@ -337,8 +337,8 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
                     <button
                         onClick={() => setActiveView('list')}
                         className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 ${activeView === 'list'
-                            ? 'bg-blue-500 text-white'
-                            : 'text-white-600 '
+                                ? 'bg-blue-500 text-white'
+                                : 'text-white-600'
                             }`}
                     >
                         List
@@ -346,8 +346,8 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
                     <button
                         onClick={() => setActiveView('both')}
                         className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 ${activeView === 'both'
-                            ? 'bg-blue-500 text-white'
-                            : 'text-white-600'
+                                ? 'bg-blue-500 text-white'
+                                : 'text-white-600'
                             }`}
                     >
                         Both

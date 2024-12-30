@@ -12,6 +12,7 @@ import CardBox from '../shared/CardBox';
 import WelcomeBox from './WelcomeBox';
 import RegionNeighborhoodSalesRatio from './RegionNeighborhoodSalesRatio'
 import SoldByPropertyType from './SoldByPropertyType';
+import SoldListPriceByMonth from './SoldListPriceByMonth'
 
 const ReportResult = () => {
     const location = useLocation();
@@ -29,6 +30,7 @@ const ReportResult = () => {
     const [shareUrl, setShareUrl] = useState('');
     const [isHiddenListingsSaving, setIsHiddenListingsSaving] = useState(false);
     const [selectedListingKey, setSelectedListingKey] = useState(null);
+    const [selectedToggle, setSelectedToggle] = useState('listVsSold');
 
     // State matching the C# class structure
     const [reportState, setReportState] = useState({
@@ -128,6 +130,8 @@ const ReportResult = () => {
                     isShared: reportResponse.reportRequestDocument.isShared || false,
                     hiddenListings: reportResponse.reportRequestDocument.hiddenListings || []
                 }));
+
+                console.log('sold by month', reportData.soldByMonth);
             } catch (error) {
                 if (error.name === 'AbortError') {
                     console.log('Request was cancelled');
@@ -331,12 +335,52 @@ const ReportResult = () => {
                     </div>
                 </div>
 
-                <div className="order-5 md:order-none md:col-span-5 md:row-span-2 md:row-start-6  p-0 mb-6 md:mb-0 overflow-hidden">
-                    <RegionNeighborhoodSalesRatio
-                        dataSeries={reportData.salesRatio.series}
-                        categories={reportData.salesRatio.categories} />
-                </div>
+                <div className="relative order-5 md:order-none md:col-span-5 md:row-span-2 md:row-start-6 p-0 mb-6 md:mb-0 overflow-hidden">
+                    <div className="relative z-10 flex justify-end mb-2"> {/* Changed from absolute to relative */}
+                        <div className="bg-gray-100 p-1 rounded-lg flex flex-col md:flex-row gap-1">
+                            <button
+                                className={`px-4 py-1 text-xs rounded-md transition-all w-full md:w-auto ${selectedToggle === 'listVsSold'
+                                        ? 'bg-blue-500 shadow text-white'
+                                        : 'text-gray-500 hover:text-gray-700'
+                                    }`}
+                                onClick={() => setSelectedToggle('listVsSold')}
+                            >
+                                List vs Sold
+                            </button>
+                            <button
+                                className={`px-4 py-1 text-xs rounded-md transition-all w-full md:w-auto ${selectedToggle === 'active'
+                                        ? 'bg-blue-500 shadow text-white'
+                                        : 'text-gray-500 hover:text-gray-700'
+                                    }`}
+                                onClick={() => setSelectedToggle('active')}
+                            >
+                                Active
+                            </button>
+                            <button
+                                className={`px-4 py-1 text-xs rounded-md transition-all w-full md:w-auto ${selectedToggle === 'sold'
+                                        ? 'bg-blue-500 shadow text-white'
+                                        : 'text-gray-500 hover:text-gray-700'
+                                    }`}
+                                onClick={() => setSelectedToggle('sold')}
+                            >
+                                Sold
+                            </button>
+                        </div>
+                    </div>
 
+                    <div className="relative"> {/* Added wrapper for content */}
+                        {selectedToggle === 'listVsSold' && (
+                            <RegionNeighborhoodSalesRatio
+                                dataSeries={reportData.salesRatio.series}
+                                categories={reportData.salesRatio.categories}
+                            />
+                        )}
+
+                        {selectedToggle === 'sold' && (
+                            <SoldListPriceByMonth dataSeries={reportData.soldByMonth} />
+                        )}
+                    </div>
+                </div>
                 <div className="order-6 md:order-none md:col-span-7 md:row-span-3 md:col-start-6 md:row-start-7 rounded-lg border  p-0 mb-6 md:mb-0 overflow-hidden">
                     <SoldByPropertyType dataSeries={reportData.propertyTypeChartData.series}
                         labels={reportData.propertyTypeChartData.labels} />

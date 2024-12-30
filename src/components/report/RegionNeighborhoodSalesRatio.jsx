@@ -4,7 +4,6 @@ import CardBox from '../shared/CardBox';
 
 const RegionNeighborhoodSalesRatio = ({ dataSeries, categories }) => {
     const seriesColors = ['#2E93fA', '#1cc3bd'];
-    const [selectedToggle, setSelectedToggle] = useState('listVsSold');
     const chartOptions = {
         chart: {
             type: "area",
@@ -185,35 +184,6 @@ const RegionNeighborhoodSalesRatio = ({ dataSeries, categories }) => {
 
                         </div>
                         <p className="text-xs">Past 6 months</p>
-                    </div>
-                    <div className="bg-gray-100 p-1 rounded-lg flex flex-col md:flex-row gap-1">
-                        <button
-                            className={`px-4 py-1 text-xs rounded-md transition-all w-full md:w-auto ${selectedToggle === 'listVsSold'
-                                    ? 'bg-blue-500 shadow text-white'
-                                    : 'text-gray-500 hover:text-gray-700'
-                                }`}
-                            onClick={() => setSelectedToggle('listVsSold')}
-                        >
-                            List vs Sold
-                        </button>
-                        <button
-                            className={`px-4 py-1 text-xs rounded-md transition-all w-full md:w-auto ${selectedToggle === 'active'
-                                    ? 'bg-blue-500 shadow text-white'
-                                    : 'text-gray-500 hover:text-gray-700'
-                                }`}
-                            onClick={() => setSelectedToggle('active')}
-                        >
-                            Active
-                        </button>
-                        <button
-                            className={`px-4 py-1 text-xs rounded-md transition-all w-full md:w-auto ${selectedToggle === 'sold'
-                                    ? 'bg-blue-500 shadow text-white'
-                                    : 'text-gray-500 hover:text-gray-700'
-                                }`}
-                            onClick={() => setSelectedToggle('sold')}
-                        >
-                            Sold
-                        </button>
                     </div>
                 </div>
                 <Chart
