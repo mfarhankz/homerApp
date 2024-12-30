@@ -58,8 +58,8 @@ const RegionNeighborhoodSalesRatio = ({ dataSeries, categories }) => {
             borderColor: '#e0e0e0',
             strokeDashArray: 3,
             padding: {
-                left: 0,
-                right: 0,
+                left: 20,
+                right: 20,
                 top: 0,
                 bottom: 0
             }

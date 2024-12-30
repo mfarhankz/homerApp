@@ -218,8 +218,9 @@ export default function MainContent({ isOpen }) {
                                                 </div>
                                                 <div>
                                                     <h3 className="text-homer-blue text-sm">
-                                                        {report.propertyType} in {report.city}
+                                                        {report.propertyType} in 
                                                     </h3>
+                                                    <h3 className="text-homer-blue text-xs">{report.region}/{report.city}</h3>
                                                 </div>
 
                                             </div>

@@ -44,8 +44,9 @@ const SoldListPriceByMonth = ({ dataSeries }) => {
             }
         },
         legend: {
+    show:false,
             position: 'bottom',
-            horizontalAlign: 'center',
+            horizontalAlign: 'left',
             fontSize: '12px'
         },
         tooltip: {
