@@ -323,8 +323,8 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
             </div>
  */}
             {/* iOS-style Toggle Buttons */}
-            <div className="absolute top-1 md:left-1/2 left-1 md:transform md:-translate-x-1/2 z-20">
-                <div className="flex flex-col md:flex-row bg-[grey] text-white rounded-lg space-y-1 md:space-y-0 md:space-x-1">
+            <div className="absolute top-1 left-1 transform z-20">
+                <div className="flex flex-row bg-[grey] text-white rounded-lg space-y-1 md:space-y-0 md:space-x-1">
                     <button
                         onClick={() => setActiveView('map')}
                         className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 ${activeView === 'map'
@@ -355,7 +355,7 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
                 </div>
             </div>
 
-            <div className="absolute top-1 right-0 transform -translate-x-1/2 z-20">
+            <div className="absolute top-1 right-0 transform -translate-x-11 z-20">
                 <div className="flex bg-white rounded-lg shadow-md space-x-1">
                     <button
                         onClick={() => {
@@ -436,7 +436,7 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
 
             {/* ListingsSection */}
             <div
-                className={`transition-all duration-300 ${!getVisibility('list')
+                className={`bg-gray-100 rounded-lg transition-all duration-300 ${!getVisibility('list')
                     ? 'opacity-0 pointer-events-none'
                     : 'opacity-100'
                     } ${activeView === 'list'
@@ -444,7 +444,7 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
                         : 'absolute bottom-1 left-4 right-4' // Overlay when both
                     } z-[5]`}
             >
-                <div className={`rounded-lg shadow-lg overflow-hidden ${activeView === 'list'
+                <div className={`rounded-lg overflow-hidden ${activeView === 'list'
                     ? 'h-full flex flex-col' // Add flex-col to allow inner content to scroll
                     : ''}`}
                 >

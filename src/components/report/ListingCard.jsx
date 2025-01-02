@@ -103,7 +103,7 @@ const ListingCard = ({ listing, onHideToggle, isClient, isActive }) => {
     }, [listing.listingKey]);
 
     return (
-        <div className={`listing-card rounded-lg overflow-hidden relative h-full w-[200px]  ${isActive ? 'card-active' : ''}`}>
+        <div className={`listing-card rounded-lg overflow-hidden relative h-full w-[190px] md:w-[200px]  ${isActive ? 'card-active' : ''}`}>
             {/* Semi-transparent overlay for sold listings */}
             {isHidden && (
                 <div className={`absolute inset-0 bg-gray-200 ${OVERLAY_OPACITY} z-10 pointer-events-none`} />

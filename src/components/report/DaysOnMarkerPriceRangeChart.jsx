@@ -57,6 +57,9 @@ const DaysOnMarkerPriceRangeChart = ({ daysOnMarketData }) => {
             chart: {
                 type: 'bar',               
                 stacked: false,
+                zoom: {
+                    enabled: false,                
+                },
                 toolbar: {
                     show: false
                 }
@@ -132,10 +135,10 @@ const DaysOnMarkerPriceRangeChart = ({ daysOnMarketData }) => {
                 }
             },
             title: {
-                text: 'Average Days on Market by Price Range',
+                text: 'Average Days on Market',
                 align: 'center',
                 style: {
-                    fontSize: '16px'
+                    fontSize: '12px'
                 }
             },
             legend: {

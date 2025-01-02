@@ -13,6 +13,7 @@ import WelcomeBox from './WelcomeBox';
 import RegionNeighborhoodSalesRatio from './RegionNeighborhoodSalesRatio'
 import SoldByPropertyType from './SoldByPropertyType';
 import SoldListPriceByMonth from './SoldListPriceByMonth'
+import ActiveListPriceByMonth from './ActiveListPriceByMonth'
 
 const ReportResult = () => {
     const location = useLocation();
@@ -131,7 +132,6 @@ const ReportResult = () => {
                     hiddenListings: reportResponse.reportRequestDocument.hiddenListings || []
                 }));
 
-                console.log('sold by month', reportData.soldByMonth);
             } catch (error) {
                 if (error.name === 'AbortError') {
                     console.log('Request was cancelled');
@@ -218,7 +218,7 @@ const ReportResult = () => {
     return (
         <div >
 
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 p-4">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:p-4">
 
                 {/* Section 1 - Now order-2 on mobile */}
                 <div className="order-2 md:order-none md:col-span-5 md:row-span-2 overflow-hidden mb-6 md:mb-0">
@@ -340,8 +340,8 @@ const ReportResult = () => {
                         <div className="bg-gray-100 p-1 rounded-lg flex flex-col md:flex-row gap-1">
                             <button
                                 className={`px-4 py-1 text-xs rounded-md transition-all w-full md:w-auto ${selectedToggle === 'listVsSold'
-                                        ? 'bg-blue-500 shadow text-white'
-                                        : 'text-gray-500 hover:text-gray-700'
+                                    ? 'bg-blue-500 shadow text-white'
+                                    : 'text-gray-500 hover:text-gray-700'
                                     }`}
                                 onClick={() => setSelectedToggle('listVsSold')}
                             >
@@ -349,8 +349,8 @@ const ReportResult = () => {
                             </button>
                             <button
                                 className={`px-4 py-1 text-xs rounded-md transition-all w-full md:w-auto ${selectedToggle === 'active'
-                                        ? 'bg-blue-500 shadow text-white'
-                                        : 'text-gray-500 hover:text-gray-700'
+                                    ? 'bg-blue-500 shadow text-white'
+                                    : 'text-gray-500 hover:text-gray-700'
                                     }`}
                                 onClick={() => setSelectedToggle('active')}
                             >
@@ -358,8 +358,8 @@ const ReportResult = () => {
                             </button>
                             <button
                                 className={`px-4 py-1 text-xs rounded-md transition-all w-full md:w-auto ${selectedToggle === 'sold'
-                                        ? 'bg-blue-500 shadow text-white'
-                                        : 'text-gray-500 hover:text-gray-700'
+                                    ? 'bg-blue-500 shadow text-white'
+                                    : 'text-gray-500 hover:text-gray-700'
                                     }`}
                                 onClick={() => setSelectedToggle('sold')}
                             >
@@ -378,6 +378,10 @@ const ReportResult = () => {
 
                         {selectedToggle === 'sold' && (
                             <SoldListPriceByMonth dataSeries={reportData.soldByMonth} />
+                        )}
+
+                        {selectedToggle === 'active' && (
+                            <ActiveListPriceByMonth dataSeries={reportData.activeByMonth} />
                         )}
                     </div>
                 </div>

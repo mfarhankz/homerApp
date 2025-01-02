@@ -1,7 +1,7 @@
 import React from "react";
 import Chart from 'react-apexcharts';
 
-const SoldListPriceByMonth = ({ dataSeries }) => {
+const ActiveListPriceByMonth = ({ dataSeries }) => {
     const options = {
         chart: {
             type: 'scatter',
@@ -44,7 +44,7 @@ const SoldListPriceByMonth = ({ dataSeries }) => {
             }
         },
         title: {
-            text: 'Sold listings',
+            text: 'Active listings',
             align: 'center',
             style: {
                 fontSize: '12px'
@@ -88,4 +88,4 @@ const SoldListPriceByMonth = ({ dataSeries }) => {
     );
 };
 
-export default SoldListPriceByMonth;
+export default ActiveListPriceByMonth;

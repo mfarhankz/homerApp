@@ -7,7 +7,9 @@ const RegionNeighborhoodSalesRatio = ({ dataSeries, categories }) => {
     const chartOptions = {
         chart: {
             type: "area",
-            height: 350,
+            zoom:{
+                enabled: false,
+            },          
             toolbar: {
                 show: false
             },
@@ -190,7 +192,7 @@ const RegionNeighborhoodSalesRatio = ({ dataSeries, categories }) => {
                     options={chartOptions}
                     series={dataSeries || []}
                     type="area"
-                    height="200"
+                    height="250"
                     width="100%"
                 />
             </div>

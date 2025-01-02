@@ -40,7 +40,8 @@ const PropertyPopup = ({ selectedGroup, currentPropertyIndex, currentImage, hand
     };
 
     return (
-        <div className="absolute w-96 lg:w-[32rem] top-20 left-1/2 -translate-x-1/2 bg-white shadow-lg rounded-t-xl transform transition-transform duration-300 ease-in-out">
+        <div className="absolute w-96 lg:w-[32rem] top-20 left-1/2 -translate-x-1/2 bg-white shadow-lg rounded-t-xl transform 
+                        transition-transform duration-300 ease-in-out z-30">
             <div className="flex flex-col w-full">
                 {/* Header */}
                 <div className="p-2 border-b  flex justify-between items-center">
@@ -84,7 +85,6 @@ const PropertyPopup = ({ selectedGroup, currentPropertyIndex, currentImage, hand
                             <span className="text-green-600 bg-green-50 px-2 py-1 rounded">
                                 {selectedGroup.properties[currentPropertyIndex].uiStatus}
                             </span>
-
                         </div>
                     </div>
 
