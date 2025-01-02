@@ -1,11 +1,10 @@
-import Map, {
-    Marker,
-    NavigationControl
-} from 'react-map-gl';
+import Map, { Marker, NavigationControl } from 'react-map-gl';
 import { WebMercatorViewport } from '@math.gl/web-mercator';
+import PropertyPopup from './PropertyPopup';
+import ListingsSection from './ListingsSection';
+import { ListFilter, X } from 'lucide-react';
 
 import { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight, X, TrendingUp, TrendingDown, BedIcon, BathIcon } from 'lucide-react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 // Reuse the cache constants and helper function from ListingCard
@@ -33,6 +32,8 @@ const getCachedImage = (listingKey) => {
 };
 
 const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
+    const [activeView, setActiveView] = useState('both');
+    const [showFilters, setShowFilters] = useState(false);
     const MAPBOX_ACCESS_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
     const mapRef = useRef(null);
     const [expandedClusters, setExpandedClusters] = useState(new Set());
@@ -132,7 +133,7 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
                 ...prev,
                 longitude,
                 latitude,
-                zoom: Math.min(zoom, 15), // Limit max zoom
+                zoom: Math.min(zoom, 14), // Limit max zoom
                 transitionDuration: 1000
             }));
         } catch (error) {
@@ -223,63 +224,12 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
     };
 
 
-    const handleNext = () => {
-        setCurrentPropertyIndex((prev) => {
-            const nextIndex = prev === selectedGroup.properties.length - 1 ? 0 : prev + 1;
-            const cachedImageUrl = getCachedImage(selectedGroup.properties[nextIndex].listingKey);
-            setCurrentImage(cachedImageUrl || fallbackImage);
-            return nextIndex;
-        });
-    };
-
-    const handlePrev = () => {
-        setCurrentPropertyIndex((prev) => {
-            const nextIndex = prev === 0 ? selectedGroup.properties.length - 1 : prev - 1;
-            const cachedImageUrl = getCachedImage(selectedGroup.properties[nextIndex].listingKey);
-            setCurrentImage(cachedImageUrl || fallbackImage);
-            return nextIndex;
-        });
-    };
-
     const handleClose = () => {
         setSelectedGroup(null);
         setCurrentPropertyIndex(0);
         setCurrentImage(null);
     };
 
-    const renderPrice = (property) => {
-        const isSold = property.uiStatus === 'Sold';
-        const hasClosePrice = property.soldPrice && property.listPrice !== property.soldPrice;
-
-        if (isSold && hasClosePrice) {
-            const soldHigher = property.soldPrice > property.listPrice;
-            return (
-                <div className="space-y-1">
-                    <div className="text-sm font-bold text-gray-600 relative">
-                        List:  <span className="relative">
-                            <span className="absolute top-1/2 left-0 right-0 h-0.5 bg-red-900 transform -rotate-180"></span>
-                            ${property.formattedListPrice}
-                        </span>
-                    </div>
-                    <div className="text-sm font-bold text-green-600 flex items-center gap-1">
-                        <span>Sold: ${property.soldPrice.toLocaleString()}</span>
-                        {soldHigher ? (
-                            <TrendingUp className="w-5 h-5 text-green-500" />
-                        ) : (
-                            <TrendingDown className="w-5 h-5 text-red-500" />
-                        )}
-                    </div>
-
-                </div>
-            );
-        }
-
-        return (
-            <div className="text-xl font-bold text-blue-600">
-                ${property.formattedListPrice}
-            </div>
-        );
-    };
 
     // Modify the marker rendering logic
     const renderMarkers = () => {
@@ -322,6 +272,7 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
                     latitude={group.coordinates.latitude}
                     longitude={group.coordinates.longitude}
                     onClick={() => handleMarkerClick(group)}
+                    style={{'cursor':'pointer'}}
                 >
                     <div className="transition-transform duration-200 hover:scale-105">
                         <div className={`px-3 py-1 rounded-full bg-white shadow-lg border border-gray-100`}>
@@ -343,10 +294,21 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
         });
     };
 
+    const getVisibility = (component) => {
+        switch (component) {
+            case 'map':
+                return activeView === 'map' || activeView === 'both';
+            case 'list':
+                return activeView === 'list' || activeView === 'both';
+            default:
+                return false;
+        }
+    };
+
     return (
-        <div className="relative w-full h-[600px]">
+        <div className="w-full h-[550px]">
             {/* Add Reset Button */}
-            <div className="hidden lg:flex absolute top-2 left-28 z-10">
+            {/* <div className="hidden lg:flex absolute top-2 left-28 z-10">
                 <button
                     onClick={() => {
                         fitMapToBounds();
@@ -359,107 +321,142 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
                     </div>
                 </button>
             </div>
+ */}
+            {/* iOS-style Toggle Buttons */}
+            <div className="absolute top-1 left-1 transform z-20">
+                <div className="flex flex-row bg-[grey] text-white rounded-lg space-y-1 md:space-y-0 md:space-x-1">
+                    <button
+                        onClick={() => setActiveView('map')}
+                        className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 ${activeView === 'map'
+                                ? 'bg-blue-500 text-white'
+                                : 'text-white-600'
+                            }`}
+                    >
+                        Map
+                    </button>
+                    <button
+                        onClick={() => setActiveView('list')}
+                        className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 ${activeView === 'list'
+                                ? 'bg-blue-500 text-white'
+                                : 'text-white-600'
+                            }`}
+                    >
+                        List
+                    </button>
+                    <button
+                        onClick={() => setActiveView('both')}
+                        className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 ${activeView === 'both'
+                                ? 'bg-blue-500 text-white'
+                                : 'text-white-600'
+                            }`}
+                    >
+                        Both
+                    </button>
+                </div>
+            </div>
 
-            <Map
-                {...viewState}
-                ref={mapRef}
-                onMove={handleViewStateChange}
-                style={{ width: '100%', borderRadius: '0.5rem' }}
-                mapStyle="mapbox://styles/mapbox/streets-v12"
-                mapboxAccessToken={MAPBOX_ACCESS_TOKEN}
+            <div className="absolute top-1 right-0 transform -translate-x-11 z-20">
+                <div className="flex bg-white rounded-lg shadow-md space-x-1">
+                    <button
+                        onClick={() => {
+                            fitMapToBounds();
+                            setExpandedClusters(new Set());
+                        }}
+                        className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 bg-blue-500 text-white flex items-center gap-2`}
+                    >
+                        <ListFilter className="w-4 h-4" />
+                        <span>Reset Map</span>
+                    </button>
+                </div>
+                {showFilters && (
+                    <div className="absolute top-full right-0 mt-1 w-80 bg-white rounded-lg shadow-xl z-40">
+                        <div className="p-4">
+                            <div className="flex justify-between items-center mb-4">
+                                <h2 className="text-lg font-semibold">Filters</h2>
+                                <button onClick={() => setShowFilters(false)} className="hover:bg-gray-100 p-1 rounded-full">
+                                    <X size={20} />
+                                </button>
+                            </div>
+
+                            <div className="space-y-4">
+                                <div>
+                                    <h3 className="font-medium mb-2">Price Range</h3>
+                                    <div className="flex gap-2">
+                                        <input type="number" placeholder="Min" className="w-1/2 p-2 border rounded" />
+                                        <input type="number" placeholder="Max" className="w-1/2 p-2 border rounded" />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h3 className="font-medium mb-2">Property Type</h3>
+                                    <div className="space-y-2">
+                                        {['Apartment', 'House', 'Studio', 'Loft'].map(type => (
+                                            <label key={type} className="flex items-center gap-2">
+                                                <input type="checkbox" className="rounded" />
+                                                <span className="text-sm">{type}</span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+
+
+                                <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
+                                    Apply Filters
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
+            {/* Map Component */}
+            <div
+                className={`absolute inset-0 transition-opacity duration-300 ${getVisibility('map') ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                    }`}
             >
-                <NavigationControl position="top-right" />
-                {renderMarkers()}
-            </Map>
-
+                <Map
+                    {...viewState}
+                    ref={mapRef}
+                    onMove={handleViewStateChange}
+                    style={{ width: '100%', borderRadius: '0.5rem' }}
+                    mapStyle="mapbox://styles/mapbox/streets-v12"
+                    mapboxAccessToken={MAPBOX_ACCESS_TOKEN}>
+                    <NavigationControl position="top-right" />
+                    {renderMarkers()}
+                </Map>
+            </div>
             {/* Enhanced Bottom Sheet with Image */}
             {selectedGroup && (
-                <div className="absolute bottom-10 left-0 right-0 bg-white shadow-lg rounded-t-xl transform transition-transform duration-300 ease-in-out">
-                    <div className="flex flex-col w-full">
-                        {/* Header */}
-                        <div className="p-2 border-b  flex justify-between items-center">
-                            <h3 className="text-base font-bold text-gray-900">
-                                Property Details - MLS®{selectedGroup.properties[currentPropertyIndex].listingKey}
-                            </h3>
-                            <button
-                                onClick={handleClose}
-                                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                                aria-label="Close dialog"
-                            >
-                                <X className="w-3 h-3 text-gray-500" />
-                            </button>
-                        </div>
-
-                        {/* Content with Image */}
-                        <div className="p-4 flex flex-row gap-4">
-                            {/* Property Details */}
-                            <div className="flex-1 space-y-3">
-                                <div className="text-xl font-bold text-blue-600">
-                                    {renderPrice(selectedGroup.properties[currentPropertyIndex])}
-
-                                </div>
-
-                                <div className="flex text-center">
-                                    <span className="bg-gray-100 px-2 py-1 rounded text-sm  text-center">
-                                        <BedIcon />{selectedGroup.properties[currentPropertyIndex].bedroomsTotal} beds
-                                    </span>
-                                    <span className="bg-gray-100 px-2 py-1 rounded text-sm  text-center">
-                                        <BathIcon />{selectedGroup.properties[currentPropertyIndex].bathroomsTotalInteger} baths
-                                    </span>
-                                </div>
-                                <div className="text-gray-600 text-xs">
-                                    {selectedGroup.properties[currentPropertyIndex].address}
-                                </div>
-                                <div className="text-gray-600 text-xs">
-                                    {selectedGroup.properties[currentPropertyIndex].uiCity},
-                                    {selectedGroup.properties[currentPropertyIndex].province}
-                                </div>
-
-                                <div className="flex justify-between items-center text-sm">
-                                    <span className="text-green-600 bg-green-50 px-2 py-1 rounded">
-                                        {selectedGroup.properties[currentPropertyIndex].uiStatus}
-                                    </span>
-
-                                </div>
-                            </div>
-
-                            {/* Image Section */}
-                            <div className="flex-1">
-                                <div className="relative w-full h-48 rounded-lg overflow-hidden">
-                                    <img
-                                        src={currentImage}
-                                        alt={`Property ${selectedGroup.properties[currentPropertyIndex].listingKey}`}
-                                        className="w-full h-full object-cover"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Footer with Navigation */}
-                        {selectedGroup.properties.length > 1 && (
-                            <div className="p-4 border-t border-gray-200 flex items-center justify-between bg-gray-50">
-                                <button
-                                    onClick={handlePrev}
-                                    className="flex items-center gap-1 text-gray-600 hover:text-gray-900 px-2 py-1 rounded hover:bg-gray-100 touch-manipulation"
-                                >
-                                    <ChevronLeft className="w-4 h-4" />
-                                    <span className="text-sm">Previous</span>
-                                </button>
-                                <span className="text-sm text-gray-500">
-                                    {currentPropertyIndex + 1} of {selectedGroup.properties.length}
-                                </span>
-                                <button
-                                    onClick={handleNext}
-                                    className="flex items-center gap-1 text-gray-600 hover:text-gray-900 px-2 py-1 rounded hover:bg-gray-100 touch-manipulation"
-                                >
-                                    <span className="text-sm">Next</span>
-                                    <ChevronRight className="w-4 h-4" />
-                                </button>
-                            </div>
-                        )}
-                    </div>
-                </div>
+                <PropertyPopup
+                    selectedGroup={selectedGroup}
+                    currentImage={currentImage}
+                    currentPropertyIndex={currentPropertyIndex}
+                    handleClose={handleClose} />
             )}
+
+
+            {/* ListingsSection */}
+            <div
+                className={`bg-gray-100 rounded-lg transition-all duration-300 ${!getVisibility('list')
+                    ? 'opacity-0 pointer-events-none'
+                    : 'opacity-100'
+                    } ${activeView === 'list'
+                        ? 'absolute inset-0' // Full screen when list only
+                        : 'absolute bottom-1 left-4 right-4' // Overlay when both
+                    } z-[5]`}
+            >
+                <div className={`rounded-lg overflow-hidden ${activeView === 'list'
+                    ? 'h-full flex flex-col' // Add flex-col to allow inner content to scroll
+                    : ''}`}
+                >
+                    <ListingsSection
+                        listings={listings}
+                        sortOption="price-low"
+                        selectedListingKey={selectedGroup?.properties[0]?.listingKey}
+                        activeView={activeView}
+                        parentIsExpanded={isMapExpanded}
+                    />
+                </div>
+            </div>
         </div>
     );
 };

@@ -68,9 +68,9 @@ const TimeRangeSelector = ({ selectedRange, onRangeSelect, defaultValue, searchC
 
     if (loading) {
         return (
-            <LoadingScreen
-                neighborhood='Loading...'
-            />
+            <LoadingScreen>
+                 <p>Loading ...</p>
+                </LoadingScreen>
         );
     }
 

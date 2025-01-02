@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import ReportHeader from './ReportHeader';
-import { debounce } from 'lodash';
-import MetricsCard from './MetricsCard';
-import DaysOnMarket from './DaysOnMarket'
-import ListingsSection from './ListingsSection';
-import PriceChart from './PriceChart';
+import DaysOnMarkerPriceRangeChart from './DaysOnMarkerPriceRangeChart'
 import ListingsMap from './ListingsMap';
 import { useAuth } from '../../contexts/AuthContext';
 import LoadingScreen from '../../components/LoadingScreen'
 import { baseDataAPI } from '../../services/api'
 import { Share2, Save, X, Loader2, } from 'lucide-react';
 import ShareModal from '../ShareModal';
-
-
+import CardBox from '../shared/CardBox';
+import WelcomeBox from './WelcomeBox';
+import RegionNeighborhoodSalesRatio from './RegionNeighborhoodSalesRatio'
+import SoldByPropertyType from './SoldByPropertyType';
+import SoldListPriceByMonth from './SoldListPriceByMonth'
+import ActiveListPriceByMonth from './ActiveListPriceByMonth'
 
 const ReportResult = () => {
     const location = useLocation();
@@ -31,6 +31,8 @@ const ReportResult = () => {
     const [shareUrl, setShareUrl] = useState('');
     const [isHiddenListingsSaving, setIsHiddenListingsSaving] = useState(false);
     const [selectedListingKey, setSelectedListingKey] = useState(null);
+    const [selectedToggle, setSelectedToggle] = useState('listVsSold');
+
     // State matching the C# class structure
     const [reportState, setReportState] = useState({
         reportId: reportId,
@@ -129,6 +131,7 @@ const ReportResult = () => {
                     isShared: reportResponse.reportRequestDocument.isShared || false,
                     hiddenListings: reportResponse.reportRequestDocument.hiddenListings || []
                 }));
+
             } catch (error) {
                 if (error.name === 'AbortError') {
                     console.log('Request was cancelled');
@@ -185,9 +188,10 @@ const ReportResult = () => {
     if (loading) {
         return (
             <LoadingScreen
-                neighborhood='Loading...'
                 onCancel={handleCancel}
-            />
+            >
+                <p>Loading...</p>
+            </LoadingScreen>
         );
     }
 
@@ -213,64 +217,180 @@ const ReportResult = () => {
 
     return (
         <div >
-            <div className="mx-auto px-4  space-y-8">
-                {/* Toolbar */}
-                <div className="report-toolbar  rounded-lg overflow-hidden">
-                    <div className="flex items-center justify-end ">
-                        <div className="flex flex-row gap-2"> {/* Removed flex-col */}
-                            <button
-                                disabled={isSaving}
-                                className="flex items-center justify-center gap-2 button-delete text-white px-3 sm:px-4 py-2 rounded-lg transition-colors duration-200"
-                            >
-                                <Save className="w-4 h-4" />
-                                <span className="hidden sm:inline text-xs">Delete</span>
-                                {isSaving && <Loader2 className="animate-spin" />}
-                            </button>
 
-                            <button
-                                disabled={isSaving}
-                                onClick={handleSaveReport}
-                                className="flex items-center justify-center gap-2 button-blue text-white px-3 sm:px-4 py-2 rounded-lg transition-colors duration-200"
-                            >
-                                <Save className="w-4 h-4" />
-                                <span className="hidden sm:inline text-xs">Set a Friendly Name</span>
-                                {isSaving && <Loader2 className="animate-spin" />}
-                            </button>
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:p-4">
 
-                            <button
-                                onClick={(e) => handleShare(e, reportState.reportId)}
-                                className="flex items-center justify-center gap-2 border border-blue-600 button-blue text-white px-3 sm:px-4 py-2 rounded-lg transition-colors duration-200"
-                            >
-                                <Share2 className="w-4 h-4" />
-                                <span className="hidden sm:inline text-xs">Share</span>
-                            </button>
+                {/* Section 1 - Now order-2 on mobile */}
+                <div className="order-2 md:order-none md:col-span-5 md:row-span-2 overflow-hidden mb-6 md:mb-0">
+                    <WelcomeBox
+                        location={reportData.reportRequestDocument.searchCriteria.city + ', ' + reportData.reportRequestDocument.searchCriteria.region}
+                        propertyType={reportData.reportRequestDocument.searchCriteria.propertyType}
+                        timeRange={reportData.reportRequestDocument.searchCriteria.timeRange}
+                        agent={{
+                            firstName: user.firstName,
+                            lastName: user.lastName,
+                            brokerageName: user.brokerageName,
+                            emailAddress: user.emailAddress,
+                            displayPullDown: false,
+                            photo: user.photo,
+                            phone: user.phone,
+                        }}
+                        priceAnalysis={{ avgDaysOnMarket: reportData.avergaeDaysOnMarket }}
+                        totalActive={reportData.totalActiveListings}
+                        totalSold={reportData.totalSoldListings}
+                    />
+                </div>
 
-                            {/* Simple Modal */}
-                            <ShareModal
-                                isOpen={isShareOpen}
-                                onClose={() => setIsShareOpen(false)}
-                                url={shareUrl}
-                                onCopy={handleCopyUrl}
-                            />
+                {/* Section 2 */}
+                <div className="order-1 md:order-none md:col-span-7  md:col-start-6 overflow-hidden mb-6 md:mb-0">
+                    <CardBox className="bg-white h-full">
+                        <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4 p-4">
+                            {/* Report Header Wrapper */}
+                            <div className="flex-grow min-w-0"> {/* added min-w-0 to prevent flex item overflow */}
+                                <ReportHeader
+                                    location={reportData.reportRequestDocument.searchCriteria.city + ', ' + reportData.reportRequestDocument.searchCriteria.region}
+                                    propertyType={reportData.reportRequestDocument.searchCriteria.propertyType}
+                                    timeRange={reportData.reportRequestDocument.searchCriteria.timeRange}
+                                    agent={{
+                                        firstName: user.firstName,
+                                        lastName: user.lastName,
+                                        brokerageName: user.brokerageName,
+                                        emailAddress: user.emailAddress,
+                                        displayPullDown: false,
+                                        photo: user.photo,
+                                        phone: user.phone,
+                                    }}
+                                />
+                            </div>
+
+                            {/* Toolbar - Responsive adjustments */}
+                            <div className="report-toolbar w-full lg:w-auto mt-2">
+                                <div className="flex flex-wrap sm:flex-nowrap justify-end gap-2">
+                                    <button
+                                        disabled={isSaving}
+                                        className="flex items-center justify-center gap-1 button-delete text-white px-2 py-2 rounded-lg transition-colors duration-200 text-xs"
+                                    >
+                                        <Save className="w-4 h-4" />
+                                        <span>Delete</span>
+                                        {isSaving && <Loader2 className="animate-spin" />}
+                                    </button>
+
+                                    <button
+                                        disabled={isSaving}
+                                        onClick={handleSaveReport}
+                                        className="flex items-center justify-center gap-1 button-blue text-white px-2 py-2 rounded-lg transition-colors duration-200 text-xs whitespace-nowrap"
+                                    >
+                                        <Save className="w-4 h-4" />
+                                        <span>Set Name</span>
+                                        {isSaving && <Loader2 className="animate-spin" />}
+                                    </button>
+
+                                    <button
+                                        onClick={(e) => handleShare(e, reportState.reportId)}
+                                        className="flex items-center justify-center gap-1 border border-blue-600 button-blue text-white px-2 py-2 rounded-lg transition-colors duration-200 text-xs"
+                                    >
+                                        <Share2 className="w-4 h-4" />
+                                        <span>Share</span>
+                                    </button>
+
+                                    <ShareModal
+                                        isOpen={isShareOpen}
+                                        onClose={() => setIsShareOpen(false)}
+                                        url={shareUrl}
+                                        onCopy={handleCopyUrl}
+                                    />
+                                </div>
+                            </div>
                         </div>
+                    </CardBox>
+                </div>
+
+                {/* Rest of the sections remain in sequence */}
+                <div className="order-3 md:order-none md:col-span-5 md:row-span-3 md:col-start-1 md:row-start-3  rounded-lg border  mb-6 md:mb-0">
+                    <DaysOnMarkerPriceRangeChart daysOnMarketData={reportData.daysOnMarketByPrice} />
+                </div>
+
+                <div className="order-4 md:order-none md:col-span-7 md:row-span-5 md:col-start-6 md:row-start-2 bg-green-50 rounded-lg  mb-6 md:mb-0">
+                    <div className="h-full relative">
+                        {/* <div className="hidden lg:flex absolute top-2 left-2 z-10 gap-2">
+                            <button
+                                onClick={() => setIsMapExpanded(!isMapExpanded)}
+                                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 bg-blue-500 text-white flex items-center gap-2`}>
+                                {isMapExpanded ? (
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-sm">Collapse</span>
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center">
+                                        <span className="text-sm">Expand</span>
+                                    </div>
+                                )}
+                            </button>
+                        </div> */}
+                        <ListingsMap
+                            listings={reportData.neighborhoodListings}
+                            isMapExpanded={isMapExpanded}
+                            propagateClick={(key) => handleMapMarkerClicked(key)}
+                        />
                     </div>
                 </div>
 
-                {/* Header Section */}
-                <ReportHeader
-                    location={reportData.reportRequestDocument.searchCriteria.city + ', ' + reportData.reportRequestDocument.searchCriteria.region}
-                    propertyType={reportData.reportRequestDocument.searchCriteria.propertyType}
-                    timeRange={reportData.reportRequestDocument.searchCriteria.timeRange}
-                    agent={{
-                        firstName: user.firstName,
-                        lastName: user.lastName,
-                        brokerageName: user.brokerageName,
-                        emailAddress: user.emailAddress,
-                        displayPullDown: false,
-                        photo: user.photo,
-                        phone: user.phone,
-                    }}
-                />
+                <div className="relative order-5 md:order-none md:col-span-5 md:row-span-2 md:row-start-6 p-0 mb-6 md:mb-0 overflow-hidden">
+                    <div className="relative z-10 flex justify-end mb-2"> {/* Changed from absolute to relative */}
+                        <div className="bg-gray-100 p-1 rounded-lg flex flex-col md:flex-row gap-1">
+                            <button
+                                className={`px-4 py-1 text-xs rounded-md transition-all w-full md:w-auto ${selectedToggle === 'listVsSold'
+                                    ? 'bg-blue-500 shadow text-white'
+                                    : 'text-gray-500 hover:text-gray-700'
+                                    }`}
+                                onClick={() => setSelectedToggle('listVsSold')}
+                            >
+                                List vs Sold
+                            </button>
+                            <button
+                                className={`px-4 py-1 text-xs rounded-md transition-all w-full md:w-auto ${selectedToggle === 'active'
+                                    ? 'bg-blue-500 shadow text-white'
+                                    : 'text-gray-500 hover:text-gray-700'
+                                    }`}
+                                onClick={() => setSelectedToggle('active')}
+                            >
+                                Active
+                            </button>
+                            <button
+                                className={`px-4 py-1 text-xs rounded-md transition-all w-full md:w-auto ${selectedToggle === 'sold'
+                                    ? 'bg-blue-500 shadow text-white'
+                                    : 'text-gray-500 hover:text-gray-700'
+                                    }`}
+                                onClick={() => setSelectedToggle('sold')}
+                            >
+                                Sold
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="relative"> {/* Added wrapper for content */}
+                        {selectedToggle === 'listVsSold' && (
+                            <RegionNeighborhoodSalesRatio
+                                dataSeries={reportData.salesRatio.series}
+                                categories={reportData.salesRatio.categories}
+                            />
+                        )}
+
+                        {selectedToggle === 'sold' && (
+                            <SoldListPriceByMonth dataSeries={reportData.soldByMonth} />
+                        )}
+
+                        {selectedToggle === 'active' && (
+                            <ActiveListPriceByMonth dataSeries={reportData.activeByMonth} />
+                        )}
+                    </div>
+                </div>
+                <div className="order-6 md:order-none md:col-span-7 md:row-span-3 md:col-start-6 md:row-start-7 rounded-lg border  p-0 mb-6 md:mb-0 overflow-hidden">
+                    <SoldByPropertyType dataSeries={reportData.propertyTypeChartData.series}
+                        labels={reportData.propertyTypeChartData.labels} />
+                </div>
+            </div>
+            <div className="mx-auto px-4  space-y-8">
 
                 {isHiddenListingsSaving && <LoadingScreen overlay={true} />}
                 {/* Save Dialog */}
@@ -331,126 +451,11 @@ const ReportResult = () => {
                     </div>
                 )}
 
-                {reportData.totalListings > 0 && (
-                    <>
-                        <div className="rounded-lg">
-                            <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-                                {/* DaysOnMarket takes up 1 column */}
-                                <div className="lg:col-span-1">
-                                    <DaysOnMarket
-                                        title="Avg Days on Market"
-                                        value={reportData.avergaeDaysOnMarket}
-                                    />
-                                </div>
-
-                                {/* Each MetricsCard takes up 2 columns */}
-                                <div className="lg:col-span-2   ">
-                                    <MetricsCard
-                                        title="Average List Price"
-                                        value={reportData.priceAnalaysis.overallAveragePrice}
-                                        highLow={{
-                                            high: reportData.priceAnalaysis.overallHighestPrice,
-                                            low: reportData.priceAnalaysis.overallLowestPrice,
-                                        }}
-                                        chart={<PriceChart data={reportData.priceAnalaysis.listingPriceAnalyses} />}
-                                    />
-                                </div>
-
-                                <div className="lg:col-span-2   ">
-                                    <MetricsCard
-                                        title="Average Sell Price"
-                                        value={reportData.soldPriceAnalaysis.overallAveragePrice}
-                                        highLow={{
-                                            high: reportData.soldPriceAnalaysis.overallHighestPrice,
-                                            low: reportData.soldPriceAnalaysis.overallLowestPrice,
-                                        }}
-                                        chart={<PriceChart data={reportData.soldPriceAnalaysis.listingPriceAnalyses} />}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                        {/* Parent container */}
-                        <div className="metric-card  shadow-sm hover:shadow-md transition-shadow duration-200">
-                            {/* Mobile Toggle Button */}
-                            <div className="lg:hidden mb-4">
-                                <button
-                                    onClick={() => setIsMapExpanded(!isMapExpanded)}
-                                    className="w-full bg-blue-50 text-blue-600 p-2 rounded-md flex items-center justify-center gap-2"
-                                >
-                                    {isMapExpanded ? (
-                                        <>
-                                            <span>Show Listings</span>
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
-                                            </svg>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <span>Show Map</span>
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fillRule="evenodd" d="M12 1.586l-4 4v12.828l4-4V1.586zM3.707 3.293A1 1 0 002 4v10a1 1 0 00.293.707L6 18.414V5.586L3.707 3.293zM17.707 5.293L14 1.586v12.828l2.293 2.293A1 1 0 0018 16V6a1 1 0 00-.293-.707z" clipRule="evenodd" />
-                                            </svg>
-                                        </>
-                                    )}
-                                </button>
-                            </div>
-
-                            <div className="flex flex-col lg:flex-row gap-6 relative h-[610px]">
-                                {/* Listings Section */}
-                                <div className={`
-                            ${isMapExpanded ? 'hidden lg:block' : 'block'} 
-                            h-full transition-all duration-300 
-                            ${isMapExpanded ? 'lg:w-0 lg:hidden' : 'lg:w-1/2'}`}>
-                                    <ListingsSection
-                                        listings={reportData.neighborhoodListings}
-                                        onSort={(items) => handleListingFiltered(items)}
-                                        sortOption="price-low"
-                                        onHideListing={handleHideListing}
-                                        selectedListingKey={selectedListingKey}
-                                    />
-                                </div>
-
-                                {/* Map Section */}
-                                <div className={`
-                            ${isMapExpanded ? 'block' : 'hidden lg:block'}
-                            h-[70vh] lg:h-full transition-all duration-300
-                            ${isMapExpanded ? 'lg:w-full' : 'lg:w-1/2'}
-                        `}>
-                                    <div className="h-full relative">
-                                        {/* Desktop Toggle Buttons */}
-                                        <div className="hidden lg:flex absolute top-2 left-2 z-10 gap-2">
-                                            <button
-                                                onClick={() => setIsMapExpanded(!isMapExpanded)}
-                                                className="button-blue text-white p-2 rounded-md shadow-md hover:bg-gray-50 transition-colors duration-200">
-                                                {isMapExpanded ? (
-                                                    <div className="flex items-center gap-2">
-                                                        <span className="text-sm">Show Listings</span>
-                                                    </div>
-                                                ) : (
-                                                    <div className="flex items-center">
-                                                        <span className="text-sm">Hide Listings</span>
-                                                    </div>
-                                                )}
-                                            </button>
-                                        </div>
-                                        <ListingsMap
-                                            listings={mapData}
-                                            isMapExpanded={isMapExpanded}
-                                            propagateClick={(key) => handleMapMarkerClicked(key)}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </>
-                )}
-
-                {reportData.totalListings == 0 && (
+                {reportData.neighborhoodListings.length == 0 && (
                     <div className="w-full justify-center items-center text-center text-red-400">No listings were found!</div>
 
                 )}
             </div>
-
         </div>
     );
 };

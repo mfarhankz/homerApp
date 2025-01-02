@@ -168,7 +168,7 @@ const NeighborhoodReportGenerator = () => {
                         {propertyTypeData.map((type) => (
                             <PropertyTypeOption
                                 key={type}
-                                icon={type === 'Other' ? '/images/property-type.png' : `/images/${type}.png`}
+                                icon={type === 'Other' ? '/images/property-type.png' : `/images/${type}.avif`}
                                 label={type}
                                 selected={reportData.propertyType === type}
                                 onClick={() => handlePropertyTypeSelect(type)}
@@ -218,7 +218,15 @@ const NeighborhoodReportGenerator = () => {
                 <LoadingScreen
                     neighborhood={reportData.cityRegion}
                     onCancel={handleCancel}
-                />
+                >
+                    <div className="space-y-2 text-center">
+                        <h2 className="text-xl text-blue-900 font-semibold">
+                            Retrieving listings in {reportData.cityRegion}...
+                        </h2>
+                        <p className="text-gray-500">Fetching key metrics...</p>
+                        <p className="text-gray-400">Preparing your customized report...</p>
+                    </div>
+                </LoadingScreen>
             )}
         </div>
     );

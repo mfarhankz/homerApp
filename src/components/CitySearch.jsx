@@ -124,7 +124,7 @@ const CitySearch = ({ onSelect, onClicked }) => {
                     onKeyDown={handleKeyDown}
                     onFocus={() => setIsOpen(true)}
                     placeholder={loading ? "Loading cities..." : "Start typing a city ..."}
-                    className="w-full px-4 py-3 pr-12 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-lg bg-white text-xl"
+                    className="w-full px-4 py-3 pr-12 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-lg bg-white text-l"
                     disabled={loading}
                     autoComplete="off"
                 />
@@ -164,7 +164,7 @@ const CitySearch = ({ onSelect, onClicked }) => {
                                         className={`px-4 py-2 cursor-pointer transition-colors ${selectedIndex === index
                                                 ? 'bg-blue-50 text-blue-900'
                                                 : 'hover:bg-gray-50 text-gray-700'
-                                            } text-xl`}
+                                            } text-l`}
                                         onClick={() => handleSelect(location)}
                                         onMouseEnter={() => setSelectedIndex(index)}
                                     >
@@ -189,9 +189,9 @@ const CitySearch = ({ onSelect, onClicked }) => {
                             <li
                                 key={`other-${location}`}
                                 className={`px-4 py-2 cursor-pointer transition-colors ${selectedIndex === index + favoriteLocations.length
-                                        ? 'bg-blue-50 text-blue-900'
+                                    ? 'bg-blue-50 text-blue-900'
                                         : 'hover:bg-gray-50 text-gray-700'
-                                    } text-lg`}
+                                    } text-l`}
                                 onClick={() => handleSelect(location)}
                                 onMouseEnter={() => setSelectedIndex(index + favoriteLocations.length)}
                             >
