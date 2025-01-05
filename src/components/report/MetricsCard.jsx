@@ -1,15 +1,16 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
+import CardBox from '../shared/CardBox';
 
 const MetricsCard = ({ title, value, highLow, chart, className = '' }) => {
     const [isExpanded, setIsExpanded] = useState(true);
 
     return (
-        <div className={`metric-card   ${className}`}>
+        <CardBox>
+        <div className={`bg-lightprimary metric-card-new   ${className}`}>
             <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
-
-                    <button
+                    {/* <button
                         onClick={() => setIsExpanded(!isExpanded)}
                         className="p-1 bg-gray-200 rounded-full transition-colors"
                     >
@@ -18,7 +19,7 @@ const MetricsCard = ({ title, value, highLow, chart, className = '' }) => {
                         ) : (
                             <ChevronDown className="w-4 h-4 text-gray-500" />
                         )}
-                    </button>
+                    </button> */}
                     <h3 className="metric-card-text">{title}</h3>
                 </div>
                 <div className="flex justify-between items-center bg-gray-100 p-2 rounded-md">
@@ -33,20 +34,20 @@ const MetricsCard = ({ title, value, highLow, chart, className = '' }) => {
                 </div>
             </div>
 
-            <div className={`transition-all duration-300 ease-in-out overflow-hidden ${isExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-                }`}>
+            <div className={`transition-all duration-300 ease-in-out overflow-hidden`}>
                 <div className="flex justify-between items-start mb-4">
-                    <div className="text-2xl font-semibold">
+                    <div className="text-xl font-semibold">
                         {typeof value === 'number' ? value : `$${value}`}
                     </div>
                 </div>
                 {chart && (
-                    <div className="mt-6 h-24">
+                    <div className="mt-6">
                         {chart}
                     </div>
                 )}
             </div>
         </div>
+        </CardBox>
     );
 };
 

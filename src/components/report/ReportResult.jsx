@@ -4,16 +4,18 @@ import ReportHeader from './ReportHeader';
 import DaysOnMarkerPriceRangeChart from './DaysOnMarkerPriceRangeChart'
 import ListingsMap from './ListingsMap';
 import { useAuth } from '../../contexts/AuthContext';
-import LoadingScreen from '../../components/LoadingScreen'
-import { baseDataAPI } from '../../services/api'
+import LoadingScreen from '../../components/LoadingScreen';
+import { baseDataAPI } from '../../services/api';
 import { Share2, Save, X, Loader2, } from 'lucide-react';
 import ShareModal from '../ShareModal';
 import CardBox from '../shared/CardBox';
 import WelcomeBox from './WelcomeBox';
-import RegionNeighborhoodSalesRatio from './RegionNeighborhoodSalesRatio'
+import RegionNeighborhoodSalesRatio from './RegionNeighborhoodSalesRatio';
 import SoldByPropertyType from './SoldByPropertyType';
-import SoldListPriceByMonth from './SoldListPriceByMonth'
-import ActiveListPriceByMonth from './ActiveListPriceByMonth'
+import SoldListPriceByMonth from './SoldListPriceByMonth';
+import ActiveListPriceByMonth from './ActiveListPriceByMonth';
+import MetricsCard from './MetricsCard';
+import PriceChart from './PriceChart';
 
 const ReportResult = () => {
     const location = useLocation();
@@ -22,8 +24,7 @@ const ReportResult = () => {
     const { user } = useAuth();
     const [reportData, setReportData] = useState();
     const [loading, setLoading] = useState(true);
-    const abortControllerRef = React.useRef(null);
-    const [isMapExpanded, setIsMapExpanded] = useState(false);
+    const abortControllerRef = React.useRef(null);    
     const [mapData, setMapData] = useState();
     const [showSaveDialog, setShowSaveDialog] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
@@ -216,12 +217,10 @@ const ReportResult = () => {
     }
 
     return (
-        <div >
-
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:p-4">
-
-                {/* Section 1 - Now order-2 on mobile */}
-                <div className="order-2 md:order-none md:col-span-5 md:row-span-2 overflow-hidden mb-6 md:mb-0">
+        <>
+            {/* Section We */}
+            <div className="grid  grid-rows-2 md:grid-rows-1 grid-flow-col gap-1 m-1">
+                <div className="row-span-1 md:row-span-1 md:col-span-2 order-2 md:order-1 ">
                     <WelcomeBox
                         location={reportData.reportRequestDocument.searchCriteria.city + ', ' + reportData.reportRequestDocument.searchCriteria.region}
                         propertyType={reportData.reportRequestDocument.searchCriteria.propertyType}
@@ -240,13 +239,11 @@ const ReportResult = () => {
                         totalSold={reportData.totalSoldListings}
                     />
                 </div>
-
-                {/* Section 2 */}
-                <div className="order-1 md:order-none md:col-span-7  md:col-start-6 overflow-hidden mb-6 md:mb-0">
-                    <CardBox className="bg-white h-full">
+                <div className="row-span-1 md:row-span-1 order-1 md:order-2">
+                    <CardBox className="bg-secondary h-full">
                         <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4 p-4">
                             {/* Report Header Wrapper */}
-                            <div className="flex-grow min-w-0"> {/* added min-w-0 to prevent flex item overflow */}
+                            <div className="flex-grow min-w-0">
                                 <ReportHeader
                                     location={reportData.reportRequestDocument.searchCriteria.city + ', ' + reportData.reportRequestDocument.searchCriteria.region}
                                     propertyType={reportData.reportRequestDocument.searchCriteria.propertyType}
@@ -263,7 +260,7 @@ const ReportResult = () => {
                                 />
                             </div>
 
-                            {/* Toolbar - Responsive adjustments */}
+                            {/* Toolbar */}
                             <div className="report-toolbar w-full lg:w-auto mt-2">
                                 <div className="flex flex-wrap sm:flex-nowrap justify-end gap-2">
                                     <button
@@ -304,71 +301,78 @@ const ReportResult = () => {
                         </div>
                     </CardBox>
                 </div>
-
-                {/* Rest of the sections remain in sequence */}
-                <div className="order-3 md:order-none md:col-span-5 md:row-span-3 md:col-start-1 md:row-start-3  rounded-lg border  mb-6 md:mb-0">
-                    <DaysOnMarkerPriceRangeChart daysOnMarketData={reportData.daysOnMarketByPrice} />
+            </div>
+            <div className="grid grid-rows-2 md:grid-rows-2 grid-cols-1 md:grid-cols-2 gap-1 m-1">
+                <div className="row-span-1 md:row-span-2 md:col-span-1">
+                    <MetricsCard
+                        title="Average List Price"
+                        value={reportData.priceAnalaysis.overallAveragePrice}
+                        highLow={{
+                            high: reportData.priceAnalaysis.overallHighestPrice,
+                            low: reportData.priceAnalaysis.overallLowestPrice,
+                        }}
+                        chart={<PriceChart data={reportData.priceAnalaysis.listingPriceAnalyses} />}
+                    />
                 </div>
+                <div className="row-span-1 md:row-span-2 md:col-span-1">
+                    <MetricsCard
+                        title="Average Sell Price"
+                        value={reportData.soldPriceAnalaysis.overallAveragePrice}
+                        highLow={{
+                            high: reportData.soldPriceAnalaysis.overallHighestPrice,
+                            low: reportData.soldPriceAnalaysis.overallLowestPrice,
+                        }}
+                        chart={<PriceChart data={reportData.soldPriceAnalaysis.listingPriceAnalyses} />}
+                    />
+                </div>
+            </div>
 
-                <div className="order-4 md:order-none md:col-span-7 md:row-span-5 md:col-start-6 md:row-start-2 bg-green-50 rounded-lg  mb-6 md:mb-0">
+            <div className="grid grid-rows-1 md:grid-rows-2 grid-cols-1 md:grid-flow-col gap-1 m-1">
+                {/* Map - Will show first */}
+                <div className="row-span-1 md:row-span-3 md:col-span-10 order-1">
                     <div className="h-full relative">
-                        {/* <div className="hidden lg:flex absolute top-2 left-2 z-10 gap-2">
-                            <button
-                                onClick={() => setIsMapExpanded(!isMapExpanded)}
-                                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 bg-blue-500 text-white flex items-center gap-2`}>
-                                {isMapExpanded ? (
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-sm">Collapse</span>
-                                    </div>
-                                ) : (
-                                    <div className="flex items-center">
-                                        <span className="text-sm">Expand</span>
-                                    </div>
-                                )}
-                            </button>
-                        </div> */}
                         <ListingsMap
                             listings={reportData.neighborhoodListings}
-                            isMapExpanded={isMapExpanded}
+                            isMapExpanded={false}
                             propagateClick={(key) => handleMapMarkerClicked(key)}
                         />
                     </div>
                 </div>
 
-                <div className="relative order-5 md:order-none md:col-span-5 md:row-span-2 md:row-start-6 p-0 mb-6 md:mb-0 overflow-hidden">
-                    <div className="relative z-10 flex justify-end mb-2"> {/* Changed from absolute to relative */}
-                        <div className="bg-gray-100 p-1 rounded-lg flex flex-col md:flex-row gap-1">
-                            <button
-                                className={`px-4 py-1 text-xs rounded-md transition-all w-full md:w-auto ${selectedToggle === 'listVsSold'
-                                    ? 'bg-blue-500 shadow text-white'
-                                    : 'text-gray-500 hover:text-gray-700'
-                                    }`}
-                                onClick={() => setSelectedToggle('listVsSold')}
-                            >
-                                List vs Sold
-                            </button>
-                            <button
-                                className={`px-4 py-1 text-xs rounded-md transition-all w-full md:w-auto ${selectedToggle === 'active'
-                                    ? 'bg-blue-500 shadow text-white'
-                                    : 'text-gray-500 hover:text-gray-700'
-                                    }`}
-                                onClick={() => setSelectedToggle('active')}
-                            >
-                                Active
-                            </button>
-                            <button
-                                className={`px-4 py-1 text-xs rounded-md transition-all w-full md:w-auto ${selectedToggle === 'sold'
-                                    ? 'bg-blue-500 shadow text-white'
-                                    : 'text-gray-500 hover:text-gray-700'
-                                    }`}
-                                onClick={() => setSelectedToggle('sold')}
-                            >
-                                Sold
-                            </button>
+                {/* Toggle and Charts - Will show second */}
+                <div className="row-span-1 md:row-span-2 md:col-span-1 order-2">                  
+                    <div className="relative">
+                        <div className="relative z-10 flex justify-end mb-2">
+                            <div className="bg-gray-100 p-1 rounded-lg flex flex-col md:flex-row gap-1">
+                                <button
+                                    className={`px-4 py-1 text-xs rounded-md transition-all w-full md:w-auto ${selectedToggle === 'listVsSold'
+                                        ? 'bg-blue-500 shadow text-white'
+                                        : 'text-gray-500 hover:text-gray-700'
+                                        }`}
+                                    onClick={() => setSelectedToggle('listVsSold')}
+                                >
+                                    List vs Sold
+                                </button>
+                                <button
+                                    className={`px-4 py-1 text-xs rounded-md transition-all w-full md:w-auto ${selectedToggle === 'active'
+                                        ? 'bg-blue-500 shadow text-white'
+                                        : 'text-gray-500 hover:text-gray-700'
+                                        }`}
+                                    onClick={() => setSelectedToggle('active')}
+                                >
+                                    Active
+                                </button>
+                                <button
+                                    className={`px-4 py-1 text-xs rounded-md transition-all w-full md:w-auto ${selectedToggle === 'sold'
+                                        ? 'bg-blue-500 shadow text-white'
+                                        : 'text-gray-500 hover:text-gray-700'
+                                        }`}
+                                    onClick={() => setSelectedToggle('sold')}
+                                >
+                                    Sold
+                                </button>
+                            </div>
                         </div>
-                    </div>
-
-                    <div className="relative"> {/* Added wrapper for content */}
                         {selectedToggle === 'listVsSold' && (
                             <RegionNeighborhoodSalesRatio
                                 dataSeries={reportData.salesRatio.series}
@@ -385,13 +389,26 @@ const ReportResult = () => {
                         )}
                     </div>
                 </div>
-                <div className="order-6 md:order-none md:col-span-7 md:row-span-3 md:col-start-6 md:row-start-7 rounded-lg border  p-0 mb-6 md:mb-0 overflow-hidden">
-                    <SoldByPropertyType dataSeries={reportData.propertyTypeChartData.series}
-                        labels={reportData.propertyTypeChartData.labels} />
+
+                {/* Property Type Chart - Will show third */}
+                <div className="row-span-1 md:row-span-1 md:col-span-1 order-3">
+                    <SoldByPropertyType
+                        dataSeries={reportData.propertyTypeChartData.series}
+                        labels={reportData.propertyTypeChartData.labels}
+                    />
                 </div>
             </div>
-            <div className="mx-auto px-4  space-y-8">
 
+            <div className="grid grid-rows-2 grid-flow-col gap-1 m-1">
+                <div className="row-span-2 ">
+                    <DaysOnMarkerPriceRangeChart daysOnMarketData={reportData.daysOnMarketByPrice} />
+
+                </div>
+            </div>
+
+            {/* END OF  Alternative Approach */}
+
+            <div className="mx-auto px-4  space-y-8">
                 {isHiddenListingsSaving && <LoadingScreen overlay={true} />}
                 {/* Save Dialog */}
                 {showSaveDialog && (
@@ -456,7 +473,7 @@ const ReportResult = () => {
 
                 )}
             </div>
-        </div>
+        </>
     );
 };
 

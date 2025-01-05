@@ -324,7 +324,7 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
  */}
             {/* iOS-style Toggle Buttons */}
             <div className="absolute top-1 left-1 transform z-20">
-                <div className="flex flex-row bg-[grey] text-white rounded-lg space-y-1 md:space-y-0 md:space-x-1">
+                <div className="flex flex-row bg-[grey] text-white rounded-lg md:space-y-0 md:space-x-1">
                     <button
                         onClick={() => setActiveView('map')}
                         className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 ${activeView === 'map'
