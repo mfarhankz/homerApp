@@ -162,15 +162,16 @@ const DaysOnMarkerPriceRangeChart = ({ daysOnMarketData }) => {
     }, [daysOnMarketData]);
 
     return (
-        <div className="w-full">
-            <div className="h-96 p-1">
+        <div className="bg-lightprimary rounded-lg w-full">
+          
                 <ReactApexChart
                     options={chartData.options}
                     series={chartData.series}
-                    type="bar"
-                    height="100%"
+                    type="bar"                 
+                    width="100%"
+                    height="300"
                 />
-            </div>
+           
         </div>
     );
 };

@@ -44,16 +44,15 @@ const SoldByPropertyType = ({ dataSeries, labels }) => {
     };
 
     return (
-        <div className="bg-white p-4 rounded-lg flex flex-col items-center">
-            <div className="w-full">
+        <div className="bg-lightprimary p-4 rounded-lg flex flex-col items-center">
+          
                 <Chart
                     options={options}
                     series={dataSeries}
-                    type="donut"
-                    height={350}
+                    type="donut"                    
                     width="100%"
                 />
-            </div>
+          
         </div>
     );
 };

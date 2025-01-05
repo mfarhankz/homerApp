@@ -165,15 +165,15 @@
         margin: 0;
         padding: 0;
         overflow-x: hidden;
-        
---color-primary: #635BFF;
-    --color-secondary: #16CDC7;
-    --color-primary-emphasis: #5249fe;
-    --color-secondary-emphasis: #1cc3bd;
-    --color-lightprimary: #635BFF40;
-    --color-lightsecondary: #16CDC740;
-    --color-primary-rgb: 99, 91, 255;
-    --color-secondary-rgb: 20, 233, 226;
+
+        --color-primary: #635BFF;
+        --color-secondary: #16CDC7;
+        --color-primary-emphasis: #5249fe;
+        --color-secondary-emphasis: #1cc3bd;
+        --color-lightprimary: #635BFF40;
+        --color-lightsecondary: #16CDC740;
+        --color-primary-rgb: 99, 91, 255;
+        --color-secondary-rgb: 20, 233, 226;
     }
 
     .min-h-screen {
@@ -183,13 +183,17 @@
         min-height: -webkit-fill-available;
     }
 
-    .bg-primary{
+    .bg-secondary{
+        background-color: var(--color-secondary);
+    }
+    .bg-primary {
         background-color: var(--color-primary);
     }
 
-    .bg-lightprimary{
-        background-color: var(--color-lightprimary);        
+    .bg-lightprimary {
+        background-color: var(--color-lightprimary);
     }
+
     .text-homer-blue {
         color: #002864 !important;
         font-weight: 700;
@@ -255,6 +259,11 @@
         padding: 0.5rem;
     }
 
+    .metric-card-new {
+        border-width: 1px;
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+    }
 
     .text-homer-blue-16 {
         color: #002864 !important;
@@ -432,10 +441,14 @@
     }
 
     .metric-card-text {
-        font-size: 15px;
-        font-weight: 400;
+        font-size: 18px;
+        font-weight: 900;
         font-family: 'Plus Jakarta Sans', sans-serif;
         color: #0C1B3D !important;
+    }
+
+    .section {
+        background-color: pink;
     }
 
     .price-sort {

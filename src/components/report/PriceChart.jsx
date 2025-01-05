@@ -1,58 +1,129 @@
-import { XAxis, YAxis, ResponsiveContainer, CartesianGrid, Area, AreaChart, Tooltip } from 'recharts';
+// export default PriceChart;
+import React, { useEffect, useState } from "react";
+import Chart from 'react-apexcharts';
+import CardBox from '../shared/CardBox';
 
-// components/report/PriceChart.jsx
 const PriceChart = ({ data }) => {
+    const options = {
+        chart: {
+            type: 'area',
+            toolbar: {
+                show: false
+            },
+            zoom: {
+                enabled: false
+            }
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            curve: 'smooth',
+            width: 2,
+            colors: ['#EE6F6F']
+        },
+        fill: {
+            type: 'gradient',
+            gradient: {
+                shadeIntensity: 1,
+                opacityFrom: 0.7,
+                opacityTo: 0.3,
+                stops: [31, 63, 100],
+                colorStops: [
+                    {
+                        offset: 31,
+                        color: '#F4AFA8',
+                        opacity: 1
+                    },
+                    {
+                        offset: 63,
+                        color: '#FFE2DF',
+                        opacity: 1
+                    },
+                    {
+                        offset: 100,
+                        color: '#E5EAFD',
+                        opacity: 0.31
+                    }
+                ]
+            }
+        },
+        markers: {
+            size: 4,
+            colors: ['#EE6F6F'],
+            strokeColors: '#fff',
+            strokeWidth: 2,
+            hover: {
+                size: 6
+            }
+        },
+        xaxis: {
+            categories: data.map(item => item.month),
+            labels: {
+                style: {
+                    colors: '#615E83',
+                    fontSize: '12px'
+                }
+            },
+            axisBorder: {
+                show: true
+            },
+            axisTicks: {
+                show: true
+            }
+        },
+        yaxis: {
+            min: Math.min(...data.map(item => item.lowestPrice)) * 0.9,
+            max: Math.max(...data.map(item => item.highestPrice)) * 1.1,
+            labels: {
+                style: {
+                    colors: '#615E83',
+                    fontSize: '12px'
+                },
+                formatter: function (value) {
+                    if (value >= 1000000) {
+                        return `${(value / 1000000).toFixed(1)}M`;
+                    } else if (value >= 1000) {
+                        return `${(value / 1000).toFixed(0)}K`;
+                    }
+                    return value;
+                }
+            }
+        },
+        grid: {
+            borderColor: '#f1f1f1',
+            strokeDashArray: 3,
+            show: false
+        },
+        tooltip: {
+            y: {
+                formatter: function (value, { series, seriesIndex, dataPointIndex, w }) {
+                    return data[dataPointIndex].formattedAveragePrice;
+                },
+                title: {
+                    formatter: () => 'Avg'
+                }
+            }
+        }
+    };
+    const series = [{
+        name: 'Average Price',
+        data: data.map(item => item.averagePrice)
+    }];
+
     return (
-        <ResponsiveContainer >
-            <AreaChart data={data} margin={{ top: 2, right: 2, left: 2, bottom: 2 }}>
-                <defs>
-                    <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="31.09%" stopColor="#F4AFA8" />
-                        <stop offset="63.25%" stopColor="#FFE2DF" />
-                        <stop offset="100%" stopColor="#E5EAFD" stopOpacity="0.31" />
-                    </linearGradient>
-                </defs>
-
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis
-                    dataKey="month"
-                    axisLine={true}
-                    tickLine={true}
-                    tick={{ fontSize: 12, fill: '#615E83' }}
+        <CardBox>
+            <div className="bg-lightprimary  overflow-hidden rounded-md">
+                <Chart
+                    options={options}
+                    series={series}
+                    type="area"
+                    height="100%"
+                    width="100%"
                 />
-                <YAxis
-                    domain={['dataMin', 'dataMax']}
-                    tick={{ fontSize: 12, fill: '#615E83' }}
-                    tickFormatter={(value) => {
-                        if (value >= 1000000) {
-                            return `${(value / 1000000).toFixed()}M`; // Format in millions
-                        } else if (value >= 1000) {
-                            return `${(value / 1000).toFixed()}K`; // Format in thousands
-                        }
-                        return value; // For very small values
-                    }}
-                />
-                <Tooltip
-                    formatter={(value, name, props) => {
-                        const { payload } = props;
-                        return [payload.formattedAveragePrice, "Avg"];
-                    }}
-                />
-                <Area
-                    type="monotone"
-                    dataKey="averagePrice"
-                    stroke="#EE6F6F"
-                    strokeWidth={2}
-                    dot={true}
-                    fill="url(#colorUv)"
-                    activeDot={{ r: 4, fill: "#ff6b6b" }}
-                />
-            </AreaChart>
-        </ResponsiveContainer>
-
-
+            </div>
+        </CardBox>
     );
 };
-
 
 export default PriceChart;
