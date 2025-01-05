@@ -90,8 +90,7 @@ const ListingsSection = ({ listings, onSort, isClientView = false,
     return (
         <div className={`flex-1 h-full flex  flex-col ${activeView === 'list' ? 'md:p-2 mt-12' : 'pb-1'}`}>
             <div className={`flex-1 overflow-y-auto ${activeView === 'list'
-                    ? `grid grid-cols-2 md:grid-cols-3 gap-2 auto-rows-min pb-12 ${parentIsExpanded ? 'lg:grid-cols-5' : 'lg:grid-cols-3'}`
-                    : 'grid grid-flow-col gap-2'
+                    ? `grid grid-cols-2 md:grid-cols-4 gap-2 auto-rows-min pb-12` : 'grid grid-flow-col gap-2'
                 }`}>
                 {filteredListings.map(listing => (
                     <div
