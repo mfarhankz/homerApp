@@ -37,10 +37,45 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
     const MAPBOX_ACCESS_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
     const mapRef = useRef(null);
     const [expandedClusters, setExpandedClusters] = useState(new Set());
-    const [viewState, setViewState] = useState({
-        latitude: 43.8078,
-        longitude: -79.2652,
-        zoom: 13
+    const [viewState, setViewState] = useState(() => {
+        // Calculate initial bounds from listings if available
+        const validListings = listings.filter(property =>
+            property.location?.coordinates?.latitude && 
+            property.location?.coordinates?.longitude
+        );
+        
+        if (validListings.length > 0) {
+            const bounds = validListings.reduce(
+                (acc, property) => {
+                    const { latitude, longitude } = property.location.coordinates;
+                    return {
+                        minLng: Math.min(acc.minLng, longitude),
+                        maxLng: Math.max(acc.maxLng, longitude),
+                        minLat: Math.min(acc.minLat, latitude),
+                        maxLat: Math.max(acc.maxLat, latitude),
+                    };
+                },
+                {
+                    minLng: 180,
+                    maxLng: -180,
+                    minLat: 90,
+                    maxLat: -90,
+                }
+            );
+            
+            return {
+                latitude: (bounds.maxLat + bounds.minLat) / 2,
+                longitude: (bounds.maxLng + bounds.minLng) / 2,
+                zoom: 13
+            };
+        }
+        
+        // Fallback to a default view if no valid listings
+        return {
+            latitude: 43.8078,
+            longitude: -79.2652,
+            zoom: 13
+        };
     });
 
     const [selectedGroup, setSelectedGroup] = useState(null);
