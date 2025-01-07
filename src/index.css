@@ -170,10 +170,17 @@
         --color-secondary: #16CDC7;
         --color-primary-emphasis: #5249fe;
         --color-secondary-emphasis: #1cc3bd;
-        --color-lightprimary: #635BFF40;
-        --color-lightsecondary: #16CDC740;
+        --color-lightprimary: rgb(253, 253, 253);
+        --color-lightsecondary: rgba(22, 205, 199, 0.25);
         --color-primary-rgb: 99, 91, 255;
         --color-secondary-rgb: 20, 233, 226;
+        --color-background: #FFFFFF;
+        --color-text: #002864;
+        --color-text-secondary: #587197;
+        --color-border: #f3f4f6;
+        --color-success: #405F1F;
+        --color-error: #EE6F6F;
+        --color-warning: #FFE3C9;
     }
 
     .min-h-screen {
@@ -253,10 +260,11 @@
     }
 
     .metric-card {
-        background-color: white;
-        border-width: 1px;
-        border-radius: 0.5rem;
-        padding: 0.5rem;
+        background-color: var(--color-background);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     .metric-card-new {
