@@ -79,18 +79,13 @@ const NeighborhoodReportGenerator = () => {
             setStep(2);
         } else if (step === 2 && reportData.propertyType) {
             setStep(3);
-        } else if (step === 3) {
-            setStep(4);
-            //setIsLoading(true);
             abortControllerRef.current = new AbortController();
-            // Prepare report data for API
             const reportPayload = {
                 city: reportData.city,
                 region: reportData.cityRegion,
                 propertyType: reportData.propertyType,
                 timeRange: reportData.timeRange
             };
-
 
             try {
                 console.log('Generating report with:', reportPayload);
@@ -181,12 +176,12 @@ const NeighborhoodReportGenerator = () => {
                         disabled={!reportData.propertyType}
                         className="px-6 py-2 button-blue text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        Continue
+                        Generate my report
                     </button>
                 </div>
             )}
 
-            {step === 3 && (
+            {/* {step === 3 && (
                 <div className="max-w-xl space-y-8 text-center justify-center items-center">
                     <div>
                         <h2 className="text-sm text-blue-900">
@@ -212,9 +207,9 @@ const NeighborhoodReportGenerator = () => {
                         Generate my report
                     </button>
                 </div>
-            )}
+            )} */}
 
-            {step === 4 && (
+            {step === 3 && (
                 <LoadingScreen
                     neighborhood={reportData.cityRegion}
                     onCancel={handleCancel}

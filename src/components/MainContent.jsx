@@ -34,6 +34,7 @@ export default function MainContent({ isOpen }) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const reportResponse = await response.data;
+                console.log(reportResponse);
                 setReports(reportResponse);
                 setError(null);
             } catch (err) {
@@ -197,7 +198,7 @@ export default function MainContent({ isOpen }) {
                                         className="report-card  cursor-pointer"
                                     >
                                         <div
-                                            className="flex items-center  pb-2 "
+                                            className="flex items-center  pb-1 top-container"
                                             onClick={() => navigate(`/report/${report.reportId}`)}
                                         >
                                             {/* Left side - Image with proper padding */}

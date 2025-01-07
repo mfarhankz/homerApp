@@ -183,9 +183,10 @@
         min-height: -webkit-fill-available;
     }
 
-    .bg-secondary{
+    .bg-secondary {
         background-color: var(--color-secondary);
     }
+
     .bg-primary {
         background-color: var(--color-primary);
     }
@@ -245,11 +246,13 @@
         transition: box-shadow 0.2s ease;
     }
 
+    .top-container{
+        height: 100px;
+        max-height: 120px;
+    }
     .report-card {
         border-width: 1px;
-        border-radius: 0.5rem;
-        padding: 0.5rem;
-
+        border-radius: 0.5rem;     
     }
 
     .metric-card {
