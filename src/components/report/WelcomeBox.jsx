@@ -2,14 +2,23 @@ import CardBox from "../shared/CardBox";
 import { Icon } from "@iconify/react";
 
 const WelcomeBox = ({ location, propertyType, timeRange, agent, priceAnalysis, totalActive, totalSold }) => {
+    // Split location into city and neighborhood
+    const [city, neighborhood] = location.split(', ');
+    // Reorder for desktop display
+    const desktopLocation = `${neighborhood}, ${city}`;
+
     return (
         <div className="grid grid-cols-1">
             <div className="col-start-1 row-start-1">
-                <CardBox className="bg-primary dark:bg-primary h-full">
-                    <div className="p-4 md:p-6">
-                        {/* Location header */}
-                        <div className="mb-4 md:mb-6">
-                            <h5 className="text-2xl md:text-3xl text-white font-semibold leading-tight">{location}</h5>
+            <CardBox className="bg-blue-950 h-full">
+            <div className="p-4 md:p-6">
+                        {/* Location header with responsive layout */}
+                        <div className="mb-4 md:mb-6 pr-16 md:pr-32">
+                            <div className="md:hidden">
+                                <h5 className="text-xl font-semibold text-white leading-tight">{neighborhood}</h5>
+                                <h5 className="text-xl font-semibold text-white leading-tight">{city}</h5>
+                            </div>
+                            <h5 className="hidden md:block text-3xl text-white font-semibold leading-tight">{desktopLocation}</h5>
                         </div>
 
                         {/* Stats in a row */}
@@ -36,11 +45,11 @@ const WelcomeBox = ({ location, propertyType, timeRange, agent, priceAnalysis, t
             </div>
 
             <div className="col-start-1 row-start-1 relative">
-                <div className="absolute top-1/2 -translate-y-1/2 -right-4 md:-right-8">
+                <div className="absolute top-1/2 -translate-y-1/2 -right-2 md:-right-6">
                     <img
                         src={`/images/${propertyType}.avif`}
                         alt="property"
-                        className="w-24 h-24 md:w-48 md:h-48 object-contain drop-shadow-2xl"
+                        className="w-20 h-20 md:w-40 md:h-40 object-contain drop-shadow-2xl"
                     />
                 </div>
             </div>
