@@ -35,7 +35,7 @@ const AgentInfo = ({
                 <h3 className="text-2xl font-semibold text-navy-600">
                     {firstName} {lastName}
                 </h3>
-                <span className="text-lg text-navy-600">{brokerageName}</span>
+                <span className="text-sm text-navy-600">{brokerageName}</span>
 
                 {/* Contact Info - Only shown if provided */}
                 {(emailAddress || phone) && (
