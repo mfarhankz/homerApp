@@ -32,7 +32,6 @@ const ReportResult = () => {
   const [shareUrl, setShareUrl] = useState('');
   const [isHiddenListingsSaving, setIsHiddenListingsSaving] = useState(false);
 
-  // Store report state (mirrors the C# class structure).
   const [reportState, setReportState] = useState({
     reportId: reportId,
     requestDto: {},
@@ -42,7 +41,6 @@ const ReportResult = () => {
     isShared: false,
   });
 
-  // ---- LISTINGS HIDE/SHOW ----
   const handleHideListing = (key) => {
     setReportData((prevData) => {
       const updatedListings = prevData.neighborhoodListings.map((listing) => {
@@ -51,7 +49,6 @@ const ReportResult = () => {
         }
         return listing;
       });
-
       debouncedSaveHiddenListings(updatedListings);
       return {
         ...prevData,
@@ -94,7 +91,6 @@ const ReportResult = () => {
     }
   };
 
-  // ---- GENERAL EVENT HANDLERS ----
   const handleCancel = () => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
@@ -140,7 +136,6 @@ const ReportResult = () => {
     setShowSaveDialog(false);
   };
 
-  // ---- SHARE HANDLERS ----
   const handleShare = (e, reportId) => {
     e.stopPropagation();
     const publicUrl = `${window.location.origin}/viewreport/${reportId}`;
@@ -157,12 +152,20 @@ const ReportResult = () => {
     }
   };
 
-  // ---- MAP CLICK HANDLER ---- (if needed)
+  const handleDelete = async () => {
+    try {
+      // Your API call or logic for deleting a report
+      await baseDataAPI.deleteReport(reportState.reportId);
+      navigate('/'); // Or any post-delete action
+    } catch (error) {
+      console.error('Error deleting report:', error);
+    }
+  };
+
   const handleMapMarkerClicked = (key) => {
     console.log('Map marker clicked with key:', key);
   };
 
-  // ---- DATA LOADING ----
   useEffect(() => {
     const LoadReportData = async () => {
       try {
@@ -210,111 +213,102 @@ const ReportResult = () => {
     );
   }
 
-  // ---- RENDER ----
   return (
     <>
-      <div className="container mx-auto px-4 py-6 space-y-6">
-        {/* Top Section: Welcome & Header */}
-        <div className="flex flex-col md:flex-row gap-6">
-          {/* Welcome Box */}
-          <div className="flex-1 order-2 md:order-1">
-            <WelcomeBox
-              location={
-                reportData.reportRequestDocument.searchCriteria.city +
-                ', ' +
-                reportData.reportRequestDocument.searchCriteria.region
-              }
-              propertyType={reportData.reportRequestDocument.searchCriteria.propertyType}
-              timeRange={reportData.reportRequestDocument.searchCriteria.timeRange}
-              agent={{
-                firstName: user.firstName,
-                lastName: user.lastName,
-                brokerageName: user.brokerageName,
-                emailAddress: user.emailAddress,
-                displayPullDown: false,
-                photo: user.photo,
-                phone: user.phone,
-              }}
-              priceAnalysis={{ avgDaysOnMarket: reportData.avergaeDaysOnMarket }}
-              totalActive={reportData.totalActiveListings}
-              totalSold={reportData.totalSoldListings}
-            />
-          </div>
+      {/* Increased horizontal and vertical padding; slightly larger space-y */}
+      <div className="container mx-auto px-6 py-8 space-y-8">
+       {/* Top Section */}
+<div className="flex flex-col md:flex-row-reverse gap-8">
+  <CardBox className="p-6 w-full">
+    {/* This parent flex also needs -reverse if you want 
+        the agent info on the right in the same row as 
+        WelcomeBox: */}
+    <div className="flex flex-col md:flex-row-reverse gap-8">
+      {/* Left Side (will appear on left in mobile, right in desktop) */}
+      <div className="md:w-1/2">
+        <WelcomeBox
+          location={
+            reportData.reportRequestDocument.searchCriteria.city +
+            ', ' +
+            reportData.reportRequestDocument.searchCriteria.region
+          }
+          propertyType={reportData.reportRequestDocument.searchCriteria.propertyType}
+          timeRange={reportData.reportRequestDocument.searchCriteria.timeRange}
+          agent={{
+            firstName: user.firstName,
+            lastName: user.lastName,
+            brokerageName: user.brokerageName,
+            emailAddress: user.emailAddress,
+            displayPullDown: false,
+            photo: user.photo,
+            phone: user.phone,
+          }}
+          priceAnalysis={{ avgDaysOnMarket: reportData.avergaeDaysOnMarket }}
+          totalActive={reportData.totalActiveListings}
+          totalSold={reportData.totalSoldListings}
+        />
+      </div>
 
-          {/* Report Header + Toolbar */}
-          <div className="flex-1 order-1 md:order-2">
-            <CardBox className="bg-secondary h-full">
-              <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4 p-4">
-                {/* Report Header */}
-                <div className="flex-grow min-w-0">
-                  <ReportHeader
-                    location={
-                      reportData.reportRequestDocument.searchCriteria.city +
-                      ', ' +
-                      reportData.reportRequestDocument.searchCriteria.region
-                    }
-                    propertyType={reportData.reportRequestDocument.searchCriteria.propertyType}
-                    timeRange={reportData.reportRequestDocument.searchCriteria.timeRange}
-                    agent={{
-                      firstName: user.firstName,
-                      lastName: user.lastName,
-                      brokerageName: user.brokerageName,
-                      emailAddress: user.emailAddress,
-                      displayPullDown: false,
-                      photo: user.photo,
-                      phone: user.phone,
-                    }}
-                  />
-                </div>
-
-                {/* Toolbar */}
-                <div className="report-toolbar w-full lg:w-auto mt-2">
-                  <div className="flex flex-wrap sm:flex-nowrap justify-end gap-2">
-                    {/* Example "Delete" button—replace or remove as needed */}
-                    <button
-                      disabled={isSaving}
-                      className="flex items-center justify-center gap-1 button-delete text-white px-2 py-2 rounded-lg transition-colors duration-200 text-xs"
-                    >
-                      <Save className="w-4 h-4" />
-                      <span>Delete</span>
-                      {isSaving && <Loader2 className="animate-spin" />}
-                    </button>
-
-                    {/* Save / Set Name */}
-                    <button
-                      disabled={isSaving}
-                      onClick={handleSaveReport}
-                      className="flex items-center justify-center gap-1 button-blue text-white px-2 py-2 rounded-lg transition-colors duration-200 text-xs whitespace-nowrap"
-                    >
-                      <Save className="w-4 h-4" />
-                      <span>Set Name</span>
-                      {isSaving && <Loader2 className="animate-spin" />}
-                    </button>
-
-                    {/* Share */}
-                    <button
-                      onClick={(e) => handleShare(e, reportState.reportId)}
-                      className="flex items-center justify-center gap-1 border border-blue-600 button-blue text-white px-2 py-2 rounded-lg transition-colors duration-200 text-xs"
-                    >
-                      <Share2 className="w-4 h-4" />
-                      <span>Share</span>
-                    </button>
-
-                    <ShareModal
-                      isOpen={isShareOpen}
-                      onClose={() => setIsShareOpen(false)}
-                      url={shareUrl}
-                      onCopy={handleCopyUrl}
-                    />
-                  </div>
-                </div>
-              </div>
-            </CardBox>
-          </div>
+      <div className="md:w-1/2 flex flex-col justify-between md:items-start pt-4 pl-4">
+  <div className="mb-4 w-full md:text-left">
+    {/* Title + Presented By */}
+    <h2 className="text-2xl font-bold text-white">Neighbourhood Report</h2>
+    <p className="text-sm text-gray-300">Presented by:</p>
+          <ReportHeader
+            location={
+              reportData.reportRequestDocument.searchCriteria.city +
+              ', ' +
+              reportData.reportRequestDocument.searchCriteria.region
+            }
+            propertyType={reportData.reportRequestDocument.searchCriteria.propertyType}
+            timeRange={reportData.reportRequestDocument.searchCriteria.timeRange}
+            agent={{
+              firstName: user.firstName,
+              lastName: user.lastName,
+              brokerageName: user.brokerageName,
+              emailAddress: user.emailAddress,
+              displayPullDown: false,
+              photo: user.photo,
+              phone: user.phone,
+            }}
+          />
         </div>
 
-        {/* Price Cards (Average List Price / Average Sell Price) */}
-        <div className="flex flex-col md:flex-row gap-6">
+        {/* Toolbar aligned right */}
+        <div className="report-toolbar mt-auto md:text-right pb-4">
+          <div className="flex flex-wrap sm:flex-nowrap justify-end gap-3">
+        <button 
+          onClick={handleDelete} 
+          className="px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg flex items-center gap-2 text-xs"
+        >
+          <Save className="w-4 h-4" />
+          <span className="hidden md:inline">Delete</span>
+        </button>
+        
+        <button 
+          onClick={handleSaveReport} 
+          className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 text-xs"
+        >
+          <Save className="w-4 h-4" />
+          <span className="hidden md:inline">Save</span>
+          {isSaving && <Loader2 className="animate-spin w-4 h-4" />}
+        </button>
+        
+        <button 
+          onClick={(e) => handleShare(e, reportState.reportId)} 
+          className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 text-xs"
+        >
+          <Share2 className="w-4 h-4" />
+          <span className="hidden md:inline">Share</span>
+        </button>
+      </div>          </div>
+        </div>
+      </div>
+  </CardBox>
+</div>
+
+        {/* Price Cards */}
+        <div className="flex flex-col md:flex-row gap-8">
           <div className="w-full md:w-1/2">
             <MetricsCard
               title="Average List Price"
@@ -339,8 +333,8 @@ const ReportResult = () => {
           </div>
         </div>
 
-        {/* Main Content: Map on the left, charts on the right */}
-        <div className="flex flex-col md:flex-row gap-6">
+        {/* Main Content: Map + Side Charts */}
+        <div className="flex flex-col md:flex-row gap-8">
           {/* Map */}
           <div className="w-full md:w-2/3 relative">
             <ListingsMap
@@ -350,15 +344,13 @@ const ReportResult = () => {
             />
           </div>
 
-          {/* Charts on the right, stacked vertically */}
-          <div className="w-full md:w-1/3 space-y-4">
-            {/* 1. Sold:List Price Ratio (formerly "list vs sold") */}
+          {/* Charts on the right */}
+          <div className="w-full md:w-1/3 space-y-6">
             <RegionNeighborhoodSalesRatio
               dataSeries={reportData.salesRatio.series}
               categories={reportData.salesRatio.categories}
             />
 
-            {/* 2. Property Type chart beneath the ratio chart */}
             <SoldByPropertyType
               dataSeries={reportData.propertyTypeChartData.series}
               labels={reportData.propertyTypeChartData.labels}
@@ -368,19 +360,17 @@ const ReportResult = () => {
 
         {/* Days on Market Chart */}
         <div>
-          <DaysOnMarkerPriceRangeChart
-            daysOnMarketData={reportData.daysOnMarketByPrice}
-          />
+          <DaysOnMarkerPriceRangeChart daysOnMarketData={reportData.daysOnMarketByPrice} />
         </div>
 
-        {/* If no listings found */}
+        {/* No Listings Found */}
         {reportData.neighborhoodListings.length === 0 && (
-          <div className="w-full text-center text-red-400">
+          <div className="w-full text-center text-red-500 font-semibold py-4">
             No listings were found!
           </div>
         )}
 
-        {/* Overlay spinner if hiding listings is still in progress */}
+        {/* Overlay spinner if still saving hidden listings */}
         {isHiddenListingsSaving && <LoadingScreen overlay={true} />}
 
         {/* Save Dialog */}
