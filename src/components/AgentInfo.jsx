@@ -12,7 +12,7 @@ const AgentInfo = ({
   const firstLetter = firstName ? firstName.charAt(0).toUpperCase() : '?';
 
   return (
-    <div className="flex items-start gap-4 p-2 bg-transparent">
+    <div className="flex items-start gap-4 p-2">
       {/* Left side - Image */}
       <div className="flex-shrink-0">
         <div className="w-16 h-16 rounded-full overflow-hidden">
