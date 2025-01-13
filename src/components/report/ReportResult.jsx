@@ -317,7 +317,9 @@ const ReportResult = () => {
                 high: reportData.priceAnalaysis.overallHighestPrice,
                 low: reportData.priceAnalaysis.overallLowestPrice,
               }}
-              chart={<PriceChart data={reportData.priceAnalaysis.listingPriceAnalyses} />}
+              chart={<PriceChart data={reportData.priceAnalaysis.listingPriceAnalyses}
+              colorVariant="green" 
+              />}
             />
           </div>
           <div className="w-full md:w-1/2">
