@@ -216,7 +216,7 @@ const ReportResult = () => {
   return (
     <>
       {/* Increased horizontal and vertical padding; slightly larger space-y */}
-      <div className="container mx-auto px-4 py-8 space-y-8">
+      <div className="container mt-6 mx-auto px-4 py-8 space-y-8">
         {/* Top Section */}
         <div className="flex flex-col md:flex-row-reverse gap-8">
           <CardBox className="p-6 w-full">
@@ -249,11 +249,11 @@ const ReportResult = () => {
                 />
               </div>
 
-              <div className="md:w-1/2 flex flex-col justify-between md:items-start pt-4 pl-4">
+              <div className="md:w-1/2 flex flex-col justify-between md:items-start pt-4 pl-4 bg-blue-950 rounded-lg">
                 <div className="mb-4 w-full md:text-left">
                   {/* Title + Presented By */}
                   <h2 className="text-2xl font-bold text-white">Neighbourhood Report</h2>
-                  <p className="text-sm text-gray-500">Presented by:</p>
+                  <p className="text-sm text-gray-300 mt-1">Presented by:</p>
                   <ReportHeader
                     location={
                       reportData.reportRequestDocument.searchCriteria.city +
@@ -275,7 +275,7 @@ const ReportResult = () => {
                 </div>
 
                 {/* Toolbar aligned right */}
-                <div className="report-toolbar mt-auto md:text-right pb-4">
+                <div className="report-toolbar mt-auto mr-2 md:text-right pb-4">
                   <div className="flex flex-wrap sm:flex-nowrap justify-end gap-3">
                     <button
                       onClick={handleDelete}
