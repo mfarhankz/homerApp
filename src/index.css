@@ -374,8 +374,8 @@
         background: #FFE3C9;
         gap: 10px;
         border-radius: 30px;
-        width: 105px;
-        padding: 5px;
+        width: 100px;
+        padding: 1px;
         text-align: center;
         opacity: 0px;
     }
@@ -385,6 +385,10 @@
         font-weight: 500;
         font-size: 10px;
     }
+
+        .listing-card-content{
+            height: 120px;
+        }
 
     .start-report {
         @apply w-full flex flex-col items-center justify-center;

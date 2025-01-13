@@ -411,8 +411,7 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
               setExpandedClusters(new Set());
             }}
             className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 bg-blue-500 text-white flex items-center gap-2`}
-          >
-            <ListFilter className="w-4 h-4" />
+          >         
             <span>Reset Map</span>
           </button>
         </div>
@@ -503,7 +502,7 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
         } ${
           activeView === 'list'
             ? 'absolute inset-0' // Full screen when list only
-            : 'absolute bottom-1 left-4 right-4' // Overlay when both
+            : 'absolute bottom-1 left-2 right-2' // Overlay when both
         } z-[5]`}
       >
         <div

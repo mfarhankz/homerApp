@@ -23,7 +23,7 @@ const AgentInfo = ({
               className="w-full h-full object-cover"
             />
           ) : (
-            <div className="w-full h-full bg-blue-500 flex items-center justify-center text-white text-3xl font-semibold">
+            <div className="w-full h-full bg-blue-500 flex items-center justify-center  text-3xl font-semibold">
               {firstLetter}
             </div>
           )}
@@ -33,24 +33,24 @@ const AgentInfo = ({
       {/* Right side - Content */}
       <div className="flex flex-col items-start">
         {/* Name */}
-        <h3 className="text-2xl font-semibold text-white">
+        <h3 className="text-2xl font-semibold">
           {firstName} {lastName}
         </h3>
-        <span className="text-sm text-white">{brokerageName}</span>
+        <span className="text-sm ">{brokerageName}</span>
 
         {/* Contact Info - Only shown if provided */}
         {(emailAddress || phone) && (
           <div className="flex flex-col gap-2 mt-2">
             {emailAddress && (
               <div className="flex items-center">
-                <Mail size={18} className="mr-2 text-white" />
-                <span className="text-base text-white">{emailAddress}</span>
+                <Mail size={18} className="mr-2 " />
+                <span className="text-base ">{emailAddress}</span>
               </div>
             )}
             {phone && (
               <div className="flex items-center">
-                <Phone size={18} className="mr-2 text-white" />
-                <span className="text-base text-white">{phone}</span>
+                <Phone size={18} className="mr-2" />
+                <span className="text-base">{phone}</span>
               </div>
             )}
           </div>

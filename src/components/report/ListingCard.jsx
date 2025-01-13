@@ -103,7 +103,7 @@ const ListingCard = ({ listing, onHideToggle, isClient, isActive }) => {
     }, [listing.listingKey]);
 
     return (
-        <div className={`listing-card rounded-lg overflow-hidden relative h-full w-[190px] md:w-[210px]  ${isActive ? 'card-active' : ''}`}>
+        <div className={`listing-card rounded-lg overflow-hidden md:h-full mb-2 md:mb-1 relative w-[170px] md:w-full  ${isActive ? 'card-active' : ''}`}>
             {/* Semi-transparent overlay for sold listings */}
             {isHidden && (
                 <div className={`absolute inset-0 bg-gray-200 ${OVERLAY_OPACITY} z-10 pointer-events-none`} />
@@ -138,33 +138,37 @@ const ListingCard = ({ listing, onHideToggle, isClient, isActive }) => {
             </div>
 
             {/* Content Section */}
-            <div className="p-2">
-                <div className="flex justify-between items-center mb-1">
-                    <div className={`text-xs font-semibold ${isHidden ? 'text-gray-600' : ''}`}>
-                        ${listing.formattedListPrice}
+            <div className=" p-2 flex flex-col listing-card-content">
+                {/* Top content */}
+                <div>
+                    <div className="flex justify-between items-center mb-1">
+                        <div className={`text-xs font-semibold ${isHidden ? 'text-gray-600' : ''}`}>
+                            ${listing.formattedListPrice}
+                        </div>
+                        <div className={`listing-card-mls-badge listing-card-mls-badge-label ${isHidden ? SOLD_OPACITY : ''}`}>
+                            MLS® {listing.listingKey}
+                        </div>
                     </div>
-                    <div className={`listing-card-mls-badge listing-card-mls-badge-label ${isHidden ? SOLD_OPACITY : ''}`}>
-                        MLS® {listing.listingKey}
-                    </div>
-                </div>
-                <div className="text-xs mb-2">
-                    {listing.address}
-                </div>
-
-                <div className="flex items-center gap-1 text-gray-600 text-sm mb-2">
-                    <div className="flex items-center">
-                        <BedIcon className={isHidden ? SOLD_OPACITY : ''} />
-                        <span className="text-xs">{listing.bedroomsTotal}</span>
-                        <span className="text-xs">beds</span>
-                    </div>
-                    <div className="flex items-center">
-                        <BathIcon className={isHidden ? SOLD_OPACITY : ''} />
-                        <span className="text-xs  ">{listing.bathroomsTotalInteger}</span>
-                        <span className="text-xs  ml-1">baths</span>
+                    <div className="text-xs mb-2">
+                        {listing.address}
                     </div>
                 </div>
 
-
+                {/* Bottom content - will always stick to bottom */}
+                <div className="mt-auto">
+                    <div className="flex items-center gap-1 text-gray-600 text-sm">
+                        <div className="flex items-center">
+                            <BedIcon className={isHidden ? SOLD_OPACITY : ''} />
+                            <span className="text-xs">{listing.bedroomsTotal}</span>
+                            <span className="text-xs">beds</span>
+                        </div>
+                        <div className="flex items-center">
+                            <BathIcon className={isHidden ? SOLD_OPACITY : ''} />
+                            <span className="text-xs">{listing.bathroomsTotalInteger}</span>
+                            <span className="text-xs ml-1">baths</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );
