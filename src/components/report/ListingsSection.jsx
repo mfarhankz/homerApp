@@ -3,7 +3,7 @@ import ListingCard from './ListingCard';
 import { useFetcher } from 'react-router-dom';
 
 const ListingsSection = ({ listings, onSort, isClientView = false,
-    onHideListing, selectedListingKey, activeView = 'both', parentIsExpanded = false }) => {
+    onHideListing, selectedListingKey, activeView = 'both', onListingCardClicked }) => {
     const [sortOption, setSortOption] = useState('All');
     const [filteredListings, setFilteredListings] = useState(listings);
     const [sortDirection, setSortDirection] = useState('asc'); // 'asc' or 'desc'
@@ -90,19 +90,20 @@ const ListingsSection = ({ listings, onSort, isClientView = false,
     return (
         <div className={`flex-1 h-full flex  flex-col ${activeView === 'list' ? 'mt-12' : 'pb-1'}`}>
             <div className={`flex-1 overflow-y-auto ${activeView === 'list'
-                    ? `grid grid-cols-2 md:grid-cols-3  auto-rows-min mb-6 pb-12 gap-1` : 'grid grid-flow-col gap-1'
+                ? `grid grid-cols-2 md:grid-cols-3  auto-rows-min mb-6 pb-12 gap-1` : 'grid grid-flow-col gap-1'
                 }`}>
                 {filteredListings.map(listing => (
                     <div
                         key={listing.listingKey}
                         ref={el => listingsRef.current[listing.listingKey] = el}
-                        className={`transition-all duration-300  ${activeView === 'list' ? 'md:m-1' : '' }`}
+                        className={`transition-all duration-300  ${activeView === 'list' ? 'md:m-1' : ''}`}
                     >
                         <ListingCard
                             listing={listing}
                             onHideToggle={(key) => onHideListingClicked(key)}
                             isClient={isClientView}
                             isActive={selectedListingKey === listing.listingKey}
+                            cardClicked={(listingKey) => onListingCardClicked(listingKey)}
                         />
                     </div>
                 ))}

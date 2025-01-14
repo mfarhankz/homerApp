@@ -1,20 +1,19 @@
 import React from 'react';
 import { Mail, Phone } from 'lucide-react';
 
-const AgentInfo = ({
-    photo,
+const AgentProfile = ({
     firstName,
     lastName,
-    emailAddress,
     brokerageName,
-    phone
+    emailAddress,
+    phone,
+    photo,
+    firstLetter
 }) => {
-    const firstLetter = firstName ? firstName.charAt(0).toUpperCase() : '?';
-
     return (
-        <div className="flex items-start gap-4 p-2">
+        <div className="grid grid-cols-[64px_1fr] gap-2 p-2 max-w-full">
             {/* Left side - Image */}
-            <div className="flex-shrink-0">
+            <div>
                 <div className="w-16 h-16 rounded-full overflow-hidden">
                     {photo ? (
                         <img
@@ -23,7 +22,7 @@ const AgentInfo = ({
                             className="w-full h-full object-cover"
                         />
                     ) : (
-                        <div className="w-full h-full bg-blue-500 flex items-center justify-center  text-3xl font-semibold">
+                        <div className="w-full h-full bg-blue-500 flex items-center justify-center text-3xl font-semibold">
                             {firstLetter}
                         </div>
                     )}
@@ -31,26 +30,34 @@ const AgentInfo = ({
             </div>
 
             {/* Right side - Content */}
-            <div className="flex flex-col items-start">
+            <div className="w-full overflow-hidden">
                 {/* Name */}
-                <h3 className="text-2xl font-semibold text-white">
+                <h3 className="text-lg md:text-2xl font-semibold text-white truncate">
                     {firstName} {lastName}
                 </h3>
-                <span className="text-sm text-white">{brokerageName}</span>
 
-                {/* Contact Info - Only shown if provided */}
+                {/* Brokerage Name */}
+                <div className="text-xs md:text-sm text-white truncate">
+                    {brokerageName}
+                </div>
+
+                {/* Contact Info */}
                 {(emailAddress || phone) && (
-                    <div className="flex flex-col gap-2 mt-2">
+                    <div className="flex flex-col space-y-1 mt-2">
                         {emailAddress && (
-                            <div className="flex items-center">
-                                <Mail size={18} className="mr-2 text-white " />
-                                <span className="text-base text-white ">{emailAddress}</span>
+                            <div className="grid grid-cols-[16px_1fr] gap-2 items-center">
+                                <Mail className="text-white w-4 h-4 md:w-[18px] md:h-[18px]" />
+                                <span className="text-sm md:text-base text-white truncate">
+                                    {emailAddress}
+                                </span>
                             </div>
                         )}
                         {phone && (
-                            <div className="flex items-center">
-                                <Phone size={18} className="mr-2 text-white" />
-                                <span className="text-base text-white">{phone}</span>
+                            <div className="grid grid-cols-[16px_1fr] gap-2 items-center">
+                                <Phone className="text-white w-4 h-4 md:w-[18px] md:h-[18px]" />
+                                <span className="text-sm md:text-base text-white truncate">
+                                    {phone}
+                                </span>
                             </div>
                         )}
                     </div>
@@ -60,4 +67,4 @@ const AgentInfo = ({
     );
 };
 
-export default AgentInfo;
+export default AgentProfile;

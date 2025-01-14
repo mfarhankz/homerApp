@@ -66,7 +66,7 @@ const clearOldCache = () => {
     }
 };
 
-const ListingCard = ({ listing, onHideToggle, isClient, isActive }) => {
+const ListingCard = ({ listing, onHideToggle, isClient, isActive, cardClicked }) => {
     const [imageUrl, setImageUrl] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const fallbackImage = '/images/listing-home.jpg';
@@ -102,8 +102,14 @@ const ListingCard = ({ listing, onHideToggle, isClient, isActive }) => {
         loadImage();
     }, [listing.listingKey]);
 
+    const handleCardClicked = () => {
+        if (cardClicked) {
+            cardClicked(listing.listingKey);
+        }
+    }
+
     return (
-        <div className={`listing-card rounded-lg overflow-hidden md:h-full mb-2 md:mb-1 relative w-[170px] md:w-full  ${isActive ? 'card-active' : ''}`}>
+        <div onClick={handleCardClicked} className={`listing-card rounded-lg overflow-hidden md:h-full mb-2 md:mb-1 relative w-[170px] md:w-full  ${isActive ? 'card-active' : ''}`}>
             {/* Semi-transparent overlay for sold listings */}
             {isHidden && (
                 <div className={`absolute inset-0 bg-gray-200 ${OVERLAY_OPACITY} z-10 pointer-events-none`} />

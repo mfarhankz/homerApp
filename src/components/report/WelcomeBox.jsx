@@ -19,9 +19,9 @@ const WelcomeBox = ({ location, propertyType, timeRange, agent, priceAnalysis, t
                 <h5 className="text-xl font-semibold text-white">{neighborhood}</h5>
                 <h5 className="text-xl font-semibold text-white">{city}</h5>
               </div>
-              <h5 className="hidden md:block text-3xl text-white font-semibold">
+              <span className="hidden md:block text-2xl text-white font-semibold">
                 {desktopLocation}
-              </h5>
+              </span>
 
               {/* Stats row */}
               <div className="mt-4 flex gap-4 md:gap-8">
