@@ -236,20 +236,7 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
         }
     }, [selectedGroup, currentPropertyIndex]);
 
-    const handleMarkerClick = (group, property = null, event) => {
-        if (event && event.originalEvent && event.originalEvent.target) {
-            const mapContainer = mapRef.current.getMap().getContainer();
-            const rect = mapContainer.getBoundingClientRect();
-            const markerElement = event.originalEvent.target.closest('.marker-container'); // Add a class to your marker container
-            if (markerElement) {
-                const markerRect = markerElement.getBoundingClientRect();
-                setMarkerPosition({
-                    x: markerRect.left - rect.left + (markerRect.width / 2),
-                    y: markerRect.top - rect.top
-                });
-            }
-        }
-        
+    const handleMarkerClick = (group, property = null) => {
         const key = `${group.coordinates.latitude}-${group.coordinates.longitude}`;
         // If it's a cluster (more than one property)
         if (group.properties.length > 1) {
@@ -334,6 +321,7 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
             handleMarkerClick(group, property || null);
             return;
         }
+
         handleMarkerClick(group);
     }
 
@@ -349,21 +337,9 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
                         key={`${key}-${index}`}
                         latitude={group.coordinates.latitude + index * 0.0001}
                         longitude={group.coordinates.longitude + index * 0.0001}
-                        onClick={(e) => handleMarkerClick(group, property, e)}
+                        onClick={() => handleMarkerClick(group, property)}
                         style={{ cursor: 'pointer' }}>
-                        <div className="relative  marker-container">
-                            {/* Vertical line */}
-                            {/* Vertical line for expanded markers */}
-                            {selectedListingKey === property.listingKey && (
-                                <div className="absolute left-1/2 -translate-x-1/2">
-                                    <div className="w-[3px] h-8 bg-blue-700"
-                                        style={{
-                                            position: 'absolute',
-                                            top: '-32px' // Same as non-expanded markers
-                                        }}
-                                    />
-                                </div>
-                            )}
+                        <div className="relative">
                             <div className={`transition-transform duration-200 hover:scale-105  
                                           ${selectedListingKey === property.listingKey ? 'rounded-full border border-blue-500 p-1' : ''}`}>
                                 <div className="px-3 py-1 rounded-full bg-white shadow-lg border border-gray-100">
@@ -382,20 +358,9 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
                     key={key}
                     latitude={group.coordinates.latitude}
                     longitude={group.coordinates.longitude}
-                    onClick={(e) => handleMarkerClick(group, null, e)}
+                    onClick={() => handleMarkerClick(group, null)}
                     style={{ cursor: 'pointer' }}>
                     <div className="relative marker-container">
-                        {/* Vertical line */}
-                        {selectedListingKey === group.properties[0].listingKey && (
-                            <div className="absolute left-1/2 -translate-x-1/2">
-                                <div className="w-[3px] h-8 bg-blue-700"
-                                    style={{
-                                        position: 'absolute',
-                                        top: '-32px' // Fixed height above marker
-                                    }}
-                                />
-                            </div>
-                        )}
                         <div className={`transition-transform duration-200 hover:scale-105 
                                 ${selectedListingKey === group.properties[0].listingKey ? 'rounded-full border border-blue-500 p-1' : ''}`}>
                             <div className="px-3 py-1 rounded-full bg-white shadow-lg border border-gray-100">
@@ -469,6 +434,7 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
                         onClick={() => {
                             fitMapToBounds();
                             setExpandedClusters(new Set());
+                            handleClose();
                         }}
                         className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 bg-blue-500 text-white flex items-center gap-2`}
                     >
