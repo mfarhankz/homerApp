@@ -2,9 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { X, TrendingUp, TrendingDown, BedIcon, BathIcon } from 'lucide-react';
 
-const PropertyPopup = ({ selectedGroup, currentPropertyIndex, currentImage, handleClose }) => {
-    console.log('group', selectedGroup);
-    //  console.log(selectedGroup.properties[currentPropertyIndex]);
+const PropertyPopup = ({ property, currentPropertyIndex, currentImage, handleClose, markerPosition }) => { 
     const renderPrice = (property) => {
         const isSold = property.uiStatus === 'Sold';
         const hasClosePrice = property.soldPrice && property.listPrice !== property.soldPrice;
@@ -40,13 +38,21 @@ const PropertyPopup = ({ selectedGroup, currentPropertyIndex, currentImage, hand
     };
 
     return (
-        <div className="absolute w-96 lg:w-[32rem] top-20 left-1/2 -translate-x-1/2 bg-white shadow-lg rounded-t-xl transform 
-                        transition-transform duration-300 ease-in-out z-30">
+        <div className="absolute w-96 lg:w-[32rem] bg-white shadow-lg rounded-xl transform 
+                        transition-transform duration-300 ease-in-out z-30"
+                        
+            style={{
+                // Position popup relative to marker
+                left: '50%',
+                transform: 'translateX(-50%)',
+                top: '44px', // Fixed distance from top to match the line
+                marginTop: '8px'
+            }}>
             <div className="flex flex-col w-full">
                 {/* Header */}
                 <div className="p-2 border-b  flex justify-between items-center">
                     <h3 className="text-base font-bold text-gray-900">
-                        Property Details - MLS®{selectedGroup.properties[currentPropertyIndex].listingKey}
+                        Property Details - MLS®{property.listingKey}
                     </h3>
                     <button
                         onClick={handleClose}
@@ -61,29 +67,29 @@ const PropertyPopup = ({ selectedGroup, currentPropertyIndex, currentImage, hand
                     {/* Property Details */}
                     <div className="flex-1 space-y-3">
                         <div className="text-xl font-bold text-blue-600">
-                            {renderPrice(selectedGroup.properties[currentPropertyIndex])}
+                            {renderPrice(property)}
 
                         </div>
 
                         <div className="flex text-center">
                             <span className="bg-gray-100 px-2 py-1 rounded text-sm  text-center">
-                                <BedIcon />{selectedGroup.properties[currentPropertyIndex].bedroomsTotal} beds
+                                <BedIcon />{property.bedroomsTotal} beds
                             </span>
                             <span className="bg-gray-100 px-2 py-1 rounded text-sm  text-center">
-                                <BathIcon />{selectedGroup.properties[currentPropertyIndex].bathroomsTotalInteger} baths
+                                <BathIcon />{property.bathroomsTotalInteger} baths
                             </span>
                         </div>
                         <div className="text-gray-600 text-xs">
-                            {selectedGroup.properties[currentPropertyIndex].address}
+                            {property.address}
                         </div>
                         <div className="text-gray-600 text-xs">
-                            {selectedGroup.properties[currentPropertyIndex].uiCity},
-                            {selectedGroup.properties[currentPropertyIndex].province}
+                            {property.uiCity},
+                            {property.province}
                         </div>
 
                         <div className="flex justify-between items-center text-sm">
                             <span className="text-green-600 bg-green-50 px-2 py-1 rounded">
-                                {selectedGroup.properties[currentPropertyIndex].uiStatus}
+                                {property.uiStatus}
                             </span>
                         </div>
                     </div>
@@ -93,7 +99,7 @@ const PropertyPopup = ({ selectedGroup, currentPropertyIndex, currentImage, hand
                         <div className="relative w-full h-48 rounded-lg overflow-hidden">
                             <img
                                 src={currentImage}
-                                alt={`Property ${selectedGroup.properties[currentPropertyIndex].listingKey}`}
+                                alt={`Property ${property.listingKey}`}
                                 className="w-full h-full object-cover"
                             />
                         </div>

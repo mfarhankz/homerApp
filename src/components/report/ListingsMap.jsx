@@ -103,8 +103,11 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
 
     const [selectedGroup, setSelectedGroup] = useState(null);
     const [currentPropertyIndex, setCurrentPropertyIndex] = useState(0);
+    const [selectedProperty, setSelectedProperty] = useState(null);
     const [currentImage, setCurrentImage] = useState(null);
     const fallbackImage = '/images/listing-home.jpg';
+    const [markerPosition, setMarkerPosition] = useState(null);
+
 
     // Group listings by coordinates
     const groupedListings = listings.reduce((acc, property) => {
@@ -233,13 +236,26 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
         }
     }, [selectedGroup, currentPropertyIndex]);
 
-    const handleMarkerClick = (group) => {
+    const handleMarkerClick = (group, property = null, event) => {
+        if (event && event.originalEvent && event.originalEvent.target) {
+            const mapContainer = mapRef.current.getMap().getContainer();
+            const rect = mapContainer.getBoundingClientRect();
+            const markerElement = event.originalEvent.target.closest('.marker-container'); // Add a class to your marker container
+            if (markerElement) {
+                const markerRect = markerElement.getBoundingClientRect();
+                setMarkerPosition({
+                    x: markerRect.left - rect.left + (markerRect.width / 2),
+                    y: markerRect.top - rect.top
+                });
+            }
+        }
+        
         const key = `${group.coordinates.latitude}-${group.coordinates.longitude}`;
         // If it's a cluster (more than one property)
         if (group.properties.length > 1) {
             setExpandedClusters((prev) => {
                 const newSet = new Set(prev);
-                if (newSet.has(key)) {
+                if (newSet.has(key) && property === null) {
                     newSet.delete(key);
                 } else {
                     newSet.add(key);
@@ -255,13 +271,21 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
                 zoom: 17,
                 transitionDuration: 500,
             }));
+
+            if (property && property.listingKey) {
+                const cachedImageUrl = getCachedImage(property.listingKey);
+                setCurrentImage(cachedImageUrl || fallbackImage);
+                setSelectedProperty(property);
+                setSelectedListingKey(property.listingKey);
+                propagateClick(property.listingKey);
+            }
         } else {
             // Single property behavior remains the same
             setSelectedGroup(group);
             setCurrentPropertyIndex(0);
+            setSelectedProperty(group.properties[0]);
             const cachedImageUrl = getCachedImage(group.properties[0].listingKey);
             setCurrentImage(cachedImageUrl || fallbackImage);
-
             setViewState((prev) => ({
                 ...prev,
                 latitude: group.coordinates.latitude,
@@ -289,9 +313,11 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
 
     const handleClose = () => {
         setSelectedGroup(null);
+        setSelectedProperty(null);
         setCurrentPropertyIndex(0);
         setCurrentImage(null);
         setSelectedListingKey('');
+        setMarkerPosition(null);
     };
 
     const findGroupByListingKey = (listingKey) => {
@@ -302,22 +328,13 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
     };
 
     const handleListingCardClicked = (listingKey) => {
-        // fitMapToBounds();
-        // setExpandedClusters(new Set());
-        // var group = findGroupByListingKey(listingKey);
-        handleMarkerClick(findGroupByListingKey(listingKey));
-        //console.log(findGroupByListingKey(listingKey)); 
-        // setSelectedListingKey(listingKey);
-        // setCurrentPropertyIndex(0);
-        // const cachedImageUrl = getCachedImage(listingKey);
-        // setCurrentImage(cachedImageUrl || fallbackImage);
-        // setViewState((prev) => ({
-        //     ...prev,
-        //     latitude: group.coordinates.latitude,
-        //     longitude: group.coordinates.longitude,
-        //     zoom: 15,
-        //     transitionDuration: 500,
-        // }));
+        const group = findGroupByListingKey(listingKey);
+        if (group.properties.length > 1) {
+            var property = group.properties.find(property => property.listingKey === listingKey);
+            handleMarkerClick(group, property || null);
+            return;
+        }
+        handleMarkerClick(group);
     }
 
     // Rendering Markers with shortened values
@@ -332,25 +349,23 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
                         key={`${key}-${index}`}
                         latitude={group.coordinates.latitude + index * 0.0001}
                         longitude={group.coordinates.longitude + index * 0.0001}
-                        onClick={() => {
-                            setSelectedGroup({ ...group, properties: [property] });
-                            setCurrentPropertyIndex(0);
-                            const cachedImageUrl = getCachedImage(property.listingKey);
-                            setCurrentImage(cachedImageUrl || fallbackImage);
-                            if (propagateClick) {
-                                propagateClick(property.listingKey);
-                            }
-                        }}
+                        onClick={(e) => handleMarkerClick(group, property, e)}
                         style={{ cursor: 'pointer' }}>
-                        <div className="relative">
+                        <div className="relative  marker-container">
                             {/* Vertical line */}
-                            {selectedListingKey === group.properties[0].listingKey && (
-                                <div className="absolute left-1/2 -top-8 transform -translate-x-1/2">
-                                    <div className="w-[3px] h-8 bg-blue-700"></div>
+                            {/* Vertical line for expanded markers */}
+                            {selectedListingKey === property.listingKey && (
+                                <div className="absolute left-1/2 -translate-x-1/2">
+                                    <div className="w-[3px] h-8 bg-blue-700"
+                                        style={{
+                                            position: 'absolute',
+                                            top: '-32px' // Same as non-expanded markers
+                                        }}
+                                    />
                                 </div>
                             )}
                             <div className={`transition-transform duration-200 hover:scale-105  
-                                            ${selectedListingKey === group.properties[0].listingKey ? 'rounded-full border border-blue-500 p-1' : ''}`}>
+                                          ${selectedListingKey === property.listingKey ? 'rounded-full border border-blue-500 p-1' : ''}`}>
                                 <div className="px-3 py-1 rounded-full bg-white shadow-lg border border-gray-100">
                                     <span className="text-sm font-semibold">
                                         {`$${property.listPrice}`}
@@ -367,13 +382,18 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
                     key={key}
                     latitude={group.coordinates.latitude}
                     longitude={group.coordinates.longitude}
-                    onClick={() => handleMarkerClick(group)}
+                    onClick={(e) => handleMarkerClick(group, null, e)}
                     style={{ cursor: 'pointer' }}>
-                    <div className="relative">
+                    <div className="relative marker-container">
                         {/* Vertical line */}
                         {selectedListingKey === group.properties[0].listingKey && (
-                            <div className="absolute left-1/2 -top-8 transform -translate-x-1/2">
-                                <div className="w-[3px] h-8 bg-blue-700"></div>
+                            <div className="absolute left-1/2 -translate-x-1/2">
+                                <div className="w-[3px] h-8 bg-blue-700"
+                                    style={{
+                                        position: 'absolute',
+                                        top: '-32px' // Fixed height above marker
+                                    }}
+                                />
                             </div>
                         )}
                         <div className={`transition-transform duration-200 hover:scale-105 
@@ -385,8 +405,7 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
                                         : group.properties[0].uiStatus === 'Sold'
                                             ? 'text-red-600'
                                             : 'text-black'
-                                        }`}
-                                >
+                                        }`}>
                                     {group.properties.length > 1
                                         ? `${group.properties.length} homes`
                                         : group.properties[0].uiStatus === 'Sold'
@@ -524,9 +543,9 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
             </div>
 
             {/* Bottom Sheet / Popup */}
-            {selectedGroup && (
+            {selectedProperty && (
                 <PropertyPopup
-                    selectedGroup={selectedGroup}
+                    property={selectedProperty}
                     currentImage={currentImage}
                     currentPropertyIndex={currentPropertyIndex}
                     handleClose={handleClose}
@@ -550,7 +569,7 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
                     <ListingsSection
                         listings={listings}
                         sortOption="price-low"
-                        selectedListingKey={selectedGroup?.properties[0]?.listingKey}
+                        selectedListingKey={selectedProperty?.listingKey}
                         activeView={activeView}
                         onListingCardClicked={(listingKey) => handleListingCardClicked(listingKey)}
                     />
