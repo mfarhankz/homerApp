@@ -2,15 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import ListingCard from './ListingCard';
 import { useFetcher } from 'react-router-dom';
 
-const ListingsSection = ({ listings, onSort, isClientView = false,
-    onHideListing, selectedListingKey, activeView = 'both', onListingCardClicked }) => {
-    const [sortOption, setSortOption] = useState('All');
+const ListingsSection = ({ listings, onSort, isClientView = false, onHideListing, selectedListingKey, activeView = 'both', 
+    onListingCardClicked, selectedFilterOption }) => {        
     const [filteredListings, setFilteredListings] = useState(listings);
     const [sortDirection, setSortDirection] = useState('asc'); // 'asc' or 'desc'
     const [isSortingEnabled, setIsSortingEnabled] = useState(false);
-
     const listingsRef = useRef({});
-
 
     useEffect(() => {
         if (selectedListingKey && listingsRef.current[selectedListingKey]) {
@@ -25,7 +22,7 @@ const ListingsSection = ({ listings, onSort, isClientView = false,
         const filterAndSortListings = () => {
             // First filter the listings
             let filtered = [...listings];
-            switch (sortOption) {
+            switch (selectedFilterOption) {
                 case 'Sold':
                     filtered = listings.filter(listing => listing.uiStatus === 'Sold');
                     break;
@@ -41,8 +38,7 @@ const ListingsSection = ({ listings, onSort, isClientView = false,
             if (isSortingEnabled) {
                 filtered.sort((a, b) => {
                     const priceA = parseFloat(a.listPrice) || 0;
-                    const priceB = parseFloat(b.listPrice) || 0;
-                    console.log('Comparing prices:', priceA, priceB);
+                    const priceB = parseFloat(b.listPrice) || 0;                    
                     return sortDirection === 'asc' ? priceA - priceB : priceB - priceA;
                 });
             }
@@ -54,22 +50,22 @@ const ListingsSection = ({ listings, onSort, isClientView = false,
         };
 
         filterAndSortListings();
-    }, [sortOption, listings, sortDirection, isSortingEnabled]);
+    }, [selectedFilterOption, listings, sortDirection, isSortingEnabled]);
 
-    const handleSortChange = (event) => {
-        console.log('Sort option changed to:', event.target.value);
-        setSortOption(event.target.value);
-    };
+    // const handleSortChange = (event) => {
+    //     console.log('Sort option changed to:', event.target.value);
+    //     setfilterOption(event.target.value);
+    // };
 
-    const toggleSort = () => {
-        if (!isSortingEnabled) {
-            setIsSortingEnabled(true);
-            setSortDirection('asc');
-        } else {
-            setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
-        }
-        console.log('Toggle sort clicked', { isSortingEnabled, sortDirection });
-    };
+    // const toggleSort = () => {
+    //     if (!isSortingEnabled) {
+    //         setIsSortingEnabled(true);
+    //         setSortDirection('asc');
+    //     } else {
+    //         setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
+    //     }
+    //     console.log('Toggle sort clicked', { isSortingEnabled, sortDirection });
+    // };
 
     const onHideListingClicked = (key) => {
         if (onHideListing) {
@@ -83,6 +79,7 @@ const ListingsSection = ({ listings, onSort, isClientView = false,
                 }
                 return listing;
             });
+
             return updatedListings;
         });
     }

@@ -112,7 +112,7 @@ const ListingCard = ({ listing, onHideToggle, isClient, isActive, cardClicked })
         <div onClick={handleCardClicked} className={`listing-card rounded-lg overflow-hidden md:h-full mb-2 md:mb-1 relative w-[170px] md:w-full  ${isActive ? 'card-active' : ''}`}>
             {/* Semi-transparent overlay for sold listings */}
             {isHidden && (
-                <div className={`absolute inset-0 bg-gray-200 ${OVERLAY_OPACITY} z-10 pointer-events-none`} />
+                <div className={`absolute inset-0 bg-gray-200 ${OVERLAY_OPACITY} z-10`} />
             )}
 
             {/* Image Section */}
@@ -135,8 +135,13 @@ const ListingCard = ({ listing, onHideToggle, isClient, isActive, cardClicked })
                     </span>
                 </div>
                 {!isClient && <button
-                    onClick={() => onHideToggle(listing.listingKey)}
-                    className="absolute top-2 right-2 px-3 py-1 bg-white text-gray-700 text-xs font-medium 
+                    onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        e.nativeEvent.stopImmediatePropagation();
+                        onHideToggle(listing.listingKey);
+                    }}
+                    className="absolute top-2 right-2 px-3 cursor-pointer hover:cursor-pointer py-1 bg-white text-gray-700 text-xs font-medium 
                              rounded-full shadow hover:bg-gray-50 transition-colors flex items-center gap-1 z-20"
                 >
                     <span>{isHidden ? 'Show' : 'Hide'}</span>

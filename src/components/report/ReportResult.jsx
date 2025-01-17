@@ -207,7 +207,7 @@ const ReportResult = () => {
 
   if (loading) {
     return (
-      <LoadingScreen onCancel={handleCancel}>
+      <LoadingScreen onCancel={handleCancel} overlay={true}>
         <p>Loading...</p>
       </LoadingScreen>
     );
@@ -348,6 +348,7 @@ const ReportResult = () => {
           <div className="w-full md:w-2/3 relative">
             <ListingsMap
               listings={reportData.neighborhoodListings}
+              hideListingEvent={(key) => handleHideListing(key)}
               isMapExpanded={false}
               propagateClick={(key) => handleMapMarkerClicked(key)}
             />

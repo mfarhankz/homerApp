@@ -52,8 +52,9 @@ function shortenNumber(num) {
     }
 }
 
-const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
+const ListingsMap = ({ listings = [], isMapExpanded, propagateClick, hideListingEvent }) => {
     const [activeView, setActiveView] = useState('both');
+    const [propertyStatus, setPropertyStatus] = useState('All');
     const [showFilters, setShowFilters] = useState(false);
     const MAPBOX_ACCESS_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
     const mapRef = useRef(null);
@@ -396,6 +397,12 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
         }
     };
 
+    const propagateHideListingEvent = (key) => {
+        if (hideListingEvent) {
+            hideListingEvent(key)
+        }
+    }
+
     return (
         <div className="w-full h-[550px]">
             {/* iOS-style View Toggle Buttons */}
@@ -403,26 +410,54 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
                 <div className="flex flex-row bg-[grey] text-white rounded-lg md:space-y-0 md:space-x-1">
                     <button
                         onClick={() => setActiveView('map')}
-                        className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 ${activeView === 'map' ? 'bg-blue-500 text-white' : 'text-white-600'
+                        className={`px-4 py-1.5 cursor-pointer rounded-md text-sm font-medium transition-all duration-200 ${activeView === 'map' ? 'bg-blue-500 text-white' : 'text-white-600'
                             }`}
                     >
                         Map
                     </button>
                     <button
                         onClick={() => setActiveView('list')}
-                        className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 ${activeView === 'list' ? 'bg-blue-500 text-white' : 'text-white-600'
+                        className={`px-4 py-1.5 hover:cursor-pointer rounded-md text-sm font-medium transition-all duration-200 ${activeView === 'list' ? 'bg-blue-500 text-white' : 'text-white-600'
                             }`}
                     >
                         List
                     </button>
                     <button
                         onClick={() => setActiveView('both')}
-                        className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 ${activeView === 'both'
+                        className={`px-4 py-1.5 hover:cursor-pointer rounded-md text-sm font-medium transition-all duration-200 ${activeView === 'both'
                             ? 'bg-blue-500 text-white'
                             : 'text-white-600'
                             }`}
                     >
                         Both
+                    </button>
+                </div>
+            </div>
+            {/* Sort */}
+            <div className="absolute top-1 left-60 transform z-20">
+                <div className="flex flex-row bg-[grey] text-white rounded-lg md:space-y-0 md:space-x-1">
+                    <button
+                        onClick={() => setPropertyStatus('Sold')}
+                        className={`px-4 py-1.5 hover:cursor-pointer rounded-md text-sm font-medium transition-all duration-200 ${propertyStatus === 'Sold' ? 'bg-blue-500 text-white' : 'text-white-600'
+                            }`}
+                    >
+                        Sold
+                    </button>
+                    <button
+                        onClick={() => setPropertyStatus('Available')}
+                        className={`px-4 py-1.5 hover:cursor-pointer rounded-md text-sm font-medium transition-all duration-200 ${propertyStatus === 'Available' ? 'bg-blue-500 text-white' : 'text-white-600'
+                            }`}
+                    >
+                        Available
+                    </button>
+                    <button
+                        onClick={() => setPropertyStatus('All')}
+                        className={`px-4 py-1.5 hover:cursor-pointer rounded-md text-sm font-medium transition-all duration-200 ${propertyStatus === 'All'
+                            ? 'bg-blue-500 text-white'
+                            : 'text-white-600'
+                            }`}
+                    >
+                        All
                     </button>
                 </div>
             </div>
@@ -534,10 +569,12 @@ const ListingsMap = ({ listings = [], isMapExpanded, propagateClick }) => {
                 >
                     <ListingsSection
                         listings={listings}
+                        onHideListing={(key) => propagateHideListingEvent(key)}
                         sortOption="price-low"
                         selectedListingKey={selectedProperty?.listingKey}
                         activeView={activeView}
                         onListingCardClicked={(listingKey) => handleListingCardClicked(listingKey)}
+                        selectedFilterOption={propertyStatus}
                     />
                 </div>
             </div>

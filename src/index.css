@@ -380,6 +380,10 @@
         opacity: 0px;
     }
 
+    .hide-show-btn {
+  cursor: pointer !important;
+}
+
     .listing-card-mls-badge-label {
         color: #1F2937;
         font-weight: 500;

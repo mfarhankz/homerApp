@@ -10,7 +10,7 @@ const LoadingScreen = ({ children, onCancel, overlay = false }) => {
                                 <div className="w-8 h-8 border-3 border-coral-500 border-t-transparent rounded-full animate-spin" />
                                 <div>
                                     <h2 className="text-blue-900 font-semibold text-center">
-                                        Applying your changes {neighborhood}, please wait ...
+                                        Applying your changes, please wait ...
                                     </h2>
                                 </div>
                             </div>
