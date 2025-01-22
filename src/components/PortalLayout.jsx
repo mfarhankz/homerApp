@@ -150,7 +150,7 @@ export default function PortalLayout() {
             </aside>
 
             {/* Main Content Area */}
-            <main className="w-full   max-w-7xl mx-auto px-4 py-6">
+            <main className="w-full mx-auto">
                 <Outlet />
             </main>
         </div>

@@ -11,10 +11,10 @@ const AgentProfile = ({
     firstLetter
 }) => {
     return (
-        <div className="grid grid-cols-[64px_1fr] gap-2 p-2 max-w-full">
+        <div className="grid grid-cols-3 gap-4 mt-3 max-w-full">
             {/* Left side - Image */}
-            <div>
-                <div className="w-16 h-16 rounded-full overflow-hidden">
+            <div className='col-span-1'>
+                <div className="w-28 h-28 overflow-hidden">
                     {photo ? (
                         <img
                             src={photo}
@@ -22,7 +22,7 @@ const AgentProfile = ({
                             className="w-full h-full object-cover"
                         />
                     ) : (
-                        <div className="w-full h-full bg-blue-500 flex items-center justify-center text-3xl font-semibold">
+                        <div className="w-full h-full bg-[rgb(223,88,74)] text-white flex items-center justify-center text-5xl">
                             {firstLetter}
                         </div>
                     )}
@@ -30,14 +30,14 @@ const AgentProfile = ({
             </div>
 
             {/* Right side - Content */}
-            <div className="w-full overflow-hidden">
+            <div className="w-full overflow-hidden col-span-2">
                 {/* Name */}
-                <h3 className="text-lg md:text-2xl font-semibold text-white truncate">
+                <h3 className="text-3xl text-white truncate">
                     {firstName} {lastName}
                 </h3>
 
                 {/* Brokerage Name */}
-                <div className="text-xs md:text-sm text-white truncate">
+                <div className="text-xs md:text-sm text-white truncate font-light">
                     {brokerageName}
                 </div>
 
@@ -47,7 +47,7 @@ const AgentProfile = ({
                         {emailAddress && (
                             <div className="grid grid-cols-[16px_1fr] gap-2 items-center">
                                 <Mail className="text-white w-4 h-4 md:w-[18px] md:h-[18px]" />
-                                <span className="text-sm md:text-base text-white truncate">
+                                <span className="text-sm md:text-base text-white truncate font-light">
                                     {emailAddress}
                                 </span>
                             </div>
@@ -55,7 +55,7 @@ const AgentProfile = ({
                         {phone && (
                             <div className="grid grid-cols-[16px_1fr] gap-2 items-center">
                                 <Phone className="text-white w-4 h-4 md:w-[18px] md:h-[18px]" />
-                                <span className="text-sm md:text-base text-white truncate">
+                                <span className="text-sm md:text-base text-white truncate font-light">
                                     {phone}
                                 </span>
                             </div>

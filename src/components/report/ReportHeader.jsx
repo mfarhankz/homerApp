@@ -13,6 +13,7 @@ const ReportHeader = ({ location, propertyType, timeRange, agent }) => {
                             photo={agent.photo}
                             firstName={agent.firstName}
                             lastName={agent.lastName}
+                            firstLetter={agent.firstName.charAt(0) + agent.lastName.charAt(0)}
                             brokerageName={agent.brokerageName}
                             displayPullDown={agent.displayPullDown}
                             phone={agent.phone}

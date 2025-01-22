@@ -53,7 +53,7 @@ const WelcomeBox = ({ location, propertyType, timeRange, agent, priceAnalysis, t
               <img
                 src={`/images/${propertyType}.avif`}
                 alt="property"
-                className="w-20 h-20 md:w-40 md:h-40 object-contain drop-shadow-2xl"
+                className="bouncing-image w-[250px] h-[250px] object-contain drop-shadow-2xl"
               />
             </div>
           </div>
