@@ -291,6 +291,7 @@
         border-radius: 10px 10px 10px 10px;
         box-shadow: 7px 5px 30px 0px rgba(0, 0, 0, 0.12);
         overflow:hidden;
+        position: relative;
     }
 
     .text-homer-blue-16 {

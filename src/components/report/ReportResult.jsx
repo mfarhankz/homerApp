@@ -170,6 +170,157 @@ const ReportResult = () => {
   const handleMapMarkerClicked = (key) => {
     console.log("Map marker clicked with key:", key);
   };
+  const [components, setComponents] = useState([]);
+
+  useEffect(() => {
+    if (reportData) {
+      setComponents([
+        {
+          id: "averageListPrice",
+          type: "MetricsCard",
+          span: "col-span-6",
+          title: "Average List Price",
+          value: reportData.priceAnalaysis?.overallAveragePrice || 0,
+          highLow: {
+            high: reportData.priceAnalaysis?.overallHighestPrice || 0,
+            low: reportData.priceAnalaysis?.overallLowestPrice || 0,
+          },
+        },
+        {
+          id: "averageSellPrice",
+          type: "MetricsCard",
+          span: "col-span-6",
+          title: "Average Sell Price",
+          value: reportData.soldPriceAnalaysis?.overallAveragePrice || 0,
+          highLow: {
+            high: reportData.soldPriceAnalaysis?.overallHighestPrice || 0,
+            low: reportData.soldPriceAnalaysis?.overallLowestPrice || 0,
+          },
+        },
+        {
+          id: "listingsMap",
+          type: "ListingsMap",
+          span: "col-span-12",
+        },
+        {
+          id: "regionSalesRatio",
+          type: "RegionNeighborhoodSalesRatio",
+          span: "col-span-6",
+        },
+        {
+          id: "propertyTypeChart",
+          type: "SoldByPropertyType",
+          span: "col-span-6",
+        },
+        {
+          id: "daysOnMarketChart",
+          type: "DaysOnMarkerPriceRangeChart",
+          span: "col-span-12",
+        },
+      ]);
+    }
+  }, [reportData]);
+
+  const handleBoxDelete = (id) => {
+    setComponents((prevComponents) =>
+      prevComponents.filter((comp) => comp.id !== id)
+    );
+  };
+
+  const getDynamicSpan = (compIndex) => {
+    // Check adjacent components with col-span-6
+    const prevComp = components[compIndex - 1];
+    const nextComp = components[compIndex + 1];
+
+    // If there's only one col-span-6 in a group, make it col-span-12
+    if (
+      components[compIndex].span === "col-span-6" &&
+      (!prevComp || prevComp.span !== "col-span-6") &&
+      (!nextComp || nextComp.span !== "col-span-6")
+    ) {
+      return "col-span-12";
+    }
+
+    return components[compIndex].span;
+  };
+
+  const renderComponent = (comp) => {
+    const dynamicSpan =
+      components.length === 1 && comp.span === "col-span-6"
+        ? "col-span-12"
+        : comp.span;
+
+    switch (comp.type) {
+      case "MetricsCard": {
+        const chart =
+          comp.id === "averageListPrice" ? (
+            <PriceChart
+              data={reportData?.priceAnalaysis?.listingPriceAnalyses || []}
+              colorVariant="green"
+            />
+          ) : (
+            <PriceChart
+              data={reportData?.soldPriceAnalaysis?.listingPriceAnalyses || []}
+            />
+          );
+
+        return (
+          <MetricsCard
+            key={comp.id}
+            customClass={dynamicSpan} // Directly set the span class here
+            title={comp.title}
+            value={comp.value}
+            highLow={comp.highLow}
+            chart={chart}
+            onDelete={() => handleBoxDelete(comp.id)}
+          />
+        );
+      }
+      case "ListingsMap":
+        return (
+          <ListingsMap
+            key={comp.id}
+            customClass={dynamicSpan}
+            listings={reportData?.neighborhoodListings || []}
+            hideListingEvent={(key) => handleHideListing(key)}
+            isMapExpanded={false}
+            propagateClick={(key) => handleMapMarkerClicked(key)}
+            onDelete={() => handleBoxDelete(comp.id)}
+          />
+        );
+      case "RegionNeighborhoodSalesRatio":
+        return (
+          <RegionNeighborhoodSalesRatio
+            key={comp.id}
+            coustomClass={dynamicSpan}
+            dataSeries={reportData?.salesRatio?.series || []}
+            categories={reportData?.salesRatio?.categories || []}
+            onDelete={() => handleBoxDelete(comp.id)}
+          />
+        );
+      case "SoldByPropertyType":
+        return (
+          <SoldByPropertyType
+            key={comp.id}
+            coustomClass={dynamicSpan}
+            dataSeries={reportData?.propertyTypeChartData?.series || []}
+            labels={reportData?.propertyTypeChartData?.labels || []}
+            onDelete={() => handleBoxDelete(comp.id)}
+          />
+        );
+      case "DaysOnMarkerPriceRangeChart":
+        return (
+          <DaysOnMarkerPriceRangeChart
+            key={comp.id}
+            coustomClass={dynamicSpan}
+            daysOnMarketData={reportData?.daysOnMarketByPrice || []}
+            onDelete={() => handleBoxDelete(comp.id)}
+          />
+        );
+      default:
+        return null;
+    }
+  };
 
   useEffect(() => {
     const LoadReportData = async () => {
@@ -344,65 +495,14 @@ const ReportResult = () => {
         {/* Price Cards */}
         <div className="container mx-auto">
           <div className="grid grid-cols-12 gap-8">
-            
-            <MetricsCard
-              customClass="col-span-6"
-              title="Average List Price"
-              value={reportData.priceAnalaysis.overallAveragePrice}
-              highLow={{
-                high: reportData.priceAnalaysis.overallHighestPrice,
-                low: reportData.priceAnalaysis.overallLowestPrice,
-              }}
-              chart={
-                <PriceChart
-                  data={reportData.priceAnalaysis.listingPriceAnalyses}
-                  colorVariant="green"
-                />
-              }
-            />
-
-            <MetricsCard
-              customClass="col-span-6"
-              title="Average Sell Price"
-              value={reportData.soldPriceAnalaysis.overallAveragePrice}
-              highLow={{
-                high: reportData.soldPriceAnalaysis.overallHighestPrice,
-                low: reportData.soldPriceAnalaysis.overallLowestPrice,
-              }}
-              chart={
-                <PriceChart
-                  data={reportData.soldPriceAnalaysis.listingPriceAnalyses}
-                />
-              }
-            />
-
-            <ListingsMap
-              customClass="col-span-12 relative"
-              listings={reportData.neighborhoodListings}
-              hideListingEvent={(key) => handleHideListing(key)}
-              isMapExpanded={false}
-              propagateClick={(key) => handleMapMarkerClicked(key)}
-            />
-
-            <RegionNeighborhoodSalesRatio
-              coustomClass="col-span-6"
-              dataSeries={reportData.salesRatio.series}
-              categories={reportData.salesRatio.categories}
-            />
-
-            <SoldByPropertyType
-              coustomClass="col-span-6"
-              dataSeries={reportData.propertyTypeChartData.series}
-              labels={reportData.propertyTypeChartData.labels}
-            />
-
-            <DaysOnMarkerPriceRangeChart
-              coustomClass="col-span-12"
-              daysOnMarketData={reportData.daysOnMarketByPrice}
-            />
+            {components.map((comp, index) =>
+              renderComponent({
+                ...comp,
+                span: getDynamicSpan(index), // Pass the dynamic span directly to the component
+              })
+            )}
           </div>
         </div>
-
 
         {/* No Listings Found */}
         {reportData.neighborhoodListings.length === 0 && (

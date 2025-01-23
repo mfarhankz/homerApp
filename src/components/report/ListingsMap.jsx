@@ -443,7 +443,7 @@ const ListingsMap = ({
           <button
             onClick={() => setActiveView("map")}
             className={`px-4 py-1.5 cursor-pointer rounded-md text-sm font-medium transition-all duration-200 ${
-              activeView === "map" ? "bg-blue-500 text-white" : "text-white-600"
+              activeView === "map" ? "bg-[#162452] text-white" : "text-white-600"
             }`}
           >
             Map
@@ -453,7 +453,7 @@ const ListingsMap = ({
             onClick={() => setActiveView("list")}
             className={`px-4 py-1.5 hover:cursor-pointer rounded-md text-sm font-medium transition-all duration-200 ${
               activeView === "list"
-                ? "bg-blue-500 text-white"
+                ? "bg-[#162452] text-white"
                 : "text-white-600"
             }`}
           >
@@ -464,7 +464,7 @@ const ListingsMap = ({
             onClick={() => setActiveView("both")}
             className={`px-4 py-1.5 hover:cursor-pointer rounded-md text-sm font-medium transition-all duration-200 ${
               activeView === "both"
-                ? "bg-blue-500 text-white"
+                ? "bg-[#162452] text-white"
                 : "text-white-600"
             }`}
           >
@@ -477,7 +477,7 @@ const ListingsMap = ({
             onClick={() => setPropertyStatus("Sold")}
             className={`px-4 py-1.5 hover:cursor-pointer rounded-md text-sm font-medium transition-all duration-200 ${
               propertyStatus === "Sold"
-                ? "bg-blue-500 text-white"
+                ? "bg-[#162452] text-white"
                 : "text-white-600"
             }`}
           >
@@ -488,7 +488,7 @@ const ListingsMap = ({
             onClick={() => setPropertyStatus("Available")}
             className={`px-4 py-1.5 hover:cursor-pointer rounded-md text-sm font-medium transition-all duration-200 ${
               propertyStatus === "Available"
-                ? "bg-blue-500 text-white"
+                ? "bg-[#162452] text-white"
                 : "text-white-600"
             }`}
           >
@@ -499,7 +499,7 @@ const ListingsMap = ({
             onClick={() => setPropertyStatus("All")}
             className={`px-4 py-1.5 hover:cursor-pointer rounded-md text-sm font-medium transition-all duration-200 ${
               propertyStatus === "All"
-                ? "bg-blue-500 text-white"
+                ? "bg-[#162452] text-white"
                 : "text-white-600"
             }`}
           >
@@ -514,7 +514,7 @@ const ListingsMap = ({
               setExpandedClusters(new Set());
               handleClose();
             }}
-            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 bg-blue-500 text-white flex items-center gap-2`}
+            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 bg-[#162452] text-white flex items-center gap-2`}
           >
             <span>Reset Map</span>
           </button>
