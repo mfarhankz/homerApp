@@ -118,7 +118,7 @@ const PriceChart = ({ data, colorVariant = 'red' }) => {
 
   return (
     <CardBox>
-      <div className="bg-lightprimary overflow-hidden rounded-md">
+      <div className="bg-lightprimary overflow-hidden">
         <Chart
           options={options}
           series={series}

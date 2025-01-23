@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
 
-const DaysOnMarkerPriceRangeChart = ({ daysOnMarketData }) => {
+const DaysOnMarkerPriceRangeChart = ({ daysOnMarketData, coustomClass }) => {
     const [chartData, setChartData] = useState({
         series: [],
         options: {}
@@ -135,7 +135,7 @@ const DaysOnMarkerPriceRangeChart = ({ daysOnMarketData }) => {
                 }
             },
             title: {
-                text: 'Average Days on Market',
+                text: '',
                 align: 'center',
                 style: {
                     fontSize: '12px'
@@ -162,16 +162,24 @@ const DaysOnMarkerPriceRangeChart = ({ daysOnMarketData }) => {
     }, [daysOnMarketData]);
 
     return (
-        <div className="bg-lightprimary rounded-lg w-full">
-          
-                <ReactApexChart
+        <div className={`metric-card-new ${coustomClass}`}>
+
+            <div className="flex justify-between items-center px-4 py-4 bg-[#eaeaea]">
+                <h3 className="text-2xl">
+                    Average Days on Market
+                </h3>
+                <i className="icon-close-circle text-2xl text-[rgb(223,88,74)] cursor-pointer flex ml-4"></i>
+
+            </div>
+            <div className="p-3">
+            <ReactApexChart
                     options={chartData.options}
                     series={chartData.series}
                     type="bar"                 
                     width="100%"
                     height="300"
                 />
-           
+            </div>   
         </div>
     );
 };

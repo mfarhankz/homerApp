@@ -2,14 +2,14 @@ import { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import CardBox from '../shared/CardBox';
 
-const MetricsCard = ({ title, value, highLow, chart, className = '' }) => {
+const MetricsCard = ({ title, value, highLow, chart, customClass }) => {
     const [isExpanded, setIsExpanded] = useState(true);
 
     return (
-        <CardBox>
-        <div className={`bg-lightprimary metric-card-new   ${className}`}>
-            <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2">
+        <CardBox className={`${customClass}`}>
+        <div className={`metric-card-new`}>
+            <div className="flex justify-between items-center px-4 py-2 bg-[#eaeaea]">
+                <div className="flex items-center">
                     {/* <button
                         onClick={() => setIsExpanded(!isExpanded)}
                         className="p-1 bg-gray-200 rounded-full transition-colors"
@@ -20,28 +20,32 @@ const MetricsCard = ({ title, value, highLow, chart, className = '' }) => {
                             <ChevronDown className="w-4 h-4 text-gray-500" />
                         )}
                     </button> */}
-                    <h3 className="metric-card-text">{title}</h3>
+                    <h3 className="text-2xl">{title}
+                        <small className="flex-shrink justify-between items-start text-xl bg-[rgb(223,88,74)] py-1 px-4 rounded-full text-white ml-4">
+                            {typeof value === 'number' ? value : `$${value}`}
+                        </small>
+                    </h3>
+
                 </div>
-                <div className="flex justify-between items-center bg-gray-100 p-2 rounded-md">
-                    <div className="text-center">
-                        <div className="text-xs text-gray-500 font-medium">HIGH</div>
-                        <div className="text-sm text-gray-800 font-bold">${highLow.high}</div>
+                <div className="flex justify-between items-center">
+                    <div className="text-center bg-[#162452] py-2 px-4 rounded-md">
+                        <div className="text-sm text-white">HIGH</div>
+                        <div className="text-base text-white">${highLow.high}</div>
                     </div>
-                    <div className="text-center ml-4">
-                        <div className="text-xs text-gray-500 font-medium">LOW</div>
-                        <div className="text-sm text-gray-800 font-bold">${highLow.low}</div>
+                    <div className="text-center bg-[#162452] py-2 px-4 rounded-md mx-2">
+                        <div className="text-sm text-white">LOW</div>
+                        <div className="text-base text-white">${highLow.low}</div>
                     </div>
+                    <i className="icon-close-circle text-2xl text-[rgb(223,88,74)] cursor-pointer flex ml-2"></i>
                 </div>
+
+                
             </div>
 
-            <div className={`transition-all duration-300 ease-in-out overflow-hidden`}>
-                <div className="flex justify-between items-start mb-4">
-                    <div className="text-xl font-semibold">
-                        {typeof value === 'number' ? value : `$${value}`}
-                    </div>
-                </div>
+            <div className="p-3">
+                
                 {chart && (
-                    <div className="mt-6">
+                    <div className="">
                         {chart}
                     </div>
                 )}

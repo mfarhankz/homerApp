@@ -1,7 +1,7 @@
 import React from "react";
 import Chart from 'react-apexcharts';
 
-const EnhancedPropertyChart = ({ dataSeries, labels }) => {
+const EnhancedPropertyChart = ({ dataSeries, labels, coustomClass }) => {
   const options = {
     chart: {
       type: 'donut',
@@ -105,21 +105,23 @@ const EnhancedPropertyChart = ({ dataSeries, labels }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm p-6">
-      <div className="flex flex-col items-center">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          Properties Sold by Type
-        </h3>
-        <div className="w-full">
+    <div className={`metric-card-new ${coustomClass}`}>
+      <div className="flex justify-between items-center px-4 py-4 bg-[#eaeaea]">
+          <h3 className="text-2xl">
+            Properties Sold by Type
+          </h3>
+          <i className="icon-close-circle text-2xl text-[rgb(223,88,74)] cursor-pointer flex ml-4"></i>
+        </div>
+        
+        <div className="p-3">
           <Chart
             options={options}
             series={dataSeries}
             type="donut"
             width="100%"
-            height="400px"
+            height="290px"
           />
         </div>
-      </div>
     </div>
   );
 };

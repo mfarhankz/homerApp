@@ -222,7 +222,7 @@ const ReportResult = () => {
   return (
     <>
       {/* Increased horizontal and vertical padding; slightly larger space-y */}
-      <div className="mt-20 mx-auto space-y-8">
+      <div className="mt-20 mb-10 mx-auto space-y-8">
         {/* Top Section */}
         <div className="report-header">
           <div className="container mx-auto z-10 relative">
@@ -233,14 +233,15 @@ const ReportResult = () => {
               <div className="grid grid-cols-12 gap-4">
                 {/* Left Side (will appear on left in mobile, right in desktop) */}
                 <div className="col-span-6">
-                <div className="grid grid-cols-12 gap-4">
-
-                  <div className="col-span-7">
+                  <div className="grid grid-cols-12 gap-4">
+                    <div className="col-span-7">
                       {/* Title + Presented By */}
                       <h2 className="text-3xl  text-white">
                         Neighbourhood Report
                       </h2>
-                      <p className="text-sm text-white/50 font-light mt-1">Presented by:</p>
+                      <p className="text-sm text-white/50 font-light mt-1">
+                        Presented by:
+                      </p>
                       <ReportHeader
                         location={
                           reportData.reportRequestDocument.searchCriteria.city +
@@ -265,10 +266,9 @@ const ReportResult = () => {
                           phone: user.phone,
                         }}
                       />
-                  </div>
+                    </div>
 
-                  <div className="col-span-2 flex flex-col items-center justify-between">
-
+                    <div className="col-span-2 flex flex-col items-center justify-between">
                       <button
                         onClick={handleDelete}
                         className=" hover:bg-red-600 hover:text-white text-center border border-[#fff]/50 text-[#fff]/50 rounded-full p-3  flex items-center justify-center text-base font-light w-[120px]"
@@ -302,10 +302,8 @@ const ReportResult = () => {
                         url={shareUrl}
                         onCopy={handleCopyUrl}
                       />
+                    </div>
                   </div>
-
-                </div>
-                  
                 </div>
 
                 <div className="col-span-6 relative">
@@ -345,73 +343,82 @@ const ReportResult = () => {
 
         {/* Price Cards */}
         <div className="container mx-auto">
-          <div className="grid grid-cols-12 gap-4">
-            <div className="col-span-6">
-              <MetricsCard
-                title="Average List Price"
-                value={reportData.priceAnalaysis.overallAveragePrice}
-                highLow={{
-                  high: reportData.priceAnalaysis.overallHighestPrice,
-                  low: reportData.priceAnalaysis.overallLowestPrice,
-                }}
-                chart={
-                  <PriceChart
-                    data={reportData.priceAnalaysis.listingPriceAnalyses}
-                    colorVariant="green"
-                  />
-                }
-              />
-            </div>
-            <div className="col-span-6">
-              <MetricsCard
-                title="Average Sell Price"
-                value={reportData.soldPriceAnalaysis.overallAveragePrice}
-                highLow={{
-                  high: reportData.soldPriceAnalaysis.overallHighestPrice,
-                  low: reportData.soldPriceAnalaysis.overallLowestPrice,
-                }}
-                chart={
-                  <PriceChart
-                    data={reportData.soldPriceAnalaysis.listingPriceAnalyses}
-                  />
-                }
-              />
-            </div>
+          <div className="grid grid-cols-12 gap-8">
+            <MetricsCard
+              customClass="col-span-6"
+              title="Average List Price"
+              value={reportData.priceAnalaysis.overallAveragePrice}
+              highLow={{
+                high: reportData.priceAnalaysis.overallHighestPrice,
+                low: reportData.priceAnalaysis.overallLowestPrice,
+              }}
+              chart={
+                <PriceChart
+                  data={reportData.priceAnalaysis.listingPriceAnalyses}
+                  colorVariant="green"
+                />
+              }
+            />
+
+            <MetricsCard
+              customClass="col-span-6"
+              title="Average Sell Price"
+              value={reportData.soldPriceAnalaysis.overallAveragePrice}
+              highLow={{
+                high: reportData.soldPriceAnalaysis.overallHighestPrice,
+                low: reportData.soldPriceAnalaysis.overallLowestPrice,
+              }}
+              chart={
+                <PriceChart
+                  data={reportData.soldPriceAnalaysis.listingPriceAnalyses}
+                />
+              }
+            />
           </div>
         </div>
 
         {/* Main Content: Map + Side Charts */}
-        <div className="container mx-auto flex flex-col md:flex-row gap-8">
-          {/* Map */}
-          <div className="w-full md:w-2/3 relative">
-            <ListingsMap
-              listings={reportData.neighborhoodListings}
-              hideListingEvent={(key) => handleHideListing(key)}
-              isMapExpanded={false}
-              propagateClick={(key) => handleMapMarkerClicked(key)}
-            />
-          </div>
+        <div className="container mx-auto">
+          <div className="grid grid-cols-12 gap-8">
+            <div className="col-span-12 relative">
+              {/* Map */}
+              <ListingsMap
+                listings={reportData.neighborhoodListings}
+                hideListingEvent={(key) => handleHideListing(key)}
+                isMapExpanded={false}
+                propagateClick={(key) => handleMapMarkerClicked(key)}
+              />
+            </div>
 
-          {/* Charts on the right */}
-          <div className="w-full md:w-1/3 space-y-6">
+            {/* Charts on the right */}
             <RegionNeighborhoodSalesRatio
-              dataSeries={reportData.salesRatio.series}
-              categories={reportData.salesRatio.categories}
-            />
+              coustomClass="col-span-6"
+                dataSeries={reportData.salesRatio.series}
+                categories={reportData.salesRatio.categories}
+              />
 
-            <SoldByPropertyType
-              dataSeries={reportData.propertyTypeChartData.series}
-              labels={reportData.propertyTypeChartData.labels}
-            />
+              <SoldByPropertyType
+              coustomClass="col-span-6"
+                dataSeries={reportData.propertyTypeChartData.series}
+                labels={reportData.propertyTypeChartData.labels}
+              />
+
+            {/* Days on Market Chart */}
+            <DaysOnMarkerPriceRangeChart
+              coustomClass="col-span-12"
+                daysOnMarketData={reportData.daysOnMarketByPrice}
+              />
+              
+            
           </div>
         </div>
 
         {/* Days on Market Chart */}
-        <div className="container mx-auto">
+        {/* <div className="container mx-auto">
           <DaysOnMarkerPriceRangeChart
             daysOnMarketData={reportData.daysOnMarketByPrice}
           />
-        </div>
+        </div> */}
 
         {/* No Listings Found */}
         {reportData.neighborhoodListings.length === 0 && (
