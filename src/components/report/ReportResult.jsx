@@ -228,8 +228,8 @@ const ReportResult = () => {
           <div className="container mx-auto z-10 relative">
             <CardBox className="p-6 w-full">
               {/* This parent flex also needs -reverse if you want 
-        the agent info on the right in the same row as 
-        WelcomeBox: */}
+              the agent info on the right in the same row as 
+              WelcomeBox: */}
               <div className="grid grid-cols-12 gap-4">
                 {/* Left Side (will appear on left in mobile, right in desktop) */}
                 <div className="col-span-6">
@@ -344,6 +344,7 @@ const ReportResult = () => {
         {/* Price Cards */}
         <div className="container mx-auto">
           <div className="grid grid-cols-12 gap-8">
+            
             <MetricsCard
               customClass="col-span-6"
               title="Average List Price"
@@ -374,21 +375,16 @@ const ReportResult = () => {
                 />
               }
             />
-          </div>
-        </div>
-
-        {/* Main Content: Map + Side Charts */}
-        <div className="container mx-auto">
-          <div className="grid grid-cols-12 gap-8">
-            <div className="col-span-12 relative">
-              {/* Map */}
-              <ListingsMap
+      
+            {/* Map */}
+            <ListingsMap
+              customClass="col-span-12 relative"
                 listings={reportData.neighborhoodListings}
                 hideListingEvent={(key) => handleHideListing(key)}
                 isMapExpanded={false}
                 propagateClick={(key) => handleMapMarkerClicked(key)}
               />
-            </div>
+
 
             {/* Charts on the right */}
             <RegionNeighborhoodSalesRatio

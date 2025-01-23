@@ -57,6 +57,7 @@ const ListingsMap = ({
   isMapExpanded,
   propagateClick,
   hideListingEvent,
+  customClass
 }) => {
   const [activeView, setActiveView] = useState("both");
   const [propertyStatus, setPropertyStatus] = useState("All");
@@ -434,7 +435,7 @@ const ListingsMap = ({
   };
 
   return (
-    <div className="metric-card-new">
+    <div className={`metric-card-new ${customClass}`}>
       {/* iOS-style View Toggle Buttons */}
       <div className="flex justify-between items-center px-4 py-3 bg-[#eaeaea] border border-t-0 border-s-0 border-e-0 border-[#fff]">
         <div className="flex items-center">
