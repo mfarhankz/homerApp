@@ -2,7 +2,7 @@ import React from "react";
 import Chart from "react-apexcharts";
 import CardBox from "../shared/CardBox";
 
-const RegionNeighborhoodSalesRatio = ({ dataSeries, categories, coustomClass }) => {
+const RegionNeighborhoodSalesRatio = ({ dataSeries, categories, coustomClass, onDelete }) => {
   const seriesColors = ["#2E93fA", "#1cc3bd"];
 
   const chartOptions = {
@@ -201,7 +201,7 @@ const RegionNeighborhoodSalesRatio = ({ dataSeries, categories, coustomClass }) 
             ))}
           </h3>
           <div className="text-base flex">Past 6 months
-          <i className="icon-close-circle text-2xl text-[rgb(223,88,74)] cursor-pointer flex ml-4"></i>
+          <i className="icon-close-circle text-2xl text-[rgb(223,88,74)] cursor-pointer flex ml-4" onClick={onDelete}></i>
           </div>
 
         </div>

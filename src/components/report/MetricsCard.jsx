@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import CardBox from "../shared/CardBox";
 
-const MetricsCard = ({ title, value, highLow, chart, customClass }) => {
+const MetricsCard = ({ title, value, highLow, chart, customClass, onDelete }) => {
   const [isExpanded, setIsExpanded] = useState(true);
 
   return (
@@ -36,7 +36,7 @@ const MetricsCard = ({ title, value, highLow, chart, customClass }) => {
               <div className="text-sm text-white">LOW</div>
               <div className="text-base text-white">${highLow.low}</div>
             </div>
-            <i className="icon-close-circle text-2xl text-[rgb(223,88,74)] cursor-pointer flex ml-2"></i>
+            <i className="icon-close-circle text-2xl text-[rgb(223,88,74)] cursor-pointer flex ml-2" onClick={onDelete}></i>
           </div>
         </div>
 

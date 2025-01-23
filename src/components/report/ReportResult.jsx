@@ -375,46 +375,34 @@ const ReportResult = () => {
                 />
               }
             />
-      
-            {/* Map */}
+
             <ListingsMap
               customClass="col-span-12 relative"
-                listings={reportData.neighborhoodListings}
-                hideListingEvent={(key) => handleHideListing(key)}
-                isMapExpanded={false}
-                propagateClick={(key) => handleMapMarkerClicked(key)}
-              />
+              listings={reportData.neighborhoodListings}
+              hideListingEvent={(key) => handleHideListing(key)}
+              isMapExpanded={false}
+              propagateClick={(key) => handleMapMarkerClicked(key)}
+            />
 
-
-            {/* Charts on the right */}
             <RegionNeighborhoodSalesRatio
               coustomClass="col-span-6"
-                dataSeries={reportData.salesRatio.series}
-                categories={reportData.salesRatio.categories}
-              />
+              dataSeries={reportData.salesRatio.series}
+              categories={reportData.salesRatio.categories}
+            />
 
-              <SoldByPropertyType
+            <SoldByPropertyType
               coustomClass="col-span-6"
-                dataSeries={reportData.propertyTypeChartData.series}
-                labels={reportData.propertyTypeChartData.labels}
-              />
+              dataSeries={reportData.propertyTypeChartData.series}
+              labels={reportData.propertyTypeChartData.labels}
+            />
 
-            {/* Days on Market Chart */}
             <DaysOnMarkerPriceRangeChart
               coustomClass="col-span-12"
-                daysOnMarketData={reportData.daysOnMarketByPrice}
-              />
-              
-            
+              daysOnMarketData={reportData.daysOnMarketByPrice}
+            />
           </div>
         </div>
 
-        {/* Days on Market Chart */}
-        {/* <div className="container mx-auto">
-          <DaysOnMarkerPriceRangeChart
-            daysOnMarketData={reportData.daysOnMarketByPrice}
-          />
-        </div> */}
 
         {/* No Listings Found */}
         {reportData.neighborhoodListings.length === 0 && (

@@ -57,7 +57,8 @@ const ListingsMap = ({
   isMapExpanded,
   propagateClick,
   hideListingEvent,
-  customClass
+  customClass,
+  onDelete
 }) => {
   const [activeView, setActiveView] = useState("both");
   const [propertyStatus, setPropertyStatus] = useState("All");
@@ -517,7 +518,11 @@ const ListingsMap = ({
           >
             <span>Reset Map</span>
           </button>
+
+          <i className="icon-close-circle text-2xl text-[rgb(223,88,74)] cursor-pointer flex ml-2" onClick={onDelete}></i>
+
         </div>
+
       </div>
 
       <div className="relative p-3 h-[700px]">

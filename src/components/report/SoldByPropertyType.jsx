@@ -1,7 +1,7 @@
 import React from "react";
 import Chart from 'react-apexcharts';
 
-const EnhancedPropertyChart = ({ dataSeries, labels, coustomClass }) => {
+const EnhancedPropertyChart = ({ dataSeries, labels, coustomClass, onDelete }) => {
   const options = {
     chart: {
       type: 'donut',
@@ -110,7 +110,7 @@ const EnhancedPropertyChart = ({ dataSeries, labels, coustomClass }) => {
           <h3 className="text-2xl">
             Properties Sold by Type
           </h3>
-          <i className="icon-close-circle text-2xl text-[rgb(223,88,74)] cursor-pointer flex ml-4"></i>
+          <i className="icon-close-circle text-2xl text-[rgb(223,88,74)] cursor-pointer flex ml-4" onClick={onDelete}></i>
         </div>
         
         <div className="p-3">
