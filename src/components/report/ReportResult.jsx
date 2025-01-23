@@ -225,14 +225,90 @@ const ReportResult = () => {
       <div className="mt-20 mx-auto space-y-8">
         {/* Top Section */}
         <div className="report-header">
-          <div className="container mx-auto flex flex-col md:flex-row-reverse gap-8">
+          <div className="container mx-auto z-10 relative">
             <CardBox className="p-6 w-full">
               {/* This parent flex also needs -reverse if you want 
         the agent info on the right in the same row as 
         WelcomeBox: */}
-              <div className="flex flex-col md:flex-row-reverse gap-8">
+              <div className="grid grid-cols-12 gap-4">
                 {/* Left Side (will appear on left in mobile, right in desktop) */}
-                <div className="md:w-1/2">
+                <div className="col-span-6">
+                <div className="grid grid-cols-12 gap-4">
+
+                  <div className="col-span-7">
+                      {/* Title + Presented By */}
+                      <h2 className="text-3xl  text-white">
+                        Neighbourhood Report
+                      </h2>
+                      <p className="text-sm text-white/50 font-light mt-1">Presented by:</p>
+                      <ReportHeader
+                        location={
+                          reportData.reportRequestDocument.searchCriteria.city +
+                          ", " +
+                          reportData.reportRequestDocument.searchCriteria.region
+                        }
+                        propertyType={
+                          reportData.reportRequestDocument.searchCriteria
+                            .propertyType
+                        }
+                        timeRange={
+                          reportData.reportRequestDocument.searchCriteria
+                            .timeRange
+                        }
+                        agent={{
+                          firstName: user.firstName,
+                          lastName: user.lastName,
+                          brokerageName: user.brokerageName,
+                          emailAddress: user.emailAddress,
+                          displayPullDown: false,
+                          photo: user.photo,
+                          phone: user.phone,
+                        }}
+                      />
+                  </div>
+
+                  <div className="col-span-2 flex flex-col items-center justify-between">
+
+                      <button
+                        onClick={handleDelete}
+                        className=" hover:bg-red-600 hover:text-white text-center border border-[#fff]/50 text-[#fff]/50 rounded-full p-3  flex items-center justify-center text-base font-light w-[120px]"
+                      >
+                        <i className="icon-trash text-lg flex"></i>
+                        <span className="ml-2">Delete</span>
+                      </button>
+
+                      <button
+                        onClick={handleSaveReport}
+                        className="hover:bg-blue-700 hover:text-white text-center border border-[#fff]/50 text-[#fff]/50 rounded-full p-3  flex items-center justify-center text-base font-light w-[120px]"
+                      >
+                        <i className="icon-save-add text-lg flex"></i>
+                        <span className="ml-2">Save</span>
+                        {isSaving && (
+                          <Loader2 className="animate-spin w-4 h-4" />
+                        )}
+                      </button>
+
+                      <button
+                        onClick={(e) => handleShare(e, reportState.reportId)}
+                        className="hover:bg-blue-700 hover:text-white text-center border border-[#fff]/50 text-[#fff]/50 rounded-full p-3  flex items-center justify-center text-base font-light w-[120px]"
+                      >
+                        <i className="icon-share text-lg flex"></i>
+                        <span className="ml-2">Share</span>
+                      </button>
+
+                      <ShareModal
+                        isOpen={isShareOpen}
+                        onClose={() => setIsShareOpen(false)}
+                        url={shareUrl}
+                        onCopy={handleCopyUrl}
+                      />
+                  </div>
+
+                </div>
+                  
+                </div>
+
+                <div className="col-span-6 relative">
                   <WelcomeBox
                     location={
                       reportData.reportRequestDocument.searchCriteria.city +
@@ -262,115 +338,45 @@ const ReportResult = () => {
                     totalSold={reportData.totalSoldListings}
                   />
                 </div>
-
-                <div className="md:w-1/2 flex flex-col justify-between md:items-start pt-4 pl-4 bg-blue-950 rounded-lg">
-                  <div className="mb-4 w-full md:text-left">
-                    {/* Title + Presented By */}
-                    <h2 className="text-3xl  text-white">
-                      Neighbourhood Report
-                    </h2>
-                    <p className="text-sm text-gray-300 mt-1">Presented by:</p>
-                    <ReportHeader
-                      location={
-                        reportData.reportRequestDocument.searchCriteria.city +
-                        ", " +
-                        reportData.reportRequestDocument.searchCriteria.region
-                      }
-                      propertyType={
-                        reportData.reportRequestDocument.searchCriteria
-                          .propertyType
-                      }
-                      timeRange={
-                        reportData.reportRequestDocument.searchCriteria
-                          .timeRange
-                      }
-                      agent={{
-                        firstName: user.firstName,
-                        lastName: user.lastName,
-                        brokerageName: user.brokerageName,
-                        emailAddress: user.emailAddress,
-                        displayPullDown: false,
-                        photo: user.photo,
-                        phone: user.phone,
-                      }}
-                    />
-                  </div>
-
-                  {/* Toolbar aligned right */}
-                  <div className="report-toolbar mt-auto mr-2 md:text-right pb-4">
-                    <div className="flex flex-wrap sm:flex-nowrap justify-end gap-3">
-                      <button
-                        onClick={handleDelete}
-                        className="px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg flex items-center gap-2 text-xs"
-                      >
-                        <Save className="w-4 h-4" />
-                        <span className="hidden md:inline">Delete</span>
-                      </button>
-
-                      <button
-                        onClick={handleSaveReport}
-                        className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 text-xs"
-                      >
-                        <Save className="w-4 h-4" />
-                        <span className="hidden md:inline">Save</span>
-                        {isSaving && (
-                          <Loader2 className="animate-spin w-4 h-4" />
-                        )}
-                      </button>
-
-                      <button
-                        onClick={(e) => handleShare(e, reportState.reportId)}
-                        className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 text-xs"
-                      >
-                        <Share2 className="w-4 h-4" />
-                        <span className="hidden md:inline">Share</span>
-                      </button>
-                      <ShareModal
-                        isOpen={isShareOpen}
-                        onClose={() => setIsShareOpen(false)}
-                        url={shareUrl}
-                        onCopy={handleCopyUrl}
-                      />
-                    </div>
-                  </div>
-                </div>
               </div>
             </CardBox>
           </div>
         </div>
 
         {/* Price Cards */}
-        <div className="container mx-auto flex flex-col md:flex-row gap-8">
-          <div className="w-full md:w-1/2">
-            <MetricsCard
-              title="Average List Price"
-              value={reportData.priceAnalaysis.overallAveragePrice}
-              highLow={{
-                high: reportData.priceAnalaysis.overallHighestPrice,
-                low: reportData.priceAnalaysis.overallLowestPrice,
-              }}
-              chart={
-                <PriceChart
-                  data={reportData.priceAnalaysis.listingPriceAnalyses}
-                  colorVariant="green"
-                />
-              }
-            />
-          </div>
-          <div className="w-full md:w-1/2">
-            <MetricsCard
-              title="Average Sell Price"
-              value={reportData.soldPriceAnalaysis.overallAveragePrice}
-              highLow={{
-                high: reportData.soldPriceAnalaysis.overallHighestPrice,
-                low: reportData.soldPriceAnalaysis.overallLowestPrice,
-              }}
-              chart={
-                <PriceChart
-                  data={reportData.soldPriceAnalaysis.listingPriceAnalyses}
-                />
-              }
-            />
+        <div className="container mx-auto">
+          <div className="grid grid-cols-12 gap-4">
+            <div className="col-span-6">
+              <MetricsCard
+                title="Average List Price"
+                value={reportData.priceAnalaysis.overallAveragePrice}
+                highLow={{
+                  high: reportData.priceAnalaysis.overallHighestPrice,
+                  low: reportData.priceAnalaysis.overallLowestPrice,
+                }}
+                chart={
+                  <PriceChart
+                    data={reportData.priceAnalaysis.listingPriceAnalyses}
+                    colorVariant="green"
+                  />
+                }
+              />
+            </div>
+            <div className="col-span-6">
+              <MetricsCard
+                title="Average Sell Price"
+                value={reportData.soldPriceAnalaysis.overallAveragePrice}
+                highLow={{
+                  high: reportData.soldPriceAnalaysis.overallHighestPrice,
+                  low: reportData.soldPriceAnalaysis.overallLowestPrice,
+                }}
+                chart={
+                  <PriceChart
+                    data={reportData.soldPriceAnalaysis.listingPriceAnalyses}
+                  />
+                }
+              />
+            </div>
           </div>
         </div>
 

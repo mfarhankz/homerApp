@@ -14,7 +14,7 @@ const EnhancedPropertyChart = ({ dataSeries, labels }) => {
     labels: labels,
     colors: ['#6366F1', '#3B82F6', '#14B8A6', '#10B981', '#F59E0B', '#EF4444'],
     legend: {
-      position: 'bottom',
+      position: 'right',
       horizontalAlign: 'center',
       fontSize: '14px',
       fontWeight: 500,

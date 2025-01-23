@@ -8,7 +8,7 @@ const CardBox = ({ children, className }) => {
             theme={{
                 root: {
                     base: "flex rounded-lg flex-col",
-                    children: "flex h-full flex-col justify-center p-0" // Added p-0 here
+                    children: "" // Added p-0 here
                 }
             }}
         >
